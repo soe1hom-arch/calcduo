@@ -92,8 +92,7 @@ class MainActivity : AppCompatActivity() {
         calculatorFragments.add(fragment)
 
         updatePanels()
-        tabAdapter.submitList(tabs.toList())
-        updateEmptySidebar()
+        refreshSidebar()
     }
 
     private fun removeCalculator(tabId: Int) {
@@ -103,7 +102,6 @@ class MainActivity : AppCompatActivity() {
         tabs.removeAt(idx)
         val removed = calculatorFragments.removeAt(idx)
 
-        // Remove from FragmentManager if added
         if (removed.isAdded) {
             supportFragmentManager.beginTransaction()
                 .remove(removed)
@@ -113,6 +111,10 @@ class MainActivity : AppCompatActivity() {
         if (activeIndex >= tabs.size) activeIndex = tabs.size - 1
 
         updatePanels()
+        refreshSidebar()
+    }
+
+    private fun refreshSidebar() {
         tabAdapter.submitList(tabs.toList())
         updateEmptySidebar()
     }
@@ -128,24 +130,26 @@ class MainActivity : AppCompatActivity() {
 
         binding.tvEmptyState.visibility = View.GONE
 
-        val fragments = calculatorFragments.toList()
-        val idx = activeIndex.coerceIn(0, fragments.size - 1)
+        val allFragments = calculatorFragments.toList()
+        val idx = activeIndex.coerceIn(0, allFragments.size - 1)
 
+        // Choose which 2 fragments to show
         val showList = when {
-            fragments.size == 1 -> listOf(fragments[0])
-            idx == fragments.size - 1 -> listOf(fragments[idx - 1], fragments[idx])
-            else -> listOf(fragments[idx], fragments[idx + 1])
+            allFragments.size == 1 -> listOf(allFragments[0])
+            idx == allFragments.size - 1 -> listOf(allFragments[idx - 1], allFragments[idx])
+            else -> listOf(allFragments[idx], allFragments[idx + 1])
         }
 
-        // Mark active tabs
+        // Mark active tabs by finding their index in the fragments list
+        val visibleFragmentIds = showList.map { it.hashCode() }.toSet()
         tabs.replaceAll { tab ->
-            val i = tabs.indexOf(tab)
-            val isActive = i >= 0 && i < showList.size && tabs[i] == showList.getOrNull(if (i == idx) 0 else 1)
-            tab.copy(isActive = isActive)
+            val ti = tabs.indexOf(tab)
+            val frag = if (ti < calculatorFragments.size) calculatorFragments[ti] else null
+            tab.copy(isActive = frag != null && frag.hashCode() in visibleFragmentIds)
         }
 
         // Remove any fragment not in the show list from panels
-        for (f in fragments) {
+        for (f in allFragments) {
             if (f !in showList && f.isAdded) {
                 supportFragmentManager.beginTransaction()
                     .remove(f)
@@ -153,17 +157,17 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Place fragments in panels
-        val txn1 = supportFragmentManager.beginTransaction()
-        txn1.replace(R.id.panel_left, showList[0], "panel_left")
-        txn1.commitNow()
-
+        // Place left panel fragment
+        val txnLeft = supportFragmentManager.beginTransaction()
+        txnLeft.replace(R.id.panel_left, showList[0], "panel_left")
+        txnLeft.commitNow()
         binding.panelLeft.visibility = View.VISIBLE
 
+        // Place right panel fragment
         if (showList.size >= 2) {
-            val txn2 = supportFragmentManager.beginTransaction()
-            txn2.replace(R.id.panel_right, showList[1], "panel_right")
-            txn2.commitNow()
+            val txnRight = supportFragmentManager.beginTransaction()
+            txnRight.replace(R.id.panel_right, showList[1], "panel_right")
+            txnRight.commitNow()
             binding.panelRight.visibility = View.VISIBLE
             binding.panelDivider.visibility = View.VISIBLE
         } else {
