@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
         if (removed.isAdded) {
             supportFragmentManager.beginTransaction()
                 .remove(removed)
-                .commitNow()
+                .commit()
         }
 
         if (activeIndex >= tabs.size) activeIndex = tabs.size - 1
@@ -153,21 +153,21 @@ class MainActivity : AppCompatActivity() {
             if (f !in showList && f.isAdded) {
                 supportFragmentManager.beginTransaction()
                     .remove(f)
-                    .commitNow()
+                    .commit()
             }
         }
 
         // Place left panel fragment
         val txnLeft = supportFragmentManager.beginTransaction()
         txnLeft.replace(R.id.panel_left, showList[0], "panel_left")
-        txnLeft.commitNow()
+        txnLeft.commit()
         binding.panelLeft.visibility = View.VISIBLE
 
         // Place right panel fragment
         if (showList.size >= 2) {
             val txnRight = supportFragmentManager.beginTransaction()
             txnRight.replace(R.id.panel_right, showList[1], "panel_right")
-            txnRight.commitNow()
+            txnRight.commit()
             binding.panelRight.visibility = View.VISIBLE
             binding.panelDivider.visibility = View.VISIBLE
         } else {
@@ -175,11 +175,14 @@ class MainActivity : AppCompatActivity() {
             if (rightFrag != null) {
                 supportFragmentManager.beginTransaction()
                     .remove(rightFrag)
-                    .commitNow()
+                    .commit()
             }
             binding.panelRight.visibility = View.GONE
             binding.panelDivider.visibility = View.GONE
         }
+
+        // Execute pending transactions
+        supportFragmentManager.executePendingTransactions()
 
         // Refresh displays
         for (f in showList) {
