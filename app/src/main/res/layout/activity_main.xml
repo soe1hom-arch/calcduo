@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <!-- Main content area -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,16 +21,30 @@
             app:title="CalcDuo"
             app:titleTextColor="@color/md_theme_onSurface" />
 
-        <!-- Split container for dual calculators -->
-        <LinearLayout
-            android:id="@+id/ll_split_container"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:weightSum="2" />
+            android:layout_weight="1">
 
-        <!-- Hidden fragment container for FragmentManager -->
+            <LinearLayout
+                android:id="@+id/ll_split_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="2" />
+
+            <TextView
+                android:id="@+id/tv_empty_state"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/empty_state"
+                android:textColor="@color/btn_text_secondary"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
         <FrameLayout
             android:id="@+id/fl_fragment_container"
             android:layout_width="0dp"
@@ -40,7 +53,6 @@
 
     </LinearLayout>
 
-    <!-- Drawer content -->
     <LinearLayout
         android:layout_width="320dp"
         android:layout_height="match_parent"
@@ -48,7 +60,6 @@
         android:background="@color/md_theme_surface"
         android:orientation="vertical">
 
-        <!-- Drawer Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="140dp"
