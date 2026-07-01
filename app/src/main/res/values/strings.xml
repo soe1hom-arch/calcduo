@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CalcDuo</string>
+    <string name="nav_open">Open navigation</string>
+    <string name="nav_close">Close navigation</string>
+    <string name="add_tab">Add Calculator</string>
+    <string name="remove_tab">Remove</string>
+    <string name="calculator_title">Calculator</string>
+    <string name="empty_state">No calculators yet. Tap + to add one.</string>
+</resources>
