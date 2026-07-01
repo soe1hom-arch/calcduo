@@ -23,7 +23,8 @@
             android:layout_weight="1"
             android:text="Calculator 1"
             android:textColor="@color/btn_text_primary"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <ImageButton
             android:id="@+id/btn_close_tab"
@@ -32,7 +33,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             android:contentDescription="Close tab"
-            android:tint="@color/btn_text_secondary" />
+            android:tint="@color/btn_text_primary" />
 
     </LinearLayout>
 
