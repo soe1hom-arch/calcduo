@@ -2,10 +2,10 @@ package com.calculator.app
 
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.calculator.app.databinding.ActivityMainBinding
 import com.calculator.app.ui.adapter.CalculatorTab
 import com.calculator.app.ui.adapter.TabAdapter
@@ -14,9 +14,9 @@ import com.calculator.app.ui.calculator.CalculatorFragment
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val calculatorTabs = mutableListOf<CalculatorTab>()
-    private val fragments = mutableListOf<CalculatorFragment>()
-    private var activeTabIndex = 0
+    private val tabs = mutableListOf<CalculatorTab>()
+    private val calculatorFragments = mutableListOf<CalculatorFragment>()
+    private var activeIndex = 0
     private var tabCounter = 0
     private lateinit var tabAdapter: TabAdapter
 
@@ -27,11 +27,10 @@ class MainActivity : AppCompatActivity() {
 
         setupToolbar()
         setupDrawer()
-        setupSidebarTabs()
+        setupSidebar()
 
-        // Start with 2 calculators
-        addCalculatorTab()
-        addCalculatorTab()
+        addCalculator()
+        addCalculator()
     }
 
     private fun setupToolbar() {
@@ -40,143 +39,148 @@ class MainActivity : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener {
             binding.drawerLayout.openDrawer(GravityCompat.START)
         }
-        binding.toolbar.navigationIcon = resources.getDrawable(
-            R.drawable.ic_menu, theme
-        )
+        binding.toolbar.navigationIcon = resources.getDrawable(R.drawable.ic_menu, theme)
     }
 
     private fun setupDrawer() {
-        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
             override fun onDrawerOpened(drawerView: View) {
-                refreshSidebarList()
+                tabAdapter.submitList(tabs.toList())
+                updateEmptySidebar()
             }
         })
     }
 
-    private fun setupSidebarTabs() {
+    private fun updateEmptySidebar() {
+        binding.tvEmptySidebar.visibility = if (tabs.isEmpty()) View.VISIBLE else View.GONE
+    }
+
+    private fun setupSidebar() {
         tabAdapter = TabAdapter(
-            onTabClick = { tab -> switchToTab(tab.id) },
-            onTabClose = { tab -> removeCalculatorTab(tab.id) }
+            onTabClick = { tab ->
+                val idx = tabs.indexOfFirst { it.id == tab.id }
+                if (idx >= 0) {
+                    activeIndex = idx
+                    tabs.replaceAll { it.copy(isActive = it.id == tab.id) }
+                    updatePanels()
+                }
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
+            },
+            onTabClose = { tab ->
+                if (tabs.size > 1) removeCalculator(tab.id)
+            }
         )
 
         binding.rvSidebarTabs.apply {
-            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@MainActivity)
+            layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = tabAdapter
         }
 
         binding.fabAddCalculator.setOnClickListener {
-            addCalculatorTab()
+            addCalculator()
             binding.drawerLayout.closeDrawer(GravityCompat.START)
         }
-
-        binding.tvEmptySidebar.visibility = View.GONE
     }
 
-    @Suppress("DEPRECATION")
-    private fun refreshSidebarList() {
-        tabAdapter.submitList(calculatorTabs.toList())
-        val isEmpty = calculatorTabs.isEmpty()
-        binding.tvEmptySidebar.visibility = if (isEmpty) View.VISIBLE else View.GONE
-    }
-
-    private fun addCalculatorTab() {
+    private fun addCalculator() {
         val tabId = tabCounter++
         val tab = CalculatorTab(id = tabId, title = "Calc $tabCounter")
-        calculatorTabs.add(tab)
-        refreshSidebarList()
+        tabs.add(tab)
+        activeIndex = tabs.size - 1
 
         val fragment = CalculatorFragment.newInstance(tabId)
-        fragments.add(fragment)
+        calculatorFragments.add(fragment)
 
-        updateSplitScreen()
+        updatePanels()
+        tabAdapter.submitList(tabs.toList())
+        updateEmptySidebar()
     }
 
-    private fun removeCalculatorTab(tabId: Int) {
-        val index = calculatorTabs.indexOfFirst { it.id == tabId }
-        if (index == -1 || calculatorTabs.size <= 1) return
+    private fun removeCalculator(tabId: Int) {
+        val idx = tabs.indexOfFirst { it.id == tabId }
+        if (idx < 0 || tabs.size <= 1) return
 
-        calculatorTabs.removeAt(index)
-        val removedFragment = fragments.removeAt(index)
+        tabs.removeAt(idx)
+        val removed = calculatorFragments.removeAt(idx)
 
-        supportFragmentManager.beginTransaction()
-            .remove(removedFragment)
-            .commitAllowingStateLoss()
-
-        if (activeTabIndex >= calculatorTabs.size) {
-            activeTabIndex = calculatorTabs.size - 1
+        // Remove from FragmentManager if added
+        if (removed.isAdded) {
+            supportFragmentManager.beginTransaction()
+                .remove(removed)
+                .commitNow()
         }
 
-        refreshSidebarList()
-        updateSplitScreen()
+        if (activeIndex >= tabs.size) activeIndex = tabs.size - 1
+
+        updatePanels()
+        tabAdapter.submitList(tabs.toList())
+        updateEmptySidebar()
     }
 
-    private fun switchToTab(tabId: Int) {
-        val index = calculatorTabs.indexOfFirst { it.id == tabId }
-        if (index == -1) return
-
-        activeTabIndex = index
-        calculatorTabs.replaceAll { it.copy(isActive = it.id == tabId) }
-        refreshSidebarList()
-        binding.drawerLayout.closeDrawer(GravityCompat.START)
-    }
-
-    private fun updateSplitScreen() {
-        val visibleFragments = fragments.toList()
-        val container = binding.llSplitContainer
-        container.removeAllViews()
-
-        if (visibleFragments.isEmpty()) {
+    private fun updatePanels() {
+        if (calculatorFragments.isEmpty()) {
+            binding.panelLeft.visibility = View.GONE
+            binding.panelRight.visibility = View.GONE
+            binding.panelDivider.visibility = View.GONE
             binding.tvEmptyState.visibility = View.VISIBLE
             return
         }
+
         binding.tvEmptyState.visibility = View.GONE
 
-        val showIndex = if (activeTabIndex < visibleFragments.size) activeTabIndex else 0
+        val fragments = calculatorFragments.toList()
+        val idx = activeIndex.coerceIn(0, fragments.size - 1)
 
-        val fragmentsToShow = when {
-            visibleFragments.size == 1 -> listOf(visibleFragments[0])
-            showIndex == visibleFragments.size - 1 -> listOf(visibleFragments[showIndex - 1], visibleFragments[showIndex])
-            else -> listOf(visibleFragments[showIndex], visibleFragments[showIndex + 1])
+        val showList = when {
+            fragments.size == 1 -> listOf(fragments[0])
+            idx == fragments.size - 1 -> listOf(fragments[idx - 1], fragments[idx])
+            else -> listOf(fragments[idx], fragments[idx + 1])
         }
 
-        for ((i, fragment) in fragmentsToShow.withIndex()) {
-            if (!fragment.isAdded) {
+        // Mark active tabs
+        tabs.replaceAll { tab ->
+            val i = tabs.indexOf(tab)
+            val isActive = i >= 0 && i < showList.size && tabs[i] == showList.getOrNull(if (i == idx) 0 else 1)
+            tab.copy(isActive = isActive)
+        }
+
+        // Remove any fragment not in the show list from panels
+        for (f in fragments) {
+            if (f !in showList && f.isAdded) {
                 supportFragmentManager.beginTransaction()
-                    .add(binding.flFragmentContainer.id, fragment, "calc_${fragment.hashCode()}")
-                    .commitAllowingStateLoss()
+                    .remove(f)
+                    .commitNow()
             }
-
-            supportFragmentManager.beginTransaction()
-                .show(fragment)
-                .commitAllowingStateLoss()
-
-            val fragmentView = fragment.requireView()
-            if (fragmentView.parent != null) {
-                (fragmentView.parent as ViewGroup).removeView(fragmentView)
-            }
-
-            val wrapper = layoutInflater.inflate(R.layout.item_calculator_panel, container, false) as ViewGroup
-            // Add fragment view to the panel content area
-            val panelContent = wrapper.findViewById<ViewGroup>(R.id.panel_content)
-            panelContent.addView(fragmentView, 0)
-
-            val divider = wrapper.findViewById<View>(R.id.divider)
-            divider.visibility = if (i == 0 && fragmentsToShow.size > 1) View.VISIBLE else View.GONE
-
-            container.addView(wrapper)
         }
 
-        // Hide unused fragments
-        for (fragment in fragments) {
-            if (fragment !in fragmentsToShow && fragment.isAdded) {
+        // Place fragments in panels
+        val txn1 = supportFragmentManager.beginTransaction()
+        txn1.replace(R.id.panel_left, showList[0], "panel_left")
+        txn1.commitNow()
+
+        binding.panelLeft.visibility = View.VISIBLE
+
+        if (showList.size >= 2) {
+            val txn2 = supportFragmentManager.beginTransaction()
+            txn2.replace(R.id.panel_right, showList[1], "panel_right")
+            txn2.commitNow()
+            binding.panelRight.visibility = View.VISIBLE
+            binding.panelDivider.visibility = View.VISIBLE
+        } else {
+            val rightFrag = supportFragmentManager.findFragmentById(R.id.panel_right)
+            if (rightFrag != null) {
                 supportFragmentManager.beginTransaction()
-                    .hide(fragment)
-                    .commitAllowingStateLoss()
+                    .remove(rightFrag)
+                    .commitNow()
             }
+            binding.panelRight.visibility = View.GONE
+            binding.panelDivider.visibility = View.GONE
         }
 
-        visibleFragments.forEach { it.refreshDisplay() }
+        // Refresh displays
+        for (f in showList) {
+            f.refreshDisplay()
+        }
     }
 
     override fun onBackPressed() {
@@ -184,15 +188,6 @@ class MainActivity : AppCompatActivity() {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        for (fragment in fragments) {
-            if (fragment.isAdded) {
-                supportFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
-            }
         }
     }
 }
