@@ -17,35 +17,90 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/md_theme_surface"
-            android:elevation="4dp"
+            android:elevation="0dp"
             app:title="CalcDuo"
-            app:titleTextColor="@color/md_theme_onSurface" />
+            app:titleTextColor="@color/md_theme_onSurface"
+            app:titleCentered="false"
+            app:logo="@mipmap/ic_launcher"
+            app:logoScaleType="centerCrop"
+            app:navigationIcon="@drawable/ic_menu"
+            app:navigationContentDescription="@string/nav_open"
+            style="@style/Widget.Material3.Toolbar"
+            app:logoDescription="@string/app_name" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
-            <FrameLayout
-                android:id="@+id/panel_left"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <View
-                android:id="@+id/panel_divider"
-                android:layout_width="2dp"
-                android:layout_height="match_parent"
-                android:background="@color/divider_color"
-                android:visibility="gone" />
-
-            <FrameLayout
-                android:id="@+id/panel_right"
+            <!-- Left Panel -->
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_panel_left_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="4dp"
+                    android:text="Calculator A"
+                    android:textColor="@color/calculator_label"
+                    android:textSize="11sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:letterSpacing="0.1"
+                    android:visibility="gone" />
+
+                <FrameLayout
+                    android:id="@+id/panel_left"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <!-- Divider - subtle Material 3 -->
+            <View
+                android:id="@+id/panel_divider"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/divider_color"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
                 android:visibility="gone" />
+
+            <!-- Right Panel -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_panel_right_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="4dp"
+                    android:text="Calculator B"
+                    android:textColor="@color/calculator_label"
+                    android:textSize="11sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:letterSpacing="0.1"
+                    android:visibility="gone" />
+
+                <FrameLayout
+                    android:id="@+id/panel_right"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:visibility="gone" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -62,12 +117,14 @@
 
     </LinearLayout>
 
+    <!-- Sidebar Drawer -->
     <LinearLayout
-        android:layout_width="320dp"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/md_theme_surface"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:elevation="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -75,7 +132,7 @@
             android:background="@color/md_theme_primaryContainer"
             android:gravity="bottom"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="24dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -91,19 +148,22 @@
                 android:layout_marginTop="4dp"
                 android:text="Multi-Calculator Workspace"
                 android:textColor="@color/md_theme_onPrimaryContainer"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:alpha="0.8" />
 
         </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="20dp"
             android:paddingBottom="8dp"
             android:text="Calculator Tabs"
             android:textColor="@color/md_theme_onSurface"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_sidebar_tabs"
@@ -111,7 +171,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:clipToPadding="false"
-            android:padding="8dp" />
+            android:paddingHorizontal="12dp"
+            android:paddingTop="4dp" />
 
         <TextView
             android:id="@+id/tv_empty_sidebar"

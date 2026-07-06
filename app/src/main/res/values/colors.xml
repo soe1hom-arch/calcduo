@@ -1,41 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Dark theme (Material 3 Dark) - High contrast -->
-    <color name="md_theme_primary">#FF6750A4</color>
-    <color name="md_theme_onPrimary">#FFFFFFFF</color>
+    <!-- Material 3 Dark - Purple palette -->
+    <color name="md_theme_primary">#FFD0BCFF</color>
+    <color name="md_theme_onPrimary">#FF381E72</color>
     <color name="md_theme_primaryContainer">#FF4F378B</color>
-    <color name="md_theme_onPrimaryContainer">#FFFFFFFF</color>
+    <color name="md_theme_onPrimaryContainer">#FFEADDFF</color>
     <color name="md_theme_secondary">#FFCCC2DC</color>
-    <color name="md_theme_onSecondary">#FF000000</color>
+    <color name="md_theme_onSecondary">#FF332D41</color>
     <color name="md_theme_secondaryContainer">#FF4A4458</color>
-    <color name="md_theme_onSecondaryContainer">#FFFFFFFF</color>
+    <color name="md_theme_onSecondaryContainer">#FFE8DEF8</color>
     <color name="md_theme_tertiary">#FFEFB8C8</color>
-    <color name="md_theme_onTertiary">#FF000000</color>
+    <color name="md_theme_onTertiary">#FF492532</color>
     <color name="md_theme_error">#FFFF5252</color>
     <color name="md_theme_onError">#FFFFFFFF</color>
     <color name="md_theme_background">#FF0D0D0D</color>
-    <color name="md_theme_onBackground">#FFFFFFFF</color>
-    <color name="md_theme_surface">#FF1A1A1A</color>
-    <color name="md_theme_onSurface">#FFFFFFFF</color>
-    <color name="md_theme_surfaceVariant">#FF2C2C2C</color>
-    <color name="md_theme_onSurfaceVariant">#FFFFFFFF</color>
-    <color name="md_theme_outline">#FF444444</color>
-    <color name="md_theme_outlineVariant">#FF333333</color>
+    <color name="md_theme_onBackground">#FFE6E1E5</color>
+    <color name="md_theme_surface">#FF141218</color>
+    <color name="md_theme_onSurface">#FFE6E1E5</color>
+    <color name="md_theme_surfaceVariant">#FF2B2930</color>
+    <color name="md_theme_onSurfaceVariant">#FFCAC4D0</color>
+    <color name="md_theme_outline">#FF938F99</color>
+    <color name="md_theme_outlineVariant">#FF44474F</color>
 
-    <!-- Button colors - High contrast white on dark -->
-    <color name="btn_number">#FF2A2A2A</color>
-    <color name="btn_number_pressed">#FF3D3D3D</color>
-    <color name="btn_operator">#FF1A3A5C</color>
-    <color name="btn_operator_pressed">#FF2A5A7C</color>
-    <color name="btn_equals">#FF1565C0</color>
+    <!-- Material 3 Button colors -->
+    <color name="btn_number">#FF4A4458</color>
+    <color name="btn_number_pressed">#FF5C5670</color>
+    <color name="btn_operator">#FF6750A4</color>
+    <color name="btn_operator_pressed">#FF7C67B8</color>
+    <color name="btn_equals">#FF7A4FE8</color>
+    <color name="btn_equals_pressed">#FF9370FF</color>
     <color name="btn_equals_text">#FFFFFFFF</color>
-    <color name="btn_clear">#FFC62828</color>
-    <color name="btn_clear_pressed">#FFD32F2F</color>
-    <color name="btn_function">#FF1E1E1E</color>
-    <color name="btn_function_pressed">#FF303030</color>
-    <color name="btn_text_primary">#FFFFFFFF</color>
-    <color name="btn_text_secondary">#FFB0B0B0</color>
-    <color name="btn_text_operator">#FFFFFFFF</color>
-    <color name="divider_color">#FF444444</color>
-    <color name="display_background">#FF0A0A0A</color>
+    <color name="btn_clear">#FFFF5252</color>
+    <color name="btn_clear_pressed">#FFFF6E6E</color>
+    <color name="btn_function">#FF2B2930</color>
+    <color name="btn_function_pressed">#FF3D3A43</color>
+    <color name="btn_text_primary">#FFE6E1E5</color>
+    <color name="btn_text_secondary">#FFCAC4D0</color>
+    <color name="btn_text_operator">#FFEADDFF</color>
+    <color name="divider_color">#FF44474F</color>
+    <color name="display_background">#FF0D0D0D</color>
+    <color name="calculator_label">#FF938F99</color>
 </resources>

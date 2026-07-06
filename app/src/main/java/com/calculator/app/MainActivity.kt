@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener {
             binding.drawerLayout.openDrawer(GravityCompat.START)
         }
-        binding.toolbar.navigationIcon = resources.getDrawable(R.drawable.ic_menu, theme)
     }
 
     private fun setupDrawer() {
@@ -88,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         tabs.add(tab)
         activeIndex = tabs.size - 1
 
-        val fragment = CalculatorFragment.newInstance(tabId)
+        val fragment = CalculatorFragment.newInstance(tabId, tab.title)
         calculatorFragments.add(fragment)
 
         updatePanels()
@@ -124,6 +123,8 @@ class MainActivity : AppCompatActivity() {
             binding.panelLeft.visibility = View.GONE
             binding.panelRight.visibility = View.GONE
             binding.panelDivider.visibility = View.GONE
+            binding.tvPanelLeftLabel.visibility = View.GONE
+            binding.tvPanelRightLabel.visibility = View.GONE
             binding.tvEmptyState.visibility = View.VISIBLE
             return
         }
@@ -133,14 +134,12 @@ class MainActivity : AppCompatActivity() {
         val allFragments = calculatorFragments.toList()
         val idx = activeIndex.coerceIn(0, allFragments.size - 1)
 
-        // Choose which 2 fragments to show
         val showList = when {
             allFragments.size == 1 -> listOf(allFragments[0])
             idx == allFragments.size - 1 -> listOf(allFragments[idx - 1], allFragments[idx])
             else -> listOf(allFragments[idx], allFragments[idx + 1])
         }
 
-        // Mark active tabs by finding their index in the fragments list
         val visibleFragmentIds = showList.map { it.hashCode() }.toSet()
         tabs.replaceAll { tab ->
             val ti = tabs.indexOf(tab)
@@ -148,7 +147,6 @@ class MainActivity : AppCompatActivity() {
             tab.copy(isActive = frag != null && frag.hashCode() in visibleFragmentIds)
         }
 
-        // Remove any fragment not in the show list from panels
         for (f in allFragments) {
             if (f !in showList && f.isAdded) {
                 supportFragmentManager.beginTransaction()
@@ -157,19 +155,21 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Place left panel fragment
         val txnLeft = supportFragmentManager.beginTransaction()
         txnLeft.replace(R.id.panel_left, showList[0], "panel_left")
         txnLeft.commit()
         binding.panelLeft.visibility = View.VISIBLE
+        binding.tvPanelLeftLabel.visibility = View.VISIBLE
+        binding.tvPanelLeftLabel.text = if (showList.size >= 2) "Calculator A" else "Calculator"
 
-        // Place right panel fragment
         if (showList.size >= 2) {
             val txnRight = supportFragmentManager.beginTransaction()
             txnRight.replace(R.id.panel_right, showList[1], "panel_right")
             txnRight.commit()
             binding.panelRight.visibility = View.VISIBLE
             binding.panelDivider.visibility = View.VISIBLE
+            binding.tvPanelRightLabel.visibility = View.VISIBLE
+            binding.tvPanelRightLabel.text = "Calculator B"
         } else {
             val rightFrag = supportFragmentManager.findFragmentById(R.id.panel_right)
             if (rightFrag != null) {
@@ -179,12 +179,11 @@ class MainActivity : AppCompatActivity() {
             }
             binding.panelRight.visibility = View.GONE
             binding.panelDivider.visibility = View.GONE
+            binding.tvPanelRightLabel.visibility = View.GONE
         }
 
-        // Execute pending transactions
         supportFragmentManager.executePendingTransactions()
 
-        // Refresh displays
         for (f in showList) {
             f.refreshDisplay()
         }

@@ -2,18 +2,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_theme_background"
+    android:background="@color/md_theme_surface"
     android:orientation="vertical">
 
-    <!-- Display Area -->
+    <!-- Calculator Label -->
+    <TextView
+        android:id="@+id/tv_calculator_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Calculator"
+        android:textColor="@color/calculator_label"
+        android:textSize="11sp"
+        android:textStyle="normal"
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="0.1" />
+
+    <!-- Display Area - reduced height -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="0.65"
         android:background="@color/display_background"
         android:gravity="bottom|end"
         android:orientation="vertical"
-        android:padding="14dp">
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="12dp"
+        android:paddingTop="4dp">
 
         <TextView
             android:id="@+id/tv_expression"
@@ -23,7 +39,9 @@
             android:gravity="end"
             android:lines="1"
             android:textColor="@color/btn_text_secondary"
-            android:textSize="13sp" />
+            android:textSize="14sp"
+            android:fontFamily="sans-serif"
+            android:alpha="0.7" />
 
         <TextView
             android:id="@+id/tv_result"
@@ -34,19 +52,24 @@
             android:maxLines="2"
             android:text="0"
             android:textColor="@color/btn_text_primary"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+            android:textSize="52sp"
+            android:textStyle="normal"
+            android:fontFamily="sans-serif-light"
+            android:letterSpacing="-0.02"
+            android:includeFontPadding="false" />
 
     </LinearLayout>
 
-    <!-- Button Grid - fills remaining space with equal row weights -->
+    <!-- Button Grid -->
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="1.35"
         android:columnCount="4"
         android:rowCount="7"
-        android:padding="2dp">
+        android:paddingHorizontal="6dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="8dp">
 
         <!-- Row 1: Advanced functions -->
         <Button

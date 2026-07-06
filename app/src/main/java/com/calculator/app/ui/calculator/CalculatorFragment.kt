@@ -19,16 +19,22 @@ class CalculatorFragment : Fragment() {
     private var tabId: Int = 0
 
     companion object {
-        fun newInstance(tabId: Int): CalculatorFragment {
+        private const val ARG_TAB_ID = "tab_id"
+        private const val ARG_LABEL = "label"
+
+        fun newInstance(tabId: Int, label: String = "Calculator"): CalculatorFragment {
             val fragment = CalculatorFragment()
-            fragment.arguments = Bundle().apply { putInt("tab_id", tabId) }
+            fragment.arguments = Bundle().apply {
+                putInt(ARG_TAB_ID, tabId)
+                putString(ARG_LABEL, label)
+            }
             return fragment
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        tabId = arguments?.getInt("tab_id", 0) ?: 0
+        tabId = arguments?.getInt(ARG_TAB_ID, 0) ?: 0
         viewModel = ViewModelProvider(this)[CalculatorViewModel::class.java]
     }
 
@@ -41,12 +47,13 @@ class CalculatorFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val label = arguments?.getString(ARG_LABEL, "Calculator") ?: "Calculator"
+        binding.tvCalculatorLabel.text = label
         setupClickListeners()
         updateDisplay()
     }
 
     fun refreshDisplay() {
-        // Safe guard: only update if fragment is attached and view is created
         if (_binding == null || !isAdded) return
         updateDisplay()
     }
@@ -56,18 +63,17 @@ class CalculatorFragment : Fragment() {
 
         val state = viewModel.state
         val ctx = context ?: return
-        val theme = ctx.theme
 
         binding.tvExpression.text = state.expression.ifEmpty { "" }
         binding.tvResult.text = state.result
 
         if (state.isError) {
             binding.tvResult.setTextColor(
-                resources.getColor(R.color.md_theme_error, theme)
+                resources.getColor(R.color.md_theme_error, ctx.theme)
             )
         } else {
             binding.tvResult.setTextColor(
-                resources.getColor(R.color.btn_text_primary, theme)
+                resources.getColor(R.color.btn_text_primary, ctx.theme)
             )
         }
     }
