@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Base Calculator Button - AOSP Calculator style using MaterialButton -->
+    <!-- Base Calculator Button - compact AOSP style -->
     <style name="CalcButtonBase" parent="Widget.Material3.Button">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">0dp</item>
@@ -17,38 +17,34 @@
         <item name="strokeWidth">0dp</item>
         <item name="elevation">0dp</item>
         <item name="rippleColor">?attr/colorOnSurface</item>
-        <item name="android:layout_marginHorizontal">4dp</item>
+        <item name="android:layout_marginHorizontal">3dp</item>
+        <item name="android:layout_marginVertical">3dp</item>
     </style>
 
-    <!-- Number buttons: colorSurfaceVariant background -->
     <style name="CalcButtonNumber" parent="CalcButtonBase">
         <item name="backgroundTint">?attr/colorSurfaceVariant</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
-    <!-- Operator buttons: colorSecondaryContainer background -->
     <style name="CalcButtonOperator" parent="CalcButtonBase">
         <item name="backgroundTint">?attr/colorSecondaryContainer</item>
         <item name="android:textColor">?attr/colorOnSecondaryContainer</item>
     </style>
 
-    <!-- Function buttons: transparent background on surface -->
     <style name="CalcButtonFunction" parent="CalcButtonBase">
         <item name="backgroundTint">@android:color/transparent</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">17sp</item>
     </style>
 
-    <!-- Clear button: surfaceVariant with variant text color -->
     <style name="CalcButtonClear" parent="CalcButtonBase">
         <item name="backgroundTint">?attr/colorSurfaceVariant</item>
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
     </style>
 
-    <!-- Equals button: colorTertiary -->
     <style name="CalcButtonEquals" parent="CalcButtonBase">
         <item name="backgroundTint">?attr/colorTertiary</item>
         <item name="android:textColor">?attr/colorOnTertiary</item>
-        <item name="android:textSize">26sp</item>
+        <item name="android:textSize">24sp</item>
     </style>
 </resources>
