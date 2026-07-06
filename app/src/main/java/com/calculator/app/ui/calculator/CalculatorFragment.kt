@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.calculator.app.R
 import com.calculator.app.data.CalculatorAction
 import com.calculator.app.databinding.FragmentCalculatorBinding
+import com.google.android.material.color.MaterialColors
 
 class CalculatorFragment : Fragment() {
 
@@ -67,15 +68,12 @@ class CalculatorFragment : Fragment() {
         binding.tvExpression.text = state.expression.ifEmpty { "" }
         binding.tvResult.text = state.result
 
-        if (state.isError) {
-            binding.tvResult.setTextColor(
-                resources.getColor(R.color.md_theme_error, ctx.theme)
-            )
+        val color = if (state.isError) {
+            com.google.android.material.R.attr.colorError
         } else {
-            binding.tvResult.setTextColor(
-                resources.getColor(R.color.btn_text_primary, ctx.theme)
-            )
+            com.google.android.material.R.attr.colorOnSurface
         }
+        binding.tvResult.setTextColor(MaterialColors.getColor(binding.tvResult, color))
     }
 
     private fun triggerHaptic() {
