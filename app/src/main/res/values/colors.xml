@@ -1,43 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Material 3 Dark - Purple palette -->
-    <color name="md_theme_primary">#FFD0BCFF</color>
-    <color name="md_theme_onPrimary">#FF381E72</color>
-    <color name="md_theme_primaryContainer">#FF4F378B</color>
-    <color name="md_theme_onPrimaryContainer">#FFEADDFF</color>
-    <color name="md_theme_secondary">#FFCCC2DC</color>
-    <color name="md_theme_onSecondary">#FF332D41</color>
-    <color name="md_theme_secondaryContainer">#FF4A4458</color>
-    <color name="md_theme_onSecondaryContainer">#FFE8DEF8</color>
-    <color name="md_theme_tertiary">#FFEFB8C8</color>
-    <color name="md_theme_onTertiary">#FF492532</color>
-    <color name="md_theme_error">#FFFF5252</color>
-    <color name="md_theme_onError">#FFFFFFFF</color>
-    <color name="md_theme_background">#FF0D0D0D</color>
-    <color name="md_theme_onBackground">#FFE6E1E5</color>
-    <color name="md_theme_surface">#FF141218</color>
-    <color name="md_theme_onSurface">#FFE6E1E5</color>
-    <color name="md_theme_surfaceVariant">#FF2B2930</color>
-    <color name="md_theme_onSurfaceVariant">#FFCAC4D0</color>
-    <color name="md_theme_outline">#FF938F99</color>
+    <!-- Material 3 Dark - Google Calculator style -->
+    <color name="md_theme_primary">#FF8AB4F8</color>
+    <color name="md_theme_onPrimary">#FF003258</color>
+    <color name="md_theme_primaryContainer">#FF00477D</color>
+    <color name="md_theme_onPrimaryContainer">#FFD1E4FF</color>
+    <color name="md_theme_secondary">#FF8AB4F8</color>
+    <color name="md_theme_onSecondary">#FF003258</color>
+    <color name="md_theme_secondaryContainer">#FF00477D</color>
+    <color name="md_theme_onSecondaryContainer">#FFD1E4FF</color>
+    <color name="md_theme_tertiary">#FFC4C4C4</color>
+    <color name="md_theme_onTertiary">#FF313131</color>
+    <color name="md_theme_error">#FFF28B82</color>
+    <color name="md_theme_onError">#FF601410</color>
+    <color name="md_theme_background">#FF000000</color>
+    <color name="md_theme_onBackground">#FFE3E3E3</color>
+    <color name="md_theme_surface">#FF000000</color>
+    <color name="md_theme_onSurface">#FFE3E3E3</color>
+    <color name="md_theme_surfaceVariant">#FF1F1F1F</color>
+    <color name="md_theme_onSurfaceVariant">#FFC4C4C4</color>
+    <color name="md_theme_outline">#FF44474F</color>
     <color name="md_theme_outlineVariant">#FF44474F</color>
 
-    <!-- Material 3 Button colors -->
-    <color name="btn_number">#FF4A4458</color>
-    <color name="btn_number_pressed">#FF5C5670</color>
-    <color name="btn_operator">#FF6750A4</color>
-    <color name="btn_operator_pressed">#FF7C67B8</color>
-    <color name="btn_equals">#FF7A4FE8</color>
-    <color name="btn_equals_pressed">#FF9370FF</color>
+    <!-- Google Calculator Button colors -->
+    <color name="btn_number">#FF505050</color>
+    <color name="btn_number_pressed">#FF616161</color>
+    <color name="btn_operator">#FFFF8C00</color>
+    <color name="btn_operator_pressed">#FFFFA726</color>
+    <color name="btn_equals">#FF1A73E8</color>
+    <color name="btn_equals_pressed">#FF4285F4</color>
     <color name="btn_equals_text">#FFFFFFFF</color>
-    <color name="btn_clear">#FFFF5252</color>
-    <color name="btn_clear_pressed">#FFFF6E6E</color>
-    <color name="btn_function">#FF2B2930</color>
-    <color name="btn_function_pressed">#FF3D3A43</color>
-    <color name="btn_text_primary">#FFE6E1E5</color>
-    <color name="btn_text_secondary">#FFCAC4D0</color>
-    <color name="btn_text_operator">#FFEADDFF</color>
+    <color name="btn_clear">#FFA50E0E</color>
+    <color name="btn_clear_pressed">#FFC62828</color>
+    <color name="btn_clear_text">#FFF28B82</color>
+    <color name="btn_function">#FF3C3C3C</color>
+    <color name="btn_function_pressed">#FF505050</color>
+    <color name="btn_text_primary">#FFFFFFFF</color>
+    <color name="btn_text_secondary">#FF9AA0A6</color>
+    <color name="btn_text_operator">#FFFFFFFF</color>
     <color name="divider_color">#FF44474F</color>
-    <color name="display_background">#FF0D0D0D</color>
-    <color name="calculator_label">#FF938F99</color>
+    <color name="display_background">#FF000000</color>
+    <color name="calculator_label">#FF9AA0A6</color>
 </resources>

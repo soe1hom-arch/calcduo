@@ -123,8 +123,6 @@ class MainActivity : AppCompatActivity() {
             binding.panelLeft.visibility = View.GONE
             binding.panelRight.visibility = View.GONE
             binding.panelDivider.visibility = View.GONE
-            binding.tvPanelLeftLabel.visibility = View.GONE
-            binding.tvPanelRightLabel.visibility = View.GONE
             binding.tvEmptyState.visibility = View.VISIBLE
             return
         }
@@ -159,8 +157,6 @@ class MainActivity : AppCompatActivity() {
         txnLeft.replace(R.id.panel_left, showList[0], "panel_left")
         txnLeft.commit()
         binding.panelLeft.visibility = View.VISIBLE
-        binding.tvPanelLeftLabel.visibility = View.VISIBLE
-        binding.tvPanelLeftLabel.text = if (showList.size >= 2) "Calculator A" else "Calculator"
 
         if (showList.size >= 2) {
             val txnRight = supportFragmentManager.beginTransaction()
@@ -168,8 +164,6 @@ class MainActivity : AppCompatActivity() {
             txnRight.commit()
             binding.panelRight.visibility = View.VISIBLE
             binding.panelDivider.visibility = View.VISIBLE
-            binding.tvPanelRightLabel.visibility = View.VISIBLE
-            binding.tvPanelRightLabel.text = "Calculator B"
         } else {
             val rightFrag = supportFragmentManager.findFragmentById(R.id.panel_right)
             if (rightFrag != null) {
@@ -179,7 +173,6 @@ class MainActivity : AppCompatActivity() {
             }
             binding.panelRight.visibility = View.GONE
             binding.panelDivider.visibility = View.GONE
-            binding.tvPanelRightLabel.visibility = View.GONE
         }
 
         supportFragmentManager.executePendingTransactions()

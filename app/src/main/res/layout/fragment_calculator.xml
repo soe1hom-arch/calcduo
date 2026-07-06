@@ -2,34 +2,35 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_theme_surface"
+    android:background="@color/display_background"
     android:orientation="vertical">
 
-    <!-- Calculator Label -->
-    <TextView
-        android:id="@+id/tv_calculator_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Calculator"
-        android:textColor="@color/calculator_label"
-        android:textSize="11sp"
-        android:textStyle="normal"
-        android:fontFamily="sans-serif-medium"
-        android:letterSpacing="0.1" />
-
-    <!-- Display Area - reduced height -->
+    <!-- Display Area - compact Google style -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.65"
+        android:layout_weight="0.60"
         android:background="@color/display_background"
         android:gravity="bottom|end"
         android:orientation="vertical"
-        android:paddingHorizontal="16dp"
-        android:paddingBottom="12dp"
-        android:paddingTop="4dp">
+        android:paddingHorizontal="20dp"
+        android:paddingBottom="16dp"
+        android:paddingTop="8dp">
+
+        <TextView
+            android:id="@+id/tv_calculator_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:text="Calculator"
+            android:textColor="@color/calculator_label"
+            android:textSize="11sp"
+            android:letterSpacing="0.05" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/tv_expression"
@@ -38,10 +39,9 @@
             android:ellipsize="start"
             android:gravity="end"
             android:lines="1"
-            android:textColor="@color/btn_text_secondary"
-            android:textSize="14sp"
             android:fontFamily="sans-serif"
-            android:alpha="0.7" />
+            android:textColor="@color/btn_text_secondary"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/tv_result"
@@ -52,26 +52,43 @@
             android:maxLines="2"
             android:text="0"
             android:textColor="@color/btn_text_primary"
-            android:textSize="52sp"
-            android:textStyle="normal"
-            android:fontFamily="sans-serif-light"
+            android:textSize="44sp"
+            android:fontFamily="sans-serif"
             android:letterSpacing="-0.02"
             android:includeFontPadding="false" />
 
     </LinearLayout>
 
-    <!-- Button Grid -->
+    <!-- Button Grid - Google Calculator layout (scientific mode) -->
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.35"
+        android:layout_weight="1.40"
         android:columnCount="4"
         android:rowCount="7"
-        android:paddingHorizontal="6dp"
+        android:paddingHorizontal="8dp"
         android:paddingTop="4dp"
         android:paddingBottom="8dp">
 
-        <!-- Row 1: Advanced functions -->
+        <!-- Row 1: (   )   ⌫   AC -->
+        <Button
+            android:id="@+id/btn_parenthesis_open"
+            style="@style/CalcButtonFunction"
+            android:text="(" />
+        <Button
+            android:id="@+id/btn_parenthesis_close"
+            style="@style/CalcButtonFunction"
+            android:text=")" />
+        <Button
+            android:id="@+id/btn_backspace"
+            style="@style/CalcButtonFunction"
+            android:text="⌫" />
+        <Button
+            android:id="@+id/btn_clear"
+            style="@style/CalcButtonClear"
+            android:text="AC" />
+
+        <!-- Row 2: π   e   √   x² -->
         <Button
             android:id="@+id/btn_pi"
             style="@style/CalcButtonFunction"
@@ -85,37 +102,19 @@
             style="@style/CalcButtonFunction"
             android:text="√" />
         <Button
-            android:id="@+id/btn_power"
-            style="@style/CalcButtonFunction"
-            android:text="xⁿ" />
-
-        <!-- Row 2: More functions -->
-        <Button
             android:id="@+id/btn_square"
             style="@style/CalcButtonFunction"
             android:text="x²" />
+
+        <!-- Row 3: 1/x   xⁿ   %   ÷ -->
         <Button
             android:id="@+id/btn_reciprocal"
             style="@style/CalcButtonFunction"
             android:text="1/x" />
         <Button
-            android:id="@+id/btn_parenthesis_open"
+            android:id="@+id/btn_power"
             style="@style/CalcButtonFunction"
-            android:text="(" />
-        <Button
-            android:id="@+id/btn_parenthesis_close"
-            style="@style/CalcButtonFunction"
-            android:text=")" />
-
-        <!-- Row 3: Clear + operators -->
-        <Button
-            android:id="@+id/btn_clear"
-            style="@style/CalcButtonClear"
-            android:text="AC" />
-        <Button
-            android:id="@+id/btn_toggle_sign"
-            style="@style/CalcButtonFunction"
-            android:text="±" />
+            android:text="xⁿ" />
         <Button
             android:id="@+id/btn_percent"
             style="@style/CalcButtonFunction"
@@ -125,7 +124,7 @@
             style="@style/CalcButtonOperator"
             android:text="÷" />
 
-        <!-- Row 4 -->
+        <!-- Row 4: 7   8   9   × -->
         <Button
             android:id="@+id/btn7"
             style="@style/CalcButtonNumber"
@@ -143,7 +142,7 @@
             style="@style/CalcButtonOperator"
             android:text="×" />
 
-        <!-- Row 5 -->
+        <!-- Row 5: 4   5   6   − -->
         <Button
             android:id="@+id/btn4"
             style="@style/CalcButtonNumber"
@@ -161,7 +160,7 @@
             style="@style/CalcButtonOperator"
             android:text="−" />
 
-        <!-- Row 6 -->
+        <!-- Row 6: 1   2   3   + -->
         <Button
             android:id="@+id/btn1"
             style="@style/CalcButtonNumber"
@@ -179,11 +178,11 @@
             style="@style/CalcButtonOperator"
             android:text="+" />
 
-        <!-- Row 7 -->
+        <!-- Row 7: ±   0   .   = -->
         <Button
-            android:id="@+id/btn_backspace"
+            android:id="@+id/btn_toggle_sign"
             style="@style/CalcButtonFunction"
-            android:text="⌫" />
+            android:text="±" />
         <Button
             android:id="@+id/btn0"
             style="@style/CalcButtonNumber"

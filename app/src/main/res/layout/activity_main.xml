@@ -21,12 +21,9 @@
             app:title="CalcDuo"
             app:titleTextColor="@color/md_theme_onSurface"
             app:titleCentered="false"
-            app:logo="@mipmap/ic_launcher"
-            app:logoScaleType="centerCrop"
             app:navigationIcon="@drawable/ic_menu"
             app:navigationContentDescription="@string/nav_open"
-            style="@style/Widget.Material3.Toolbar"
-            app:logoDescription="@string/app_name" />
+            style="@style/Widget.Material3.Toolbar" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -42,35 +39,19 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tv_panel_left_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="4dp"
-                    android:text="Calculator A"
-                    android:textColor="@color/calculator_label"
-                    android:textSize="11sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:letterSpacing="0.1"
-                    android:visibility="gone" />
-
                 <FrameLayout
                     android:id="@+id/panel_left"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:layout_height="match_parent" />
 
             </LinearLayout>
 
-            <!-- Divider - subtle Material 3 -->
+            <!-- Subtle divider -->
             <View
                 android:id="@+id/panel_divider"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:background="@color/divider_color"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"
                 android:visibility="gone" />
 
             <!-- Right Panel -->
@@ -80,24 +61,10 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tv_panel_right_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="4dp"
-                    android:text="Calculator B"
-                    android:textColor="@color/calculator_label"
-                    android:textSize="11sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:letterSpacing="0.1"
-                    android:visibility="gone" />
-
                 <FrameLayout
                     android:id="@+id/panel_right"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="match_parent"
                     android:visibility="gone" />
 
             </LinearLayout>
@@ -129,7 +96,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="140dp"
-            android:background="@color/md_theme_primaryContainer"
+            android:background="@color/md_theme_surfaceVariant"
             android:gravity="bottom"
             android:orientation="vertical"
             android:padding="24dp">
@@ -138,7 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="CalcDuo"
-                android:textColor="@color/md_theme_onPrimaryContainer"
+                android:textColor="@color/md_theme_onSurface"
                 android:textSize="28sp"
                 android:textStyle="bold" />
 
@@ -146,10 +113,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Multi-Calculator Workspace"
-                android:textColor="@color/md_theme_onPrimaryContainer"
-                android:textSize="14sp"
-                android:alpha="0.8" />
+                android:text="Dual Calculator"
+                android:textColor="@color/btn_text_secondary"
+                android:textSize="14sp" />
 
         </LinearLayout>
 
@@ -159,11 +125,10 @@
             android:paddingHorizontal="20dp"
             android:paddingTop="20dp"
             android:paddingBottom="8dp"
-            android:text="Calculator Tabs"
+            android:text="Tabs"
             android:textColor="@color/md_theme_onSurface"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-medium" />
+            android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_sidebar_tabs"
@@ -181,7 +146,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:padding="32dp"
-            android:text="No calculators yet. Tap + to add one."
+            android:text="No calculators yet"
             android:textColor="@color/btn_text_secondary"
             android:textSize="14sp"
             android:visibility="gone" />
@@ -191,12 +156,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="Add Calculator"
-            android:textColor="@color/md_theme_onPrimaryContainer"
+            android:text="Add"
+            android:textColor="@color/btn_text_primary"
             android:contentDescription="Add new calculator tab"
             app:icon="@android:drawable/ic_input_add"
-            app:iconTint="@color/md_theme_onPrimaryContainer"
-            app:backgroundTint="@color/md_theme_primaryContainer" />
+            app:iconTint="@color/btn_text_primary"
+            app:backgroundTint="@color/md_theme_surfaceVariant" />
 
     </LinearLayout>
 
