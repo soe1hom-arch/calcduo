@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material 3 Dark - Dynamic color palette -->
+    <color name="md_theme_background">#FF000000</color>
+    <color name="md_theme_onBackground">#FFE3E3E3</color>
+    <color name="md_theme_surface">#FF000000</color>
+    <color name="md_theme_onSurface">#FFE3E3E3</color>
+    <color name="md_theme_surfaceVariant">#FF2B2930</color>
+    <color name="md_theme_onSurfaceVariant">#FFCAC4D0</color>
+    <color name="md_theme_primaryContainer">#FF4F378B</color>
+    <color name="md_theme_onPrimaryContainer">#FFEADDFF</color>
+    <color name="md_theme_secondaryContainer">#FF4A4458</color>
+    <color name="md_theme_onSecondaryContainer">#FFE8DEF8</color>
+    <color name="md_theme_tertiary">#FF4A4458</color>
+    <color name="md_theme_onTertiary">#FFE8DEF8</color>
+    <color name="md_theme_outlineVariant">#FF44474F</color>
+
+    <color name="display_background">#FF000000</color>
+    <color name="display_formula_text">#FF9AA0A6</color>
+    <color name="display_result_text">#FFE3E3E3</color>
+    <color name="divider_color">#FF44474F</color>
+</resources>

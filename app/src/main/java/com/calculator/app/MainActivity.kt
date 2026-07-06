@@ -2,6 +2,9 @@ package com.calculator.app
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -28,9 +31,66 @@ class MainActivity : AppCompatActivity() {
         setupToolbar()
         setupDrawer()
         setupSidebar()
+        setupBackPressed()
 
-        addCalculator()
-        addCalculator()
+        if (savedInstanceState != null) {
+            restoreState(savedInstanceState)
+        } else {
+            addCalculator()
+            addCalculator()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("tab_counter", tabCounter)
+        outState.putInt("active_index", activeIndex)
+        val tabIds = tabs.map { it.id }.toIntArray()
+        val tabTitles = tabs.map { it.title }.toTypedArray()
+        outState.putIntArray("tab_ids", tabIds)
+        outState.putStringArray("tab_titles", tabTitles)
+    }
+
+    private fun restoreState(savedInstanceState: Bundle) {
+        tabCounter = savedInstanceState.getInt("tab_counter", 0)
+        activeIndex = savedInstanceState.getInt("active_index", 0)
+        val tabIds = savedInstanceState.getIntArray("tab_ids") ?: intArrayOf()
+        val tabTitles = savedInstanceState.getStringArray("tab_titles") ?: arrayOf()
+
+        val existingFragments =
+            supportFragmentManager.fragments.filterIsInstance<CalculatorFragment>()
+
+        for (i in tabIds.indices) {
+            val tab = CalculatorTab(
+                id = tabIds[i],
+                title = tabTitles.getOrElse(i) { "Calc ${i + 1}" }
+            )
+            tabs.add(tab)
+            val fragment = existingFragments.getOrNull(i)
+                ?: CalculatorFragment.newInstance(tab.id, tab.title)
+            calculatorFragments.add(fragment)
+        }
+
+        if (tabs.isEmpty()) {
+            addCalculator()
+            addCalculator()
+        }
+        updatePanels()
+        refreshSidebar()
+    }
+
+    private fun setupBackPressed() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                } else {
+                    isEnabled = false
+                    onBackPressedDispatcher.onBackPressed()
+                    isEnabled = true
+                }
+            }
+        })
     }
 
     private fun setupToolbar() {
@@ -39,6 +99,47 @@ class MainActivity : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener {
             binding.drawerLayout.openDrawer(GravityCompat.START)
         }
+        binding.toolbar.inflateMenu(R.menu.main_menu)
+        binding.toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_clear_all -> {
+                    clearAll()
+                    true
+                }
+                R.id.action_about -> {
+                    showAboutDialog()
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
+    private fun clearAll() {
+        if (tabs.isEmpty()) return
+        for (fragment in calculatorFragments) {
+            if (fragment.isAdded) {
+                supportFragmentManager.beginTransaction()
+                    .remove(fragment)
+                    .commitNow()
+            }
+        }
+        tabs.clear()
+        calculatorFragments.clear()
+        tabCounter = 0
+        activeIndex = 0
+        addCalculator()
+        addCalculator()
+        refreshSidebar()
+        updatePanels()
+    }
+
+    private fun showAboutDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("CalcDuo")
+            .setMessage(getString(R.string.about_message))
+            .setPositiveButton("OK", null)
+            .show()
     }
 
     private fun setupDrawer() {
@@ -104,7 +205,7 @@ class MainActivity : AppCompatActivity() {
         if (removed.isAdded) {
             supportFragmentManager.beginTransaction()
                 .remove(removed)
-                .commit()
+                .commitNowAllowingStateLoss()
         }
 
         if (activeIndex >= tabs.size) activeIndex = tabs.size - 1
@@ -149,19 +250,19 @@ class MainActivity : AppCompatActivity() {
             if (f !in showList && f.isAdded) {
                 supportFragmentManager.beginTransaction()
                     .remove(f)
-                    .commit()
+                    .commitNowAllowingStateLoss()
             }
         }
 
-        val txnLeft = supportFragmentManager.beginTransaction()
-        txnLeft.replace(R.id.panel_left, showList[0], "panel_left")
-        txnLeft.commit()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.panel_left, showList[0], "panel_left")
+            .commitNowAllowingStateLoss()
         binding.panelLeft.visibility = View.VISIBLE
 
         if (showList.size >= 2) {
-            val txnRight = supportFragmentManager.beginTransaction()
-            txnRight.replace(R.id.panel_right, showList[1], "panel_right")
-            txnRight.commit()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.panel_right, showList[1], "panel_right")
+                .commitNowAllowingStateLoss()
             binding.panelRight.visibility = View.VISIBLE
             binding.panelDivider.visibility = View.VISIBLE
         } else {
@@ -169,24 +270,14 @@ class MainActivity : AppCompatActivity() {
             if (rightFrag != null) {
                 supportFragmentManager.beginTransaction()
                     .remove(rightFrag)
-                    .commit()
+                    .commitNowAllowingStateLoss()
             }
             binding.panelRight.visibility = View.GONE
             binding.panelDivider.visibility = View.GONE
         }
 
-        supportFragmentManager.executePendingTransactions()
-
         for (f in showList) {
             f.refreshDisplay()
-        }
-    }
-
-    override fun onBackPressed() {
-        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
         }
     }
 }

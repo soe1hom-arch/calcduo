@@ -4,7 +4,6 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 import kotlin.math.PI
 import kotlin.math.E
-import java.util.Stack
 
 data class CalculatorState(
     val expression: String = "",
@@ -45,11 +44,24 @@ object CalculatorEngine {
                 is CalculatorAction.Operator -> handleOperator(state, action.op)
                 is CalculatorAction.Equals -> handleEquals(state)
                 is CalculatorAction.Clear -> CalculatorState()
-                is CalculatorAction.ClearEntry -> state.copy(
-                    expression = state.expression.dropLastWhile { it.isDigit() || it == '.' }
-                        .trimEnd(),
-                    result = if (state.expression.isEmpty()) "0" else state.result
-                )
+                is CalculatorAction.ClearEntry -> {
+                    val newExpr = state.expression.dropLastWhile { it.isDigit() || it == '.' }
+                        .trimEnd()
+                    if (newExpr.isEmpty()) return state.copy(
+                        expression = "", result = "0", isError = false, errorMessage = ""
+                    )
+                    try {
+                        val result = evaluate(newExpr)
+                        state.copy(
+                            expression = newExpr,
+                            result = formatResult(result),
+                            isError = false,
+                            errorMessage = ""
+                        )
+                    } catch (e: Exception) {
+                        state.copy(expression = newExpr, result = newExpr, isError = false, errorMessage = "")
+                    }
+                }
                 is CalculatorAction.Backspace -> handleBackspace(state)
                 is CalculatorAction.Percent -> handlePercent(state)
                 is CalculatorAction.ToggleSign -> handleToggleSign(state)
@@ -247,70 +259,76 @@ object CalculatorEngine {
             return evaluateTokens(parts[0]).pow(evaluateTokens(parts[1]))
         }
 
-        // Handle * and /
-        val mulDivRegex = Regex("[+\\-*/]")
-        if (e.contains("*") || e.contains("/")) {
-            // Find the first occurrence of * or / with proper operator precedence
-            val ops = mutableListOf<Char>()
-            val nums = mutableListOf<Double>()
-            var currentNum = StringBuilder()
-            var i = 0
-            while (i < e.length) {
-                if (e[i] == '+' || e[i] == '-') {
-                    if (i == 0 || e[i-1] in "*÷/") {
+        // Tokenize expression into numbers and operators
+        val ops = mutableListOf<Char>()
+        val nums = mutableListOf<Double>()
+        val currentNum = StringBuilder()
+        var i = 0
+
+        while (i < e.length) {
+            when {
+                e[i] == '+' || e[i] == '-' -> {
+                    // Check for unary plus/minus (after operator or parenthesis)
+                    if (i == 0 || e[i - 1] in "*/(+-") {
                         currentNum.append(e[i])
                         i++
                         continue
                     }
                     if (currentNum.isNotEmpty()) {
                         nums.add(currentNum.toString().toDouble())
-                        currentNum = StringBuilder()
+                        currentNum.clear()
                     }
                     ops.add(e[i])
-                } else if (e[i] == '*' || e[i] == '/') {
+                }
+                e[i] == '*' || e[i] == '/' -> {
                     if (currentNum.isNotEmpty()) {
                         nums.add(currentNum.toString().toDouble())
-                        currentNum = StringBuilder()
+                        currentNum.clear()
                     }
                     ops.add(e[i])
-                } else {
+                }
+                else -> {
                     currentNum.append(e[i])
                 }
-                i++
             }
-            if (currentNum.isNotEmpty()) {
-                nums.add(currentNum.toString().toDouble())
-            }
-
-            // Process * and / first
-            var j = 0
-            while (j < ops.size) {
-                if (ops[j] == '*' || ops[j] == '/') {
-                    val left = nums[j]
-                    val right = nums[j + 1]
-                    val result = if (ops[j] == '*') left * right else left / right
-                    nums[j] = result
-                    nums.removeAt(j + 1)
-                    ops.removeAt(j)
-                } else {
-                    j++
-                }
-            }
-
-            // Process + and -
-            var result = nums[0]
-            for (k in ops.indices) {
-                if (ops[k] == '+') result += nums[k + 1]
-                else if (ops[k] == '-') result -= nums[k + 1]
-            }
-            return result
+            i++
+        }
+        if (currentNum.isNotEmpty()) {
+            nums.add(currentNum.toString().toDouble())
         }
 
-        return expr.toDouble()
+        // If no numbers parsed, return NaN
+        if (nums.isEmpty()) return Double.NaN
+        // If no operators, just return the single number
+        if (ops.isEmpty()) return nums[0]
+
+        // Process * and / first
+        var j = 0
+        while (j < ops.size) {
+            if (ops[j] == '*' || ops[j] == '/') {
+                val left = nums[j]
+                val right = nums[j + 1]
+                val result = if (ops[j] == '*') left * right else left / right
+                nums[j] = result
+                nums.removeAt(j + 1)
+                ops.removeAt(j)
+            } else {
+                j++
+            }
+        }
+
+        // Process + and -
+        var result = nums[0]
+        for (k in ops.indices) {
+            if (ops[k] == '+') result += nums[k + 1]
+            else if (ops[k] == '-') result -= nums[k + 1]
+        }
+        return result
+
     }
 
     fun formatResult(value: Double): String {
-        if (value == Double.NaN || value.isInfinite()) return "Error"
+        if (value.isNaN() || value.isInfinite()) return "Error"
         if (value == value.toLong().toDouble()) {
             val longVal = value.toLong()
             if (longVal.toString().length > 15) return String.format("%.6e", value)

@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Calculator 1"
-        android:textColor="@color/md_theme_onSurface"
+        android:textColor="?attr/colorOnSurface"
         android:textSize="15sp" />
 
     <ImageButton
@@ -28,6 +28,6 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@android:drawable/ic_menu_close_clear_cancel"
         android:contentDescription="Close tab"
-        android:tint="@color/md_theme_onSurfaceVariant" />
+        android:tint="?attr/colorOnSurfaceVariant" />
 
 </LinearLayout>
