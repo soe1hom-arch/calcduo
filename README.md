@@ -22,6 +22,7 @@
 
 [⬇️ **Download APK**](https://github.com/soe1hom-arch/calcduo/releases/latest)
 
+> ⚠️ Beta — This application is still in development stage, maybe you will still find many Bugs.
 ---
 
 ## 🛠 Build
