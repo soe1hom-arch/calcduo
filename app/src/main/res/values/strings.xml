@@ -7,4 +7,6 @@
     <string name="remove_tab">Remove</string>
     <string name="calculator_title">Calculator</string>
     <string name="empty_state">No calculators yet. Tap + to add one.</string>
+    <string name="notes_title">Notes</string>
+    <string name="notes_hint">Type your notes here...</string>
     <string name="about_message">CalcDuo v1.0\n\nDual Calculator for Android\nBased on AOSP ExactCalculator\nLicensed under Apache 2.0\n\nDeveloped by soe1hom-arch</string>\n</resources>
