@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/display_background">
+
+    <!-- Advanced Pad (scientific) -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/advanced_pad"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/display_background"
+        android:paddingHorizontal="8dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.28"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Row 1 advanced: (  )  ⌫  AC -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_parenthesis_open"
+            style="@style/CalcButtonFunction"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="("
+            app:layout_constraintBottom_toTopOf="@+id/advanced_row1_guide"
+            app:layout_constraintEnd_toStartOf="@+id/advanced_col1_guide"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_parenthesis_close"
+            style="@style/CalcButtonFunction"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text=")"
+            app:layout_constraintBottom_toTopOf="@+id/advanced_row1_guide"
+            app:layout_constraintEnd_toStartOf="@+id/advanced_col2_guide"
+            app:layout_constraintStart_toEndOf="@+id/advanced_col1_guide"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_backspace"
+            style="@style/CalcButtonFunction"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="⌫"
+            app:layout_constraintBottom_toTopOf="@+id/advanced_row1_guide"
+            app:layout_constraintEnd_toStartOf="@+id/advanced_col3_guide"
+            app:layout_constraintStart_toEndOf="@+id/advanced_col2_guide"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_clear"
+            style="@style/CalcButtonClear"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="AC"
+            app:layout_constraintBottom_toTopOf="@+id/advanced_row1_guide"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/advanced_col3_guide"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Row 2 advanced: π  e  √  x² -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_pi"
+            style="@style/CalcButtonFunction"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="π"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/advanced_col1_guide"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/advanced_row1_guide" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_euler"
+            style="@style/CalcButtonFunction"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="e"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/advanced_col2_guide"
+            app:layout_constraintStart_toEndOf="@+id/advanced_col1_guide"
+            app:layout_constraintTop_toBottomOf="@+id/advanced_row1_guide" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_sqrt"
+            style="@style/CalcButtonFunction"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="√"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/advanced_col3_guide"
+            app:layout_constraintStart_toEndOf="@+id/advanced_col2_guide"
+            app:layout_constraintTop_toBottomOf="@+id/advanced_row1_guide" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_square"
+            style="@style/CalcButtonFunction"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="x²"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/advanced_col3_guide"
+            app:layout_constraintTop_toBottomOf="@+id/advanced_row1_guide" />
+
+        <!-- Row 3 advanced: 1/x  xʸ  % -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_reciprocal"
+            style="@style/CalcButtonFunction"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="1/x"
+            app:layout_constraintEnd_toStartOf="@+id/advanced_col1_guide"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/advanced_row2_guide"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_power"
+            style="@style/CalcButtonFunction"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="xʸ"
+            app:layout_constraintEnd_toStartOf="@+id/advanced_col2_guide"
+            app:layout_constraintStart_toEndOf="@+id/advanced_col1_guide"
+            app:layout_constraintTop_toBottomOf="@+id/advanced_row2_guide"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_percent"
+            style="@style/CalcButtonFunction"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="%"
+            app:layout_constraintEnd_toStartOf="@+id/advanced_col3_guide"
+            app:layout_constraintStart_toEndOf="@+id/advanced_col2_guide"
+            app:layout_constraintTop_toBottomOf="@+id/advanced_row2_guide"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- empty space under row2 depends on row3 being separate-->
+
+        <!-- Guidelines for advanced pad -->
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/advanced_row1_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.33" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/advanced_row2_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.66" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/advanced_col1_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.25" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/advanced_col2_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.50" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/advanced_col3_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.75" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Basic Pad (number/operator) -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/basic_pad"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/display_background"
+        android:paddingHorizontal="8dp"
+        android:paddingBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.72"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/advanced_pad">
+
+        <!-- Row 1: 7 8 9 ÷ -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn7"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="7"
+            app:layout_constraintBottom_toTopOf="@+id/row1_guide"
+            app:layout_constraintEnd_toStartOf="@+id/col1_guide"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn8"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="8"
+            app:layout_constraintBottom_toTopOf="@+id/row1_guide"
+            app:layout_constraintEnd_toStartOf="@+id/col2_guide"
+            app:layout_constraintStart_toEndOf="@+id/col1_guide"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn9"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="9"
+            app:layout_constraintBottom_toTopOf="@+id/row1_guide"
+            app:layout_constraintEnd_toStartOf="@+id/col3_guide"
+            app:layout_constraintStart_toEndOf="@+id/col2_guide"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_divide"
+            style="@style/CalcButtonOperator"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="÷"
+            app:layout_constraintBottom_toTopOf="@+id/row1_guide"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/col3_guide"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Row 2: 4 5 6 × -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn4"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="4"
+            app:layout_constraintBottom_toTopOf="@+id/row2_guide"
+            app:layout_constraintEnd_toStartOf="@+id/col1_guide"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/row1_guide" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn5"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="5"
+            app:layout_constraintBottom_toTopOf="@+id/row2_guide"
+            app:layout_constraintEnd_toStartOf="@+id/col2_guide"
+            app:layout_constraintStart_toEndOf="@+id/col1_guide"
+            app:layout_constraintTop_toBottomOf="@+id/row1_guide" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn6"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="6"
+            app:layout_constraintBottom_toTopOf="@+id/row2_guide"
+            app:layout_constraintEnd_toStartOf="@+id/col3_guide"
+            app:layout_constraintStart_toEndOf="@+id/col2_guide"
+            app:layout_constraintTop_toBottomOf="@+id/row1_guide" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_multiply"
+            style="@style/CalcButtonOperator"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="×"
+            app:layout_constraintBottom_toTopOf="@+id/row2_guide"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/col3_guide"
+            app:layout_constraintTop_toBottomOf="@+id/row1_guide" />
+
+        <!-- Row 3: 1 2 3 − -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn1"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="1"
+            app:layout_constraintBottom_toTopOf="@+id/row3_guide"
+            app:layout_constraintEnd_toStartOf="@+id/col1_guide"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/row2_guide" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn2"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="2"
+            app:layout_constraintBottom_toTopOf="@+id/row3_guide"
+            app:layout_constraintEnd_toStartOf="@+id/col2_guide"
+            app:layout_constraintStart_toEndOf="@+id/col1_guide"
+            app:layout_constraintTop_toBottomOf="@+id/row2_guide" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn3"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="3"
+            app:layout_constraintBottom_toTopOf="@+id/row3_guide"
+            app:layout_constraintEnd_toStartOf="@+id/col3_guide"
+            app:layout_constraintStart_toEndOf="@+id/col2_guide"
+            app:layout_constraintTop_toBottomOf="@+id/row2_guide" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_subtract"
+            style="@style/CalcButtonOperator"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="−"
+            app:layout_constraintBottom_toTopOf="@+id/row3_guide"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/col3_guide"
+            app:layout_constraintTop_toBottomOf="@+id/row2_guide" />
+
+        <!-- Row 4: ± 0 . + -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_toggle_sign"
+            style="@style/CalcButtonFunction"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="±"
+            app:layout_constraintBottom_toTopOf="@+id/row4_guide"
+            app:layout_constraintEnd_toStartOf="@+id/col1_guide"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/row3_guide" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn0"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="0"
+            app:layout_constraintBottom_toTopOf="@+id/row4_guide"
+            app:layout_constraintEnd_toStartOf="@+id/col2_guide"
+            app:layout_constraintStart_toEndOf="@+id/col1_guide"
+            app:layout_constraintTop_toBottomOf="@+id/row3_guide" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_decimal"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="."
+            app:layout_constraintBottom_toTopOf="@+id/row4_guide"
+            app:layout_constraintEnd_toStartOf="@+id/col3_guide"
+            app:layout_constraintStart_toEndOf="@+id/col2_guide"
+            app:layout_constraintTop_toBottomOf="@+id/row3_guide" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_add"
+            style="@style/CalcButtonOperator"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="+"
+            app:layout_constraintBottom_toTopOf="@+id/row4_guide"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/col3_guide"
+            app:layout_constraintTop_toBottomOf="@+id/row3_guide" />
+
+        <!-- Row 5: = -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_equals"
+            style="@style/CalcButtonEquals"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="="
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/row4_guide" />
+
+        <!-- Guidelines -->
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/col1_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.25" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/col2_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.50" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/col3_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.75" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/row1_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.20" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/row2_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.40" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/row3_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.60" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/row4_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.80" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

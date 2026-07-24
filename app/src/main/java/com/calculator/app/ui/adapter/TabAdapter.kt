@@ -2,7 +2,6 @@ package com.calculator.app.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,15 +9,12 @@ import com.calculator.app.databinding.ItemCalculatorTabBinding
 
 data class CalculatorTab(
     val id: Int,
-    val title: String = "Calc ${id + 1}",
-    val isActive: Boolean = false,
-    val panel: Int = 0 // 0 = left, 1 = right
+    val title: String = "Calc ${id + 1}"
 )
 
 class TabAdapter(
     private val onTabClick: (CalculatorTab) -> Unit,
-    private val onTabClose: (CalculatorTab) -> Unit,
-    private val onTabLongClick: (CalculatorTab) -> Unit = {}
+    private val onTabClose: (CalculatorTab) -> Unit
 ) : ListAdapter<CalculatorTab, TabAdapter.TabViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TabViewHolder {
@@ -37,14 +33,8 @@ class TabAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(tab: CalculatorTab) {
-            val panelLabel = if (tab.panel == 0) "[L]" else "[R]"
-            binding.tvTabTitle.text = "$panelLabel ${tab.title}"
-            binding.root.isSelected = tab.isActive
+            binding.tvTabTitle.text = tab.title
             binding.root.setOnClickListener { onTabClick(tab) }
-            binding.root.setOnLongClickListener {
-                onTabLongClick(tab)
-                true
-            }
             binding.btnCloseTab.setOnClickListener { onTabClose(tab) }
         }
     }

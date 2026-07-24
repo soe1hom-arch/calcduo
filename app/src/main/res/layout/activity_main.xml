@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <!-- Toolbar -->
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -24,37 +25,61 @@
             app:navigationContentDescription="@string/nav_open"
             style="@style/Widget.Material3.Toolbar" />
 
+        <!-- Top half: Tab displays -->
         <LinearLayout
+            android:id="@+id/container_displays"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:baselineAligned="false">
+            android:orientation="horizontal"
+            android:baselineAligned="false"
+            android:weightSum="2">
 
-            <!-- Left Panel -->
+            <!-- Tab 1 display -->
             <FrameLayout
-                android:id="@+id/panel_left"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:id="@+id/panel_tab1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true" />
 
-            <!-- Subtle divider -->
+            <!-- Vertical divider -->
             <View
                 android:id="@+id/panel_divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
                 android:background="?attr/colorOutline"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
-            <!-- Right Panel -->
+            <!-- Tab 2 display -->
             <FrameLayout
-                android:id="@+id/panel_right"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:id="@+id/panel_tab2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
                 android:visibility="gone" />
 
         </LinearLayout>
+
+        <!-- Divider between display and keyboard -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/colorOutlineVariant" />
+
+        <!-- Bottom half: Shared keyboard -->
+        <FrameLayout
+            android:id="@+id/container_keyboard"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <include layout="@layout/shared_keyboard" />
+
+        </FrameLayout>
 
         <!-- Notes Panel -->
         <LinearLayout

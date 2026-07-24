@@ -1,19 +1,17 @@
 package com.calculator.app
 
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.calculator.app.data.CalculatorAction
 import com.calculator.app.databinding.ActivityMainBinding
 import com.calculator.app.ui.adapter.CalculatorTab
 import com.calculator.app.ui.adapter.TabAdapter
@@ -22,9 +20,10 @@ import com.calculator.app.ui.calculator.CalculatorFragment
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val tabs = mutableListOf<CalculatorTab>()  // max 2: index 0=left, 1=right
+    private val tabs = mutableListOf<CalculatorTab>()
     private val calculatorFragments = mutableListOf<CalculatorFragment>()
     private var tabCounter = 0
+    private var activeTabIndex = 0
     private lateinit var tabAdapter: TabAdapter
     private var notesVisible = false
     private val notesPrefsKey = "calcduo_notes"
@@ -39,34 +38,36 @@ class MainActivity : AppCompatActivity() {
         setupSidebar()
         setupBackPressed()
         setupNotes()
+        setupKeyboard()
 
         if (savedInstanceState != null) {
             restoreState(savedInstanceState)
         } else {
-            // Start with dual calculators (top + bottom)
+            // Start with 1 calculator tab
             addCalculator(0)
-            addCalculator(1)
+            activeTabIndex = 0
+            updatePanels()
+            updateActiveTabHighlight()
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt("tab_counter", tabCounter)
+        outState.putInt("active_tab_index", activeTabIndex)
         val tabIds = tabs.map { it.id }.toIntArray()
         val tabTitles = tabs.map { it.title }.toTypedArray()
-        val tabPanels = tabs.map { it.panel }.toIntArray()
         outState.putIntArray("tab_ids", tabIds)
         outState.putStringArray("tab_titles", tabTitles)
-        outState.putIntArray("tab_panels", tabPanels)
         outState.putString("notes_text", binding.etNotes.text.toString())
         outState.putBoolean("notes_visible", notesVisible)
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
         tabCounter = savedInstanceState.getInt("tab_counter", 0)
+        activeTabIndex = savedInstanceState.getInt("active_tab_index", 0)
         val tabIds = savedInstanceState.getIntArray("tab_ids") ?: intArrayOf()
         val tabTitles = savedInstanceState.getStringArray("tab_titles") ?: arrayOf()
-        val tabPanels = savedInstanceState.getIntArray("tab_panels") ?: intArrayOf()
 
         val existingFragments =
             supportFragmentManager.fragments.filterIsInstance<CalculatorFragment>()
@@ -74,8 +75,7 @@ class MainActivity : AppCompatActivity() {
         for (i in tabIds.indices) {
             val tab = CalculatorTab(
                 id = tabIds[i],
-                title = tabTitles.getOrElse(i) { "Calc ${i + 1}" },
-                panel = tabPanels.getOrElse(i) { i.coerceAtMost(1) }
+                title = tabTitles.getOrElse(i) { "Calc ${i + 1}" }
             )
             tabs.add(tab)
             val fragment = existingFragments.getOrNull(i)
@@ -85,8 +85,9 @@ class MainActivity : AppCompatActivity() {
 
         if (tabs.isEmpty()) {
             addCalculator(0)
-            addCalculator(1)
+            activeTabIndex = 0
         }
+
         val savedNotes = savedInstanceState.getString("notes_text", "")
         if (savedNotes.isNotEmpty()) {
             binding.etNotes.setText(savedNotes)
@@ -95,22 +96,201 @@ class MainActivity : AppCompatActivity() {
         binding.panelNotes.visibility = if (notesVisible) View.VISIBLE else View.GONE
         binding.toolbar.menu.findItem(R.id.action_notes)?.isChecked = notesVisible
         updatePanels()
+        updateActiveTabHighlight()
         refreshSidebar()
     }
 
-    private fun setupBackPressed() {
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    binding.drawerLayout.closeDrawer(GravityCompat.START)
-                } else {
-                    isEnabled = false
-                    onBackPressedDispatcher.onBackPressed()
-                    isEnabled = true
-                }
+    // ───────────────── Keyboard Setup ─────────────────
+
+    private fun setupKeyboard() {
+        val actions: List<Pair<View?, CalculatorAction>> = listOf(
+            binding.btn0 to CalculatorAction.Number("0"),
+            binding.btn1 to CalculatorAction.Number("1"),
+            binding.btn2 to CalculatorAction.Number("2"),
+            binding.btn3 to CalculatorAction.Number("3"),
+            binding.btn4 to CalculatorAction.Number("4"),
+            binding.btn5 to CalculatorAction.Number("5"),
+            binding.btn6 to CalculatorAction.Number("6"),
+            binding.btn7 to CalculatorAction.Number("7"),
+            binding.btn8 to CalculatorAction.Number("8"),
+            binding.btn9 to CalculatorAction.Number("9"),
+            binding.btnAdd to CalculatorAction.Operator("+"),
+            binding.btnSubtract to CalculatorAction.Operator("-"),
+            binding.btnMultiply to CalculatorAction.Operator("×"),
+            binding.btnDivide to CalculatorAction.Operator("÷"),
+            binding.btnClear to CalculatorAction.Clear,
+            binding.btnEquals to CalculatorAction.Equals,
+            binding.btnDecimal to CalculatorAction.Decimal,
+            binding.btnPercent to CalculatorAction.Percent,
+            binding.btnBackspace to CalculatorAction.Backspace,
+            binding.btnToggleSign to CalculatorAction.ToggleSign,
+            binding.btnSqrt to CalculatorAction.SquareRoot,
+            binding.btnSquare to CalculatorAction.Square,
+            binding.btnReciprocal to CalculatorAction.Reciprocal,
+            binding.btnPi to CalculatorAction.Pi,
+            binding.btnEuler to CalculatorAction.Euler,
+            binding.btnPower to CalculatorAction.Power,
+            binding.btnParenthesisOpen to CalculatorAction.ParenthesisOpen,
+            binding.btnParenthesisClose to CalculatorAction.ParenthesisClose,
+        )
+
+        actions.forEach { (btn, action) ->
+            btn?.setOnClickListener {
+                routeKeyboardAction(action)
             }
-        })
+        }
     }
+
+    private fun routeKeyboardAction(action: CalculatorAction) {
+        if (calculatorFragments.isEmpty()) return
+        val idx = activeTabIndex.coerceIn(0, calculatorFragments.size - 1)
+        calculatorFragments[idx].performAction(action)
+    }
+
+    // ───────────────── Tab Management ─────────────────
+
+    private fun addCalculator(slotIndex: Int) {
+        if (tabs.size >= 2) {
+            Toast.makeText(this, "Maximum 2 tabs", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val tabId = tabCounter++
+        val tabTitle = "Calc ${tabs.size + 1}"
+        val tab = CalculatorTab(id = tabId, title = tabTitle)
+        tabs.add(tab)
+
+        val fragment = CalculatorFragment.newInstance(tabId, tabTitle)
+        calculatorFragments.add(fragment)
+
+        updatePanels()
+        activeTabIndex = tabs.size - 1
+        updateActiveTabHighlight()
+        refreshSidebar()
+    }
+
+    private fun removeCalculator(tabId: Int) {
+        if (tabs.size <= 1) {
+            Toast.makeText(this, "At least 1 tab required", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val idx = tabs.indexOfFirst { it.id == tabId }
+        if (idx < 0) return
+
+        tabs.removeAt(idx)
+        val fragment = calculatorFragments.removeAt(idx)
+
+        supportFragmentManager.beginTransaction()
+            .remove(fragment)
+            .commitAllowingStateLoss()
+
+        if (activeTabIndex >= tabs.size) {
+            activeTabIndex = tabs.size - 1
+        }
+        updatePanels()
+        updateActiveTabHighlight()
+        refreshSidebar()
+    }
+
+    private fun selectTab(tabId: Int) {
+        val idx = tabs.indexOfFirst { it.id == tabId }
+        if (idx < 0 || idx >= calculatorFragments.size) return
+        activeTabIndex = idx
+        updateActiveTabHighlight()
+    }
+
+    // ───────────────── Panel Management ─────────────────
+
+    private fun updatePanels() {
+        // Tab 1 slot
+        if (tabs.size >= 1 && calculatorFragments.size >= 1) {
+            val frag1 = calculatorFragments[0]
+            if (frag1.parentFragment == null && !frag1.isAdded) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.panel_tab1, frag1, "tab_1")
+                    .commitAllowingStateLoss()
+            }
+            binding.panelTab1.visibility = View.VISIBLE
+        } else {
+            binding.panelTab1.visibility = View.GONE
+        }
+
+        // Tab 2 slot
+        if (tabs.size >= 2 && calculatorFragments.size >= 2) {
+            val frag2 = calculatorFragments[1]
+            if (frag2.parentFragment == null && !frag2.isAdded) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.panel_tab2, frag2, "tab_2")
+                    .commitAllowingStateLoss()
+            }
+            binding.panelTab2.visibility = View.VISIBLE
+            binding.panelDivider.visibility = View.VISIBLE
+        } else {
+            binding.panelTab2.visibility = View.GONE
+            binding.panelDivider.visibility = View.GONE
+        }
+
+        // Update fragment listeners for tab selection
+        calculatorFragments.forEach { frag ->
+            frag.setOnTabSelectedListener { tabId ->
+                selectTab(tabId)
+            }
+        }
+
+        // Show/hide empty state
+        binding.tvEmptyState.visibility =
+            if (tabs.isEmpty()) View.VISIBLE else View.GONE
+    }
+
+    private fun updateActiveTabHighlight() {
+        val activeColor = ContextCompat.getColor(this, R.color.md_theme_primaryContainer)
+        val inactiveColor = ContextCompat.getColor(this, R.color.display_background)
+
+        val borderActive = GradientDrawable().apply {
+            setStroke(3, activeColor)
+            setColor(inactiveColor)
+        }
+        val borderInactive = GradientDrawable().apply {
+            setStroke(0, 0)
+            setColor(inactiveColor)
+        }
+
+        binding.panelTab1.background =
+            if (activeTabIndex == 0 && tabs.size >= 1) borderActive else borderInactive
+        binding.panelTab2.background =
+            if (activeTabIndex == 1 && tabs.size >= 2) borderActive else borderInactive
+    }
+
+    // ───────────────── Sidebar ─────────────────
+
+    private fun setupDrawer() {
+        // drawer setup done in XML
+    }
+
+    private fun setupSidebar() {
+        tabAdapter = TabAdapter(
+            onTabClick = { tab -> selectTab(tab.id) },
+            onTabClose = { tab -> removeCalculator(tab.id) }
+        )
+        binding.rvSidebarTabs.layoutManager = LinearLayoutManager(this)
+        binding.rvSidebarTabs.adapter = tabAdapter
+        binding.fabAddCalculator.setOnClickListener {
+            addCalculator(tabs.size)
+        }
+    }
+
+    private fun refreshSidebar() {
+        tabAdapter.submitList(tabs.toList())
+        updateEmptySidebar()
+    }
+
+    private fun updateEmptySidebar() {
+        binding.tvEmptySidebar.visibility =
+            if (tabs.isEmpty()) View.VISIBLE else View.GONE
+    }
+
+    // ───────────────── Toolbar ─────────────────
 
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
@@ -130,7 +310,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.action_about -> {
-                    showAboutDialog()
+                    showAbout()
                     true
                 }
                 else -> false
@@ -139,167 +319,34 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun clearAll() {
-        if (tabs.isEmpty()) return
-        for (fragment in calculatorFragments) {
-            if (fragment.isAdded) {
-                supportFragmentManager.beginTransaction()
-                    .remove(fragment)
-                    .commitNow()
-            }
-        }
-        tabs.clear()
-        calculatorFragments.clear()
-        tabCounter = 0
-        addCalculator(0)
-        addCalculator(1)
-        refreshSidebar()
-        updatePanels()
+        calculatorFragments.forEach { it.clear() }
     }
 
-    private fun showAboutDialog() {
+    private fun showAbout() {
         AlertDialog.Builder(this)
-            .setTitle("CalcDuo")
+            .setTitle("About CalcDuo")
             .setMessage(getString(R.string.about_message))
             .setPositiveButton("OK", null)
             .show()
     }
 
-    private fun setupDrawer() {
-        binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
-            override fun onDrawerOpened(drawerView: View) {
-                tabAdapter.submitList(tabs.toList())
-                updateEmptySidebar()
+    // ───────────────── Back Press ─────────────────
+
+    private fun setupBackPressed() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                } else {
+                    isEnabled = false
+                    onBackPressedDispatcher.onBackPressed()
+                    isEnabled = true
+                }
             }
         })
     }
 
-    private fun updateEmptySidebar() {
-        binding.tvEmptySidebar.visibility = if (tabs.isEmpty()) View.VISIBLE else View.GONE
-    }
-
-    private fun setupSidebar() {
-        tabAdapter = TabAdapter(
-            onTabClick = { tab ->
-                // Tab click activates the tab
-                tabs.replaceAll { it.copy(isActive = it.id == tab.id) }
-                refreshSidebar()
-            },
-            onTabClose = { tab ->
-                removeCalculator(tab.id)
-            },
-            onTabLongClick = { tab ->
-                showMovePanelDialog(tab)
-            }
-        )
-
-        binding.rvSidebarTabs.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = tabAdapter
-        }
-
-        binding.fabAddCalculator.setOnClickListener { showAddPanelMenu() }
-    }
-
-    private fun showAddPanelMenu() {
-        val hasLeft = tabs.any { it.panel == 0 }
-        val hasRight = tabs.any { it.panel == 1 }
-
-        if (hasLeft && hasRight) {
-            Toast.makeText(this, "Max 2 calculators (one per panel)", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val options = mutableListOf<String>().apply {
-            if (!hasLeft) add("Add to Left Panel")
-            if (!hasRight) add("Add to Right Panel")
-        }
-
-        AlertDialog.Builder(this)
-            .setTitle("Add Calculator")
-            .setItems(options.toTypedArray()) { _, which ->
-                when (options[which]) {
-                    "Add to Left Panel" -> {
-                        addCalculator(0)
-                        binding.drawerLayout.closeDrawer(GravityCompat.START)
-                    }
-                    "Add to Right Panel" -> {
-                        addCalculator(1)
-                        binding.drawerLayout.closeDrawer(GravityCompat.START)
-                    }
-                }
-            }
-            .show()
-    }
-
-    private fun addCalculator(panel: Int) {
-        // Max 2 tabs, one per panel
-        if (tabs.any { it.panel == panel }) return
-        if (tabs.size >= 2) return
-
-        val tabId = tabCounter++
-        val tab = CalculatorTab(id = tabId, title = "Calc $tabCounter", panel = panel)
-        tabs.add(tab)
-
-        val fragment = CalculatorFragment.newInstance(tabId, tab.title)
-        calculatorFragments.add(fragment)
-
-        updatePanels()
-        refreshSidebar()
-    }
-
-    private fun removeCalculator(tabId: Int) {
-        val idx = tabs.indexOfFirst { it.id == tabId }
-        if (idx < 0) return
-
-        val removedTab = tabs.removeAt(idx)
-        val removed = calculatorFragments.removeAt(idx)
-
-        if (removed.isAdded) {
-            supportFragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.fade_out, R.anim.fade_in)
-                .remove(removed)
-                .commit()
-        }
-
-        updatePanels()
-        refreshSidebar()
-    }
-
-    private fun showMovePanelDialog(tab: CalculatorTab) {
-        val currentPanel = if (tab.panel == 0) "Left" else "Right"
-        val targetPanel = if (tab.panel == 0) "Right" else "Left"
-        val targetCode = if (tab.panel == 0) 1 else 0
-
-        // Cek apakah panel tujuan sudah terisi
-        if (tabs.any { it.panel == targetCode }) {
-            Toast.makeText(this, "Panel $targetPanel is already occupied.", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        AlertDialog.Builder(this)
-            .setTitle("Move Tab")
-            .setMessage("Move [" + tab.title + "] from [$currentPanel] to [$targetPanel] panel?")
-            .setPositiveButton("Move to $targetPanel") { _, _ ->
-                moveTab(tab.id, targetCode)
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
-    }
-
-    private fun moveTab(tabId: Int, targetPanel: Int) {
-        val idx = tabs.indexOfFirst { it.id == tabId }
-        if (idx < 0) return
-
-        // Update panel assignment
-        tabs[idx] = tabs[idx].copy(panel = targetPanel)
-        updatePanels()
-        refreshSidebar()
-    }
-
-    private fun refreshSidebar() {
-        tabAdapter.submitList(tabs.toList())
-        updateEmptySidebar()
-    }
+    // ───────────────── Notes ─────────────────
 
     private fun setupNotes() {
         val savedNotes = getSharedPreferences("calcduo_prefs", Context.MODE_PRIVATE)
@@ -334,68 +381,5 @@ class MainActivity : AppCompatActivity() {
         binding.panelNotes.visibility = if (notesVisible) View.VISIBLE else View.GONE
         updatePanels()
         binding.toolbar.menu.findItem(R.id.action_notes)?.isChecked = notesVisible
-    }
-
-    private fun updatePanels() {
-        val leftTab = tabs.find { it.panel == 0 }
-        val rightTab = tabs.find { it.panel == 1 }
-
-        // Left panel
-        if (leftTab != null) {
-            val idx = tabs.indexOf(leftTab)
-            val frag = calculatorFragments.getOrNull(idx)
-            if (frag != null) {
-                supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                    .replace(R.id.panel_left, frag, "panel_left")
-                    .commit()
-                binding.panelLeft.visibility = View.VISIBLE
-            }
-        } else {
-            val frag = supportFragmentManager.findFragmentById(R.id.panel_left)
-            if (frag != null) {
-                supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.fade_out, R.anim.fade_in)
-                    .remove(frag)
-                    .commit()
-            }
-            binding.panelLeft.visibility = View.GONE
-        }
-
-        // Right panel
-        if (rightTab != null) {
-            val idx = tabs.indexOf(rightTab)
-            val frag = calculatorFragments.getOrNull(idx)
-            if (frag != null) {
-                supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                    .replace(R.id.panel_right, frag, "panel_right")
-                    .commit()
-                binding.panelRight.visibility = View.VISIBLE
-                binding.panelDivider.visibility = View.VISIBLE
-            }
-        } else {
-            val frag = supportFragmentManager.findFragmentById(R.id.panel_right)
-            if (frag != null) {
-                supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.fade_out, R.anim.fade_in)
-                    .remove(frag)
-                    .commit()
-            }
-            binding.panelRight.visibility = View.GONE
-            binding.panelDivider.visibility = View.GONE
-        }
-
-        // Update active state
-        tabs.replaceAll { tab ->
-            tab.copy(isActive = tab.id == leftTab?.id || tab.id == rightTab?.id)
-        }
-
-        // Show empty state if both panels empty
-        if (leftTab == null && rightTab == null) {
-            binding.tvEmptyState.visibility = View.VISIBLE
-        } else {
-            binding.tvEmptyState.visibility = View.GONE
-        }
     }
 }
