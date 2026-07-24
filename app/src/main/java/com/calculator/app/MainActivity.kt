@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             // Start with one calculator on left panel
             addCalculator(0)
+            addCalculator(1)
         }
     }
 
@@ -84,6 +85,7 @@ class MainActivity : AppCompatActivity() {
 
         if (tabs.isEmpty()) {
             addCalculator(0)
+            addCalculator(1)
         }
         val savedNotes = savedInstanceState.getString("notes_text", "")
         if (savedNotes.isNotEmpty()) {
@@ -149,6 +151,7 @@ class MainActivity : AppCompatActivity() {
         calculatorFragments.clear()
         tabCounter = 0
         addCalculator(0)
+        addCalculator(1)
         refreshSidebar()
         updatePanels()
     }
@@ -337,11 +340,6 @@ class MainActivity : AppCompatActivity() {
         val leftTab = tabs.find { it.panel == 0 }
         val rightTab = tabs.find { it.panel == 1 }
 
-        // Update active state
-        tabs.replaceAll { tab ->
-            tab.copy(isActive = tab.id == leftTab?.id || tab.id == rightTab?.id)
-        }
-
         // Left panel
         if (leftTab != null) {
             val idx = tabs.indexOf(leftTab)
@@ -386,6 +384,11 @@ class MainActivity : AppCompatActivity() {
             }
             binding.panelRight.visibility = View.GONE
             binding.panelDivider.visibility = View.GONE
+        }
+
+        // Update active state
+        tabs.replaceAll { tab ->
+            tab.copy(isActive = tab.id == leftTab?.id || tab.id == rightTab?.id)
         }
 
         // Show empty state if both panels empty
