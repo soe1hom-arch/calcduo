@@ -57,6 +57,8 @@ class MainActivity : AppCompatActivity() {
         outState.putIntArray("tab_ids", tabIds)
         outState.putStringArray("tab_titles", tabTitles)
         outState.putIntArray("tab_panels", tabPanels)
+        outState.putString("notes_text", binding.etNotes.text.toString())
+        outState.putBoolean("notes_visible", notesVisible)
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
@@ -83,6 +85,13 @@ class MainActivity : AppCompatActivity() {
         if (tabs.isEmpty()) {
             addCalculator(0)
         }
+        val savedNotes = savedInstanceState.getString("notes_text", "")
+        if (savedNotes.isNotEmpty()) {
+            binding.etNotes.setText(savedNotes)
+        }
+        notesVisible = savedInstanceState.getBoolean("notes_visible", false)
+        binding.panelNotes.visibility = if (notesVisible) View.VISIBLE else View.GONE
+        binding.toolbar.menu.findItem(R.id.action_notes)?.isChecked = notesVisible
         updatePanels()
         refreshSidebar()
     }
@@ -343,7 +352,6 @@ class MainActivity : AppCompatActivity() {
                     .replace(R.id.panel_left, frag, "panel_left")
                     .commit()
                 binding.panelLeft.visibility = View.VISIBLE
-                frag.refreshDisplay()
             }
         } else {
             val frag = supportFragmentManager.findFragmentById(R.id.panel_left)
@@ -367,7 +375,6 @@ class MainActivity : AppCompatActivity() {
                     .commit()
                 binding.panelRight.visibility = View.VISIBLE
                 binding.panelDivider.visibility = View.VISIBLE
-                frag.refreshDisplay()
             }
         } else {
             val frag = supportFragmentManager.findFragmentById(R.id.panel_right)

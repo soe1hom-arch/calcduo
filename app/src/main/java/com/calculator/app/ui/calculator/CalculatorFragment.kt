@@ -1,20 +1,24 @@
 package com.calculator.app.ui.calculator
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.view.HapticFeedbackConstants
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.ViewModelProvider
-import com.calculator.app.R
 import com.calculator.app.data.CalculatorAction
 import com.calculator.app.databinding.FragmentCalculatorBinding
 import com.google.android.material.color.MaterialColors
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class CalculatorFragment : Fragment() {
 
@@ -55,30 +59,32 @@ class CalculatorFragment : Fragment() {
         val label = arguments?.getString(ARG_LABEL, "Calculator") ?: "Calculator"
         binding.tvCalculatorLabel.text = label
         setupClickListeners()
-        updateDisplay()
         setupCopyListeners()
+        observeState()
     }
 
-    fun refreshDisplay() {
-        if (_binding == null || !isAdded) return
-        updateDisplay()
+    private fun observeState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collectLatest { state ->
+                    updateDisplay(state)
+                }
+            }
+        }
     }
 
-    private fun updateDisplay() {
-        if (_binding == null || !isAdded) return
-
-        val state = viewModel.state
-        val ctx = context ?: return
+    private fun updateDisplay(state: CalculatorState) {
+        if (_binding == null) return
 
         binding.tvExpression.text = state.expression.ifEmpty { "" }
         binding.tvResult.text = state.result
 
-        val color = if (state.isError) {
+        val colorRes = if (state.isError) {
             com.google.android.material.R.attr.colorError
         } else {
             com.google.android.material.R.attr.colorOnSurface
         }
-        binding.tvResult.setTextColor(MaterialColors.getColor(binding.tvResult, color))
+        binding.tvResult.setTextColor(MaterialColors.getColor(binding.tvResult, colorRes))
     }
 
     private fun triggerHaptic() {
@@ -89,38 +95,45 @@ class CalculatorFragment : Fragment() {
         } catch (_: Exception) { }
     }
 
+    @Suppress("UNUSED_ANONYMOUS_PARAMETER")
     private fun setupClickListeners() {
-        binding.btn0.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Number("0")); updateDisplay() }
-        binding.btn1.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Number("1")); updateDisplay() }
-        binding.btn2.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Number("2")); updateDisplay() }
-        binding.btn3.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Number("3")); updateDisplay() }
-        binding.btn4.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Number("4")); updateDisplay() }
-        binding.btn5.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Number("5")); updateDisplay() }
-        binding.btn6.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Number("6")); updateDisplay() }
-        binding.btn7.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Number("7")); updateDisplay() }
-        binding.btn8.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Number("8")); updateDisplay() }
-        binding.btn9.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Number("9")); updateDisplay() }
+        val actions: List<Pair<View?, CalculatorAction>> = listOf(
+            binding.btn0 to CalculatorAction.Number("0"),
+            binding.btn1 to CalculatorAction.Number("1"),
+            binding.btn2 to CalculatorAction.Number("2"),
+            binding.btn3 to CalculatorAction.Number("3"),
+            binding.btn4 to CalculatorAction.Number("4"),
+            binding.btn5 to CalculatorAction.Number("5"),
+            binding.btn6 to CalculatorAction.Number("6"),
+            binding.btn7 to CalculatorAction.Number("7"),
+            binding.btn8 to CalculatorAction.Number("8"),
+            binding.btn9 to CalculatorAction.Number("9"),
+            binding.btnAdd to CalculatorAction.Operator("+"),
+            binding.btnSubtract to CalculatorAction.Operator("-"),
+            binding.btnMultiply to CalculatorAction.Operator("×"),
+            binding.btnDivide to CalculatorAction.Operator("÷"),
+            binding.btnClear to CalculatorAction.Clear,
+            binding.btnEquals to CalculatorAction.Equals,
+            binding.btnDecimal to CalculatorAction.Decimal,
+            binding.btnPercent to CalculatorAction.Percent,
+            binding.btnBackspace to CalculatorAction.Backspace,
+            binding.btnToggleSign to CalculatorAction.ToggleSign,
+            binding.btnSqrt to CalculatorAction.SquareRoot,
+            binding.btnSquare to CalculatorAction.Square,
+            binding.btnReciprocal to CalculatorAction.Reciprocal,
+            binding.btnPi to CalculatorAction.Pi,
+            binding.btnEuler to CalculatorAction.Euler,
+            binding.btnPower to CalculatorAction.Power,
+            binding.btnParenthesisOpen to CalculatorAction.ParenthesisOpen,
+            binding.btnParenthesisClose to CalculatorAction.ParenthesisClose,
+        )
 
-        binding.btnAdd.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Operator("+")); updateDisplay() }
-        binding.btnSubtract.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Operator("-")); updateDisplay() }
-        binding.btnMultiply.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Operator("×")); updateDisplay() }
-        binding.btnDivide.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Operator("÷")); updateDisplay() }
-
-        binding.btnClear.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Clear); updateDisplay() }
-        binding.btnEquals.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Equals); updateDisplay() }
-        binding.btnDecimal.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Decimal); updateDisplay() }
-        binding.btnPercent.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Percent); updateDisplay() }
-        binding.btnBackspace.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Backspace); updateDisplay() }
-        binding.btnToggleSign.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.ToggleSign); updateDisplay() }
-
-        binding.btnSqrt.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.SquareRoot); updateDisplay() }
-        binding.btnSquare.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Square); updateDisplay() }
-        binding.btnReciprocal.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Reciprocal); updateDisplay() }
-        binding.btnPi.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Pi); updateDisplay() }
-        binding.btnEuler.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Euler); updateDisplay() }
-        binding.btnPower.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.Power); updateDisplay() }
-        binding.btnParenthesisOpen.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.ParenthesisOpen); updateDisplay() }
-        binding.btnParenthesisClose.setOnClickListener { triggerHaptic(); viewModel.onAction(CalculatorAction.ParenthesisClose); updateDisplay() }
+        actions.forEach { (btn, action) ->
+            btn?.setOnClickListener {
+                triggerHaptic()
+                viewModel.onAction(action)
+            }
+        }
     }
 
     private fun setupCopyListeners() {

@@ -16,10 +16,8 @@ data class CalculatorState(
 sealed class CalculatorAction {
     data class Number(val value: String) : CalculatorAction()
     data class Operator(val op: String) : CalculatorAction()
-    data class Function(val name: String) : CalculatorAction()
     object Equals : CalculatorAction()
     object Clear : CalculatorAction()
-    object ClearEntry : CalculatorAction()
     object Backspace : CalculatorAction()
     object Decimal : CalculatorAction()
     object Percent : CalculatorAction()
@@ -44,24 +42,6 @@ object CalculatorEngine {
                 is CalculatorAction.Operator -> handleOperator(state, action.op)
                 is CalculatorAction.Equals -> handleEquals(state)
                 is CalculatorAction.Clear -> CalculatorState()
-                is CalculatorAction.ClearEntry -> {
-                    val newExpr = state.expression.dropLastWhile { it.isDigit() || it == '.' }
-                        .trimEnd()
-                    if (newExpr.isEmpty()) return state.copy(
-                        expression = "", result = "0", isError = false, errorMessage = ""
-                    )
-                    try {
-                        val result = evaluate(newExpr)
-                        state.copy(
-                            expression = newExpr,
-                            result = formatResult(result),
-                            isError = false,
-                            errorMessage = ""
-                        )
-                    } catch (e: Exception) {
-                        state.copy(expression = newExpr, result = newExpr, isError = false, errorMessage = "")
-                    }
-                }
                 is CalculatorAction.Backspace -> handleBackspace(state)
                 is CalculatorAction.Percent -> handlePercent(state)
                 is CalculatorAction.ToggleSign -> handleToggleSign(state)
@@ -88,7 +68,6 @@ object CalculatorEngine {
                     result = E.toString().take(8)
                 )
                 is CalculatorAction.Power -> handleOperator(state, "^")
-                is CalculatorAction.Function -> state // handled elsewhere
             }
         } catch (e: Exception) {
             state.copy(

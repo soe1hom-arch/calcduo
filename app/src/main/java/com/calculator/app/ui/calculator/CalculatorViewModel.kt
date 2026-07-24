@@ -4,16 +4,19 @@ import androidx.lifecycle.ViewModel
 import com.calculator.app.data.CalculatorAction
 import com.calculator.app.data.CalculatorEngine
 import com.calculator.app.data.CalculatorState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class CalculatorViewModel : ViewModel() {
-    var state = CalculatorState()
-        private set
+    private val _state = MutableStateFlow(CalculatorState())
+    val state: StateFlow<CalculatorState> = _state.asStateFlow()
 
     fun onAction(action: CalculatorAction) {
-        state = CalculatorEngine.processAction(state, action)
+        _state.value = CalculatorEngine.processAction(_state.value, action)
     }
 
     fun clear() {
-        state = CalculatorState()
+        _state.value = CalculatorState()
     }
 }
