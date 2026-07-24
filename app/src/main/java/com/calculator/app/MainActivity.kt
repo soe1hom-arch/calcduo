@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState != null) {
             restoreState(savedInstanceState)
         } else {
-            // Start with one calculator on left panel
+            // Start with dual calculators (top + bottom)
             addCalculator(0)
             addCalculator(1)
         }
