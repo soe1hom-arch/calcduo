@@ -28,29 +28,29 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:baselineAligned="false">
 
             <!-- Left Panel -->
             <FrameLayout
                 android:id="@+id/panel_left"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1" />
 
             <!-- Subtle divider -->
             <View
                 android:id="@+id/panel_divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
                 android:background="?attr/colorOutline"
                 android:visibility="gone" />
 
             <!-- Right Panel -->
             <FrameLayout
                 android:id="@+id/panel_right"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:visibility="gone" />
 

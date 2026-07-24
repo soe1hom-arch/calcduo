@@ -103,7 +103,10 @@ object CalculatorEngine {
         if (state.isError) return CalculatorState(expression = value, result = value)
 
         val newExpr = state.expression + value
-        val newResult = if (state.result == "0" || state.result == "Error") value
+
+        // Start fresh if we just pressed an operator or result is an operator symbol
+        val endsWithOp = state.expression.trimEnd().endsWithAny(listOf("+", "-", "×", "÷", "^"))
+        val newResult = if (state.result == "0" || state.result == "Error" || endsWithOp) value
         else state.result + value
 
         return state.copy(expression = newExpr, result = newResult)
@@ -131,11 +134,10 @@ object CalculatorEngine {
 
         return state.copy(
             expression = newExpr,
-            result = op,
-            history = if (state.result != "0") state.result else state.history
+            result = state.result,
+            history = if (state.result != "0" && state.result != "Error") state.result else state.history,
         )
     }
-
     private fun handleEquals(state: CalculatorState): CalculatorState {
         if (state.expression.isBlank() || state.isError) return state
 
@@ -301,6 +303,11 @@ object CalculatorEngine {
         if (nums.isEmpty()) return Double.NaN
         // If no operators, just return the single number
         if (ops.isEmpty()) return nums[0]
+
+        // Truncate trailing ops if numbers are fewer (e.g. "5+" → num=1, ops=1)
+        while (nums.size <= ops.size) {
+            ops.removeAt(ops.lastIndex)
+        }
 
         // Process * and / first
         var j = 0
