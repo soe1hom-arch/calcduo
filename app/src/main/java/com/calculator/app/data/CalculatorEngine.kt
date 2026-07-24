@@ -105,7 +105,8 @@ object CalculatorEngine {
         val newExpr = state.expression + value
 
         // Start fresh if we just pressed an operator or result is an operator symbol
-        val endsWithOp = state.expression.trimEnd().endsWithAny(listOf("+", "-", "×", "÷", "^"))
+        val endsWithOp = state.expression.trimEnd().let { expr ->
+                listOf("+", "-", "×", "÷", "^").any { expr.endsWith(it) } }
         val newResult = if (state.result == "0" || state.result == "Error" || endsWithOp) value
         else state.result + value
 

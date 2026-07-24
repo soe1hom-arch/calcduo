@@ -266,7 +266,7 @@ class MainActivity : AppCompatActivity() {
 
         AlertDialog.Builder(this)
             .setTitle("Move Tab")
-            .setMessage("Move "${tab.title}" from [$currentPanel] to [$targetPanel] panel?")
+            .setMessage("Move [" + tab.title + "] from [$currentPanel] to [$targetPanel] panel?")
             .setPositiveButton("Move to $targetPanel") { _, _ ->
                 moveTab(tab.id, targetCode)
             }
