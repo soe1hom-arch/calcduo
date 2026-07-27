@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Dark circular background -->
+    <path
+        android:fillColor="#FF3A2A80"
+        android:pathData="M54,54m-48,0a48,48 0,1 1,96 0a48,48 0,1 1,-96 0" />
+
+    <!-- Dual calculator design -->
+    <!-- Left panel (behind) -->
+    <path
+        android:fillColor="#FFD0BCFF"
+        android:pathData="M32,34h28v40H32z"
+        android:strokeWidth="2.5"
+        android:strokeColor="#FFD0BCFF" />
+    <path
+        android:fillColor="#FFD0BCFF"
+        android:pathData="M36,38h20v4H36z" />
+    <path
+        android:fillColor="#FFD0BCFF"
+        android:pathData="M36,46h8v12h-8z" />
+    <path
+        android:fillColor="#FFD0BCFF"
+        android:pathData="M46,46h8v12h-8z" />
+
+    <!-- Right panel (in front, offset) -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M46,38h28v40H46z"
+        android:strokeWidth="2.5"
+        android:strokeColor="#FFFFFFFF" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M50,42h20v4H50z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M50,50h8v12h-8z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M60,50h8v12h-8z" />
+    <path
+        android:fillColor="#7C5CFF"
+        android:pathData="M50,66h16v4H50z"
+        android:strokeWidth="0" />
+
+    <!-- Accent dot -->
+    <path
+        android:fillColor="#FF7C5CFF"
+        android:pathData="M64,42h2v2h-2z" />
+
+</vector>

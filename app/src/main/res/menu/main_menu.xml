@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_settings"
+        android:title="Settings"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_history"
+        android:title="History"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_clear_all"
+        android:title="Clear All"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_notes"
+        android:title="Notes"
+        android:checkable="true"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_privacy"
+        android:title="Privacy Policy"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_about"
+        android:title="About"
+        app:showAsAction="never" />
+</menu>

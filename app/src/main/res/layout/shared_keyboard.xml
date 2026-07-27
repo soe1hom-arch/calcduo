@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/calcKeyboardBackground"
+    android:orientation="vertical"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:paddingTop="3dp"
+    android:paddingBottom="6dp">
+
+    <!-- Row 1: toggle between Standard and Full mode -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <!-- Standard mode: AC ∨ ⌫ ÷ (visible by default) -->
+        <LinearLayout
+            android:id="@+id/row1_standard"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_ac"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="AC" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_toggle_mode"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="∨" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_backspace"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="⌫" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_divide"
+                style="@style/CalcButtonOperator"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="÷" />
+        </LinearLayout>
+
+        <!-- Full mode row 1: sin cos tan ÷ (hidden by default) -->
+        <LinearLayout
+            android:id="@+id/row1_full"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_sin"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="sin" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_cos"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="cos" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_tan"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="tan" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_divide2"
+                style="@style/CalcButtonOperator"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="÷" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Scientific section: visible only in Full mode -->
+    <LinearLayout
+        android:id="@+id/fullModeSection"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <!-- Sci Row 1: log ln √ x² -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_log"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="log" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_ln"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="ln" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_sqrt"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="√" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_square"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="x²" />
+        </LinearLayout>
+
+        <!-- Sci Row 2: 1/x xʸ π e -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_reciprocal"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="1/x" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_power"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="xʸ" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_pi"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="π" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_euler"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="e" />
+        </LinearLayout>
+
+        <!-- Sci Row 3: ( ) % toggle ∩ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_left_paren"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="(" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_right_paren"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text=")" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_percent"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="%" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_toggle_mode_full"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="∧" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Row 2: 7 8 9 × -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn7"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="7" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn8"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="8" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn9"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="9" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_multiply"
+            style="@style/CalcButtonOperator"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="×" />
+    </LinearLayout>
+
+    <!-- Row 3: 4 5 6 − -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn4"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="4" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn5"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="5" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn6"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="6" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_subtract"
+            style="@style/CalcButtonOperator"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="−" />
+    </LinearLayout>
+
+    <!-- Row 4: 1 2 3 + -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn1"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="1" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn2"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="2" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn3"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="3" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_add"
+            style="@style/CalcButtonOperator"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="+" />
+    </LinearLayout>
+
+    <!-- Row 5: ± 0 . = -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_toggle_sign"
+            style="@style/CalcButtonFunction"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="±" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn0"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="0" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_decimal"
+            style="@style/CalcButtonNumber"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="." />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_equals"
+            style="@style/CalcButtonEquals"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="=" />
+    </LinearLayout>
+
+</LinearLayout>

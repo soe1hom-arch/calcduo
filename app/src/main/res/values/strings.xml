@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CalcDuo</string>
+    <string name="nav_open">Open navigation</string>
+    <string name="nav_close">Close navigation</string>
+    <string name="add_tab">Add Calculator</string>
+    <string name="remove_tab">Remove</string>
+    <string name="calculator_title">Calculator</string>
+    <string name="empty_state">No calculators yet. Tap + to add one.</string>
+    <string name="notes_title">Notes</string>
+    <string name="notes_hint">Type your notes here...</string>
+    <string name="about_message">CalcDuo v1.0.0
+
+Premium Dual Calculator for Android
+Run two calculators side-by-side on one screen.
+
+DEVELOPER
+soe1hom-arch
+
+CONTACT
+github.com/soe1hom-arch
+
+TECH STACK
+Kotlin · Material Design 3 · ViewBinding · StateFlow
+
+CREDITS
+Based on AOSP ExactCalculator by Google
+Licensed under Apache 2.0</string>
+    <string name="menu_privacy">Privacy Policy</string>
+</resources>

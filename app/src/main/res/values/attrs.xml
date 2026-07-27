@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- CalcDuo Premium Theme Attributes -->
+    <attr name="calcBackground" format="color" />
+    <attr name="calcBackgroundSecondary" format="color" />
+    <attr name="calcCardBackground" format="color" />
+    <attr name="calcKeyboardBackground" format="color" />
+    <attr name="calcButtonBackground" format="color" />
+    <attr name="calcButtonPressed" format="color" />
+    <attr name="calcTextPrimary" format="color" />
+    <attr name="calcTextSecondary" format="color" />
+    <attr name="calcTextDisabled" format="color" />
+    <attr name="calcAccent" format="color" />
+    <attr name="calcAccentDark" format="color" />
+    <attr name="calcAccentPressed" format="color" />
+    <attr name="calcDivider" format="color" />
+    <attr name="calcDanger" format="color" />
+    <attr name="calcDangerBackground" format="color" />
+</resources>

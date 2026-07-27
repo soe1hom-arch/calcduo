@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- CalcDuo Premium Light Palette -->
+
+    <!-- Backgrounds -->
+    <color name="bg_primary">#FFF8F8FF</color>
+    <color name="bg_secondary">#FFF0F0F5</color>
+    <color name="bg_card">#FFFFFFFF</color>
+    <color name="bg_keyboard">#FFF5F5FA</color>
+    <color name="bg_button">#FFEBEBF0</color>
+    <color name="accent_purple_pressed">#FF5B3EE8</color>
+    <color name="bg_button_pressed">#FFE0E0E8</color>
+
+    <!-- Accent -->
+    <color name="accent_purple">#FF6C4FFF</color>
+    <color name="accent_purple_dark">#FF4A37BF</color>
+
+    <!-- Functional -->
+    <color name="danger">#FFD32F2F</color>
+    <color name="danger_bg">#FFFDECEA</color>
+
+    <!-- Text -->
+    <color name="text_primary">#FF1C1B1F</color>
+    <color name="text_secondary">#FF6E6B76</color>
+    <color name="text_disabled">#FF9E9BA6</color>
+
+    <!-- Button Categories -->
+    <color name="btn_number_bg">@color/bg_button</color>
+    <color name="btn_number_text">@color/text_primary</color>
+    <color name="btn_operator_bg">#FFEDE7FF</color>
+    <color name="btn_operator_text">@color/accent_purple</color>
+    <color name="btn_function_bg">#FFE8E8EE</color>
+    <color name="btn_function_text">@color/text_secondary</color>
+    <color name="btn_equals_bg">@color/accent_purple</color>
+    <color name="btn_equals_text">#FFFFFFFF</color>
+    <color name="btn_danger_bg">@color/danger_bg</color>
+    <color name="btn_danger_text">@color/danger</color>
+
+    <!-- Dividers -->
+    <color name="divider_subtle">#FFE0E0E8</color>
+
+    <!-- Shadows -->
+
+    <color name="display_background">#FFF8F8FF</color>
+
+    <color name="md_theme_primaryContainer">#FFEDE7FF</color>
+
+    <!-- Grey Theme (Premium Slate) -->
+    <color name="grey_bg_primary">#FF1A1A24</color>
+    <color name="grey_bg_secondary">#FF222232</color>
+    <color name="grey_bg_card">#FF2A2A3E</color>
+    <color name="grey_bg_keyboard">#FF202034</color>
+    <color name="grey_bg_button">#FF32324A</color>
+    <color name="grey_bg_button_pressed">#FF3D3D58</color>
+    <color name="grey_text_primary">#FFF0F0FF</color>
+    <color name="grey_text_secondary">#FFB8B8D0</color>
+    <color name="grey_text_disabled">#FF80809A</color>
+    <color name="grey_divider">#FF353550</color>
+    <color name="grey_danger_bg">#FF3A2025</color>
+
+</resources>
