@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CalcDuo — Premium Dual Calculator</title>
+  <meta name="description" content="Run two calculators side-by-side on your Android device. Advanced math, memory, notes, and Material Design 3.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --md-sys-color-primary: #6750a4;
+      --md-sys-color-on-primary: #ffffff;
+      --md-sys-color-primary-container: #eaddff;
+      --md-sys-color-on-primary-container: #21005d;
+      --md-sys-color-secondary: #625b71;
+      --md-sys-color-surface: #fef7ff;
+      --md-sys-color-surface-dim: #ded8e1;
+      --md-sys-color-on-surface: #1d1b20;
+      --md-sys-color-on-surface-variant: #49454f;
+      --md-sys-color-outline: #79747e;
+      --md-sys-color-outline-variant: #cac4d0;
+      --md-sys-color-surface-container: #f3edf7;
+      --md-sys-color-surface-container-high: #ece6f0;
+      --md-ref-palette-purple-40: #6750a4;
+      --md-ref-palette-purple-80: #d0bcff;
+      --gradient-primary: linear-gradient(135deg, #6750a4 0%, #9a82db 50%, #d0bcff 100%);
+      --gradient-hero: linear-gradient(160deg, #21005d 0%, #6750a4 40%, #9a82db 100%);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --radius-full: 999px;
+      --shadow-sm: 0 2px 8px rgba(103,80,164,0.08);
+      --shadow-md: 0 8px 32px rgba(103,80,164,0.12);
+      --shadow-lg: 0 20px 60px rgba(103,80,164,0.15);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--md-sys-color-surface);
+      color: var(--md-sys-color-on-surface);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--md-sys-color-surface); }
+    ::-webkit-scrollbar-thumb { background: var(--md-sys-color-outline-variant); border-radius: 4px; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+    /* Nav */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px; max-width: 1248px; margin: 0 auto;
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      background: rgba(254,247,255,0.8);
+    }
+    nav .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.2rem; }
+    nav .logo-icon {
+      width: 36px; height: 36px; background: var(--gradient-primary);
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 900; font-size: 1.1rem;
+    }
+    nav .nav-links { display: flex; gap: 28px; align-items: center; }
+    nav a { color: var(--md-sys-color-on-surface-variant); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    nav a:hover { color: var(--md-sys-color-primary); }
+    .nav-cta {
+      background: var(--md-sys-color-primary); color: white !important; padding: 10px 24px;
+      border-radius: var(--radius-full); font-weight: 600; font-size: 0.85rem !important;
+      box-shadow: var(--shadow-sm);
+    }
+    .nav-cta:hover { background: #7a5fc0 !important; box-shadow: var(--shadow-md); }
+
+    /* Hero */
+    .hero {
+      min-height: 92vh; display: flex; align-items: center; position: relative;
+      overflow: hidden; padding: 40px 0 80px;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -40%; right: -10%; width: 70%; height: 140%;
+      background: radial-gradient(ellipse, rgba(103,80,164,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; bottom: -20%; left: -5%; width: 50%; height: 100%;
+      background: radial-gradient(ellipse, rgba(208,188,255,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; position: relative; z-index: 1; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container);
+      padding: 8px 18px; border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: 3.8rem; font-weight: 900; line-height: 1.05; letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+    .hero h1 .highlight {
+      background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.15rem; color: var(--md-sys-color-on-surface-variant); max-width: 520px;
+      margin-bottom: 36px; line-height: 1.7;
+    }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px; padding: 16px 36px;
+      border-radius: var(--radius-full); font-weight: 600; font-size: 0.95rem;
+      text-decoration: none; transition: all 0.25s; cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--md-sys-color-primary); color: white;
+      box-shadow: var(--shadow-md);
+    }
+    .btn-primary:hover { background: #7a5fc0; transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+    .btn-secondary {
+      background: var(--md-sys-color-surface-container); color: var(--md-sys-color-on-surface);
+      border: 1px solid var(--md-sys-color-outline-variant);
+    }
+    .btn-secondary:hover { background: var(--md-sys-color-surface-container-high); }
+    .btn-google-play {
+      background: #1a1a1a; color: white; padding: 14px 32px;
+    }
+    .btn-google-play:hover { background: #333; transform: translateY(-2px); }
+
+    /* Phone Mockup */
+    .hero-visual { display: flex; justify-content: center; align-items: center; }
+    .phone-mockup {
+      width: 260px; background: #1d1b20; border-radius: 42px; padding: 12px;
+      box-shadow: var(--shadow-lg), 0 0 0 1px rgba(103,80,164,0.15);
+      position: relative; overflow: hidden;
+    }
+    .phone-mockup .notch {
+      width: 120px; height: 26px; background: #1d1b20;
+      border-radius: 0 0 16px 16px; margin: -12px auto 8px;
+      position: relative; z-index: 2;
+    }
+    .phone-mockup .screen {
+      background: linear-gradient(180deg, #2d2440 0%, #1d1b20 50%);
+      border-radius: 24px; overflow: hidden; position: relative;
+    }
+    .phone-mockup .screen-content {
+      padding: 20px 16px 32px; display: flex; flex-direction: column; gap: 12px;
+    }
+    .calc-display {
+      background: rgba(255,255,255,0.05); border-radius: 16px; padding: 16px 20px;
+      text-align: right; color: white;
+    }
+    .calc-display .expression { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
+    .calc-display .result { font-size: 2rem; font-weight: 700; }
+    .calc-keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .calc-keypad button {
+      border: none; border-radius: 12px; padding: 12px 0; font-size: 1rem; font-weight: 600;
+      cursor: default; background: rgba(255,255,255,0.08); color: white;
+    }
+    .calc-keypad .op { background: rgba(103,80,164,0.5); color: #d0bcff; }
+    .calc-keypad .eq { background: #6750a4; color: white; }
+    .calc-keypad .fn { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.5); }
+    .phone-mockup .split-indicator {
+      display: flex; align-items: center; gap: 8px; padding: 8px 4px;
+    }
+    .phone-mockup .split-indicator .line { flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
+    .phone-mockup .split-indicator .dot {
+      width: 6px; height: 6px; border-radius: 50%; background: #d0bcff;
+    }
+    .calc-second {
+      background: rgba(255,255,255,0.03); border-radius: 16px; padding: 12px;
+      text-align: right; color: white;
+    }
+    .calc-second .mini-result { font-size: 1.2rem; font-weight: 600; color: #d0bcff; }
+    .calc-second .mini-label { font-size: 0.65rem; color: rgba(255,255,255,0.4); }
+
+    /* Features Section */
+    section { padding: 100px 0; }
+    .section-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--md-sys-color-primary); font-size: 0.8rem; font-weight: 700;
+      background: var(--md-sys-color-primary-container); padding: 6px 16px;
+      border-radius: var(--radius-full); margin-bottom: 16px;
+    }
+    .section-title { font-size: 2.8rem; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .section-title .highlight { background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .section-sub { color: var(--md-sys-color-on-surface-variant); font-size: 1.05rem; max-width: 640px; margin-bottom: 48px; }
+
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .feature-card {
+      background: var(--md-sys-color-surface-container); border-radius: var(--radius);
+      padding: 32px 28px; transition: all 0.3s; position: relative;
+      overflow: hidden; border: 1px solid transparent;
+    }
+    .feature-card:hover {
+      border-color: var(--md-sys-color-outline-variant); transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+    .feature-card .icon {
+      width: 52px; height: 52px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 18px;
+    }
+    .feature-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p { color: var(--md-sys-color-on-surface-variant); font-size: 0.9rem; line-height: 1.65; }
+
+    /* Feature highlight row */
+    .feature-highlight {
+      background: var(--md-sys-color-surface-container);
+      border-radius: var(--radius); padding: 60px; margin-top: 24px;
+      display: grid; grid-template-columns: 2fr 1fr; gap: 48px; align-items: center;
+    }
+    .feature-highlight h3 { font-size: 1.6rem; font-weight: 800; margin-bottom: 12px; }
+    .feature-highlight p { color: var(--md-sys-color-on-surface-variant); margin-bottom: 20px; }
+    .feature-highlight ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .feature-highlight ul li::before { content: '✓ '; color: var(--md-sys-color-primary); font-weight: 700; }
+    .feature-highlight .stats { display: flex; gap: 32px; }
+    .feature-highlight .stats .num { font-size: 2.2rem; font-weight: 900; color: var(--md-sys-color-primary); }
+    .feature-highlight .stats .label { font-size: 0.8rem; color: var(--md-sys-color-on-surface-variant); }
+
+    /* Privacy */
+    .privacy-card {
+      background: var(--gradient-primary); border-radius: var(--radius);
+      padding: 48px; text-align: center; color: white;
+    }
+    .privacy-card h2 { font-size: 1.8rem; margin-bottom: 12px; }
+    .privacy-card p { opacity: 0.85; max-width: 520px; margin: 0 auto; font-size: 0.95rem; }
+
+    /* Download Section */
+    .download-section {
+      background: var(--md-sys-color-surface-container);
+      border-radius: var(--radius); padding: 60px; text-align: center;
+    }
+    .download-section .btn { font-size: 1.1rem; padding: 18px 48px; }
+    .download-badges { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .download-badges .badge {
+      display: inline-block; padding: 6px 16px; border-radius: var(--radius-full);
+      font-size: 0.75rem; font-weight: 600;
+    }
+    .badge-purple { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); }
+    .badge-outline { border: 1px solid var(--md-sys-color-outline); color: var(--md-sys-color-on-surface-variant); }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--md-sys-color-outline-variant); padding: 48px 0 32px;
+      text-align: center;
+    }
+    footer .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 16px; flex-wrap: wrap; }
+    footer a { color: var(--md-sys-color-on-surface-variant); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+    footer a:hover { color: var(--md-sys-color-primary); }
+    footer p { color: var(--md-sys-color-outline); font-size: 0.8rem; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; text-align: center; }
+      .hero p { margin: 0 auto 36px; }
+      .hero-actions { justify-content: center; }
+      .hero-visual { display: none; }
+      .features-grid { grid-template-columns: 1fr; }
+      .feature-highlight { grid-template-columns: 1fr; padding: 32px 24px; text-align: center; }
+      .feature-highlight .stats { justify-content: center; }
+      .section-title { font-size: 2rem; }
+      .hero h1 { font-size: 2.6rem; }
+      .download-section { padding: 32px 20px; }
+      .privacy-card { padding: 32px 20px; }
+      nav .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <div class="logo-icon">CD</div>
+      <span>CalcDuo</span>
+    </div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#details">Details</a>
+      <a href="#download" class="nav-cta">Get CalcDuo</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="hero-badge">🧮 Material Design 3</div>
+        <h1>Two Calculators.<br><span class="highlight">One Screen.</span></h1>
+        <p>Run two independent calculators side-by-side. Advanced math, memory functions, notes panel, and a premium Material Design 3 experience — all offline, under 3MB.</p>
+        <div class="hero-actions">
+          <a href="#download" class="btn btn-primary">⬇ Get CalcDuo</a>
+          <a href="#features" class="btn btn-secondary">Explore Features</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="screen">
+            <div class="screen-content">
+              <div class="calc-display">
+                <div class="expression">42 × 3.14159</div>
+                <div class="result">131.94</div>
+              </div>
+              <div class="calc-keypad">
+                <button class="fn">MC</button><button class="fn">MR</button><button class="fn">M+</button><button class="op">÷</button>
+                <button>7</button><button>8</button><button>9</button><button class="op">×</button>
+                <button>4</button><button>5</button><button>6</button><button class="op">−</button>
+                <button>1</button><button>2</button><button>3</button><button class="op">+</button>
+                <button class="fn">±</button><button>0</button><button>.</button><button class="eq">=</button>
+              </div>
+              <div class="split-indicator">
+                <div class="line"></div><div class="dot"></div><div class="line"></div>
+              </div>
+              <div class="calc-second">
+                <div class="mini-label">Calculator 2</div>
+                <div class="mini-result">√(144) + 2.5²</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" style="background:var(--md-sys-color-surface-container);">
+    <div class="container">
+      <span class="section-label">✨ Features</span>
+      <h2 class="section-title">Built for <span class="highlight">Productivity</span></h2>
+      <p class="section-sub">Every feature designed to make multi-calculation effortless. From students to professionals.</p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(103,80,164,0.12);color:var(--md-sys-color-primary)">🔄</div>
+          <h3>Dual Calculator</h3>
+          <p>Two independent calculators side-by-side. Compare results, work with multiple numbers simultaneously.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(208,188,255,0.2);color:#7a5fc0">📑</div>
+          <h3>Tab System</h3>
+          <p>Create, rename, and switch between calculator tabs. Organize your calculations by topic or project.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(103,80,164,0.12);color:var(--md-sys-color-primary)">🔢</div>
+          <h3>Advanced Math</h3>
+          <p>Parentheses, power (xʸ), square root, π, e, percentage, sign toggle — everything you need.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(208,188,255,0.2);color:#7a5fc0">💾</div>
+          <h3>Memory Functions</h3>
+          <p>MC, MR, M+, M− with a visual memory indicator. Never lose track of stored values.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(103,80,164,0.12);color:var(--md-sys-color-primary)">📋</div>
+          <h3>Calculation History</h3>
+          <p>Browse and review your recent calculations. Tap any entry to reuse it.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(208,188,255,0.2);color:#7a5fc0">📝</div>
+          <h3>Notes Panel</h3>
+          <p>Built-in notepad alongside your work. Jot down numbers, ideas, or results without switching apps.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(103,80,164,0.12);color:var(--md-sys-color-primary)">🌓</div>
+          <h3>Light & Dark Theme</h3>
+          <p>Auto-switches with system settings. Beautiful in both modes with thoughtful color design.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(208,188,255,0.2);color:#7a5fc0">📳</div>
+          <h3>Haptic Feedback</h3>
+          <p>Tactile response on every key press. Feels like a premium physical calculator.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(103,80,164,0.12);color:var(--md-sys-color-primary)">📡</div>
+          <h3>Fully Offline</h3>
+          <p>No internet required. Your data stays on your device. Private, fast, and always available.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="details">
+    <div class="container">
+      <div class="feature-highlight">
+        <div>
+          <span class="section-label">💎 Premium Experience</span>
+          <h3>Designed With Material Design 3</h3>
+          <p>CalcDuo follows Google's latest Material Design 3 guidelines with a sophisticated purple accent palette. Every interaction feels polished and intentional.</p>
+          <ul>
+            <li>Material You dynamic theming support</li>
+            <li>Smooth animations and transitions</li>
+            <li>Optimized for both phones and tablets</li>
+            <li>Split-screen multitasking ready</li>
+            <li>Accessible — supports font scaling</li>
+          </ul>
+        </div>
+        <div>
+          <div class="stats">
+            <div><div class="num">&lt;3MB</div><div class="label">App Size</div></div>
+            <div><div class="num">0</div><div class="label">Permissions</div></div>
+            <div><div class="num">100%</div><div class="label">Offline</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="privacy-card">
+        <span class="section-label" style="background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.2);">🔒 Privacy First</span>
+        <h2>No Data Collected. <br>No Permissions Required.</h2>
+        <p>CalcDuo does not collect any personal data, does not require internet access, and requests zero permissions (except vibration for haptic feedback — and you can disable that). Your calculations stay yours.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="download">
+    <div class="container">
+      <div class="download-section">
+        <span class="section-label">⬇️ Get Started</span>
+        <h2 class="section-title">Download <span class="highlight">CalcDuo</span></h2>
+        <p class="section-sub" style="margin:0 auto 32px;">Available now for Android. Free, premium, and offline.</p>
+        <div class="download-badges">
+          <span class="badge badge-purple">v1.0.0</span>
+          <span class="badge badge-outline">Android 8.0+</span>
+          <span class="badge badge-outline">&lt; 3MB</span>
+          <span class="badge badge-outline">Material Design 3</span>
+        </div>
+        <a href="https://github.com/soe1hom-arch/calcduo/releases/latest" class="btn btn-primary" style="font-size:1.1rem;padding:18px 48px;">⬇ Download APK</a>
+        <p style="margin-top:16px;font-size:0.85rem;color:var(--md-sys-color-on-surface-variant);">Coming soon to Google Play Store</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-links">
+        <a href="https://github.com/soe1hom-arch/calcduo">GitHub</a>
+        <a href="https://github.com/soe1hom-arch/calcduo/releases">Releases</a>
+        <a href="https://github.com/soe1hom-arch/calcduo/issues">Issues</a>
+        <a href="https://github.com/soe1hom-arch/calcduo/blob/main/LICENSE">License</a>
+      </div>
+      <p>MIT License — © 2026 Wandi (soe1hom-arch). Built with ❤️ for Android.</p>
+    </div>
+  </footer>
+</body>
+</html>
