@@ -70,16 +70,32 @@ cd calcduo
 # ./gradlew assembleRelease      # signed release (requires keystore)
 ```
 
-### CI
+### Local Release Build
+
+To generate a keystore and set up for local release builds:
+
+```bash
+# Passwords via env vars (recommended for scripting)
+KEY_PASSWORD="your_password" STORE_PASSWORD="your_password" \
+  ./scripts/setup-release.sh
+
+# Or run interactively (passwords hidden)
+./scripts/setup-release.sh
+```
+
+> **Security:** Never hardcode passwords in scripts or commit them to the repository.
+
+### CI / GitHub Secrets
 
 Push to `main` → auto debug build. Tag `v*` → signed release.
 
 | Secret | Purpose |
 |---|---|
-| `KEYSTORE_BASE64` | Base64 keystore |
+| `KEYSTORE_BASE64` | Base64-encoded keystore file |
 | `KEYSTORE_PASSWORD` | Keystore password |
 | `KEY_ALIAS` | Key alias |
 | `KEY_PASSWORD` | Key password |
+| `PAT_TOKEN` | GitHub token for release creation *(optional — only for `build-release.yml`)* |
 
 ---
 

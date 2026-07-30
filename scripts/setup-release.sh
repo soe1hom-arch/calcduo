@@ -1,13 +1,26 @@
 #!/bin/bash
 # Setup keystore for local release builds
+# NOTE: Passwords are NOT hardcoded — read from env vars or prompted interactively.
 
 KEYSTORE_DIR="app"
 KEYSTORE_FILE="$KEYSTORE_DIR/calcduo-keystore.jks"
 KEY_ALIAS="calcduo"
-KEY_PASSWORD=""
-STORE_PASSWORD=""
 
 echo "🔑 Generating keystore for release builds..."
+
+# Read passwords securely
+KEY_PASSWORD="${KEY_PASSWORD:-}"
+STORE_PASSWORD="${STORE_PASSWORD:-}"
+
+if [ -z "$KEY_PASSWORD" ] || [ -z "$STORE_PASSWORD" ]; then
+    read -rsp "Enter keystore password: " STORE_PASSWORD
+    echo ""
+    read -rsp "Enter key password (press Enter to use keystore password): " KEY_PASSWORD
+    echo ""
+    if [ -z "$KEY_PASSWORD" ]; then
+        KEY_PASSWORD="$STORE_PASSWORD"
+    fi
+fi
 
 if ! command -v keytool &> /dev/null; then
     if [ -n "$JAVA_HOME" ]; then
@@ -29,6 +42,5 @@ keytool -genkey -v \
 
 echo "✅ Keystore created: $KEYSTORE_FILE"
 echo ""
-echo "📋 GitHub Secrets needed for CI/CD:"
-echo "  KEYSTORE_BASE64  = base64 of $KEYSTORE_FILE"
-echo "  KEY_ALIAS         = $KEY_ALIAS"
+echo "📋 To configure GitHub Secrets for CI/CD, refer to:"
+echo "   https://github.com/soe1hom-arch/calcduo/settings/secrets/actions"

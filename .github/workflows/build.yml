@@ -26,10 +26,10 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build with Gradle
+      - name: Build with Gradle (debug)
         run: ./gradlew assembleDebug
 
-      - name: Upload APK
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
@@ -41,13 +41,13 @@ jobs:
         if: ${{ secrets.KEYSTORE_BASE64 != '' }}
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_FILE: keystore.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
         run: |
-          echo $KEYSTORE_BASE64 | base64 -d > keystore.jks
+          echo "$KEYSTORE_BASE64" | base64 --decode > "$KEYSTORE_FILE"
           ./gradlew assembleRelease
-          # Upload release artifact
           echo "Release APK built successfully"
 
       - name: Upload Release APK
