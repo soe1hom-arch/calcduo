@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
                 binding.keyboard.btnEquals
             )
         )
+        CustomAccent.applyKeyboardRipple(this, binding.keyboard.root)
         setupCalculators()
         setupDisplayTapToCollapse()
     }
@@ -278,14 +279,6 @@ class MainActivity : AppCompatActivity() {
         val view = LayoutInflater.from(this).inflate(R.layout.dialog_settings, null, false)
         dialog.setContentView(view)
         view.findViewById<View>(R.id.btn_settings_close).setOnClickListener { dialog.dismiss() }
-
-        view.findViewById<android.widget.ImageView>(R.id.img_settings_icon)?.let { CustomAccent.tintImageView(this, it) }
-        listOf(
-            R.id.tv_label_theme, R.id.tv_label_op_edge, R.id.tv_label_edge,
-            R.id.tv_label_accent, R.id.tv_label_feedback
-        ).forEach { id ->
-            view.findViewById<android.widget.TextView>(id)?.let { CustomAccent.tintTextView(this, it) }
-        }
 
         val chipGroup = view.findViewById<com.google.android.material.chip.ChipGroup>(R.id.chip_group_theme)
         val chipMap = mapOf(

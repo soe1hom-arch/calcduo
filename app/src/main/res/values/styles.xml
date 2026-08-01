@@ -28,10 +28,10 @@
         <item name="android:textSize">28sp</item>
     </style>
 
-    <!-- Operators: Dark Purple -->
+    <!-- Operators: Black -->
     <style name="CalcButtonOperator" parent="CalcButtonBase" tools:targetApi="28">
-        <item name="backgroundTint">?attr/calcAccentDark</item>
-        <item name="android:textColor">?attr/calcAccent</item>
+        <item name="backgroundTint">#FF000000</item>
+        <item name="android:textColor">#FFFFFFFF</item>
         <item name="android:textSize">28sp</item>
         <item name="strokeWidth">2dp</item>
         <item name="strokeColor">#FF5F00</item>
@@ -48,10 +48,10 @@
         <item name="elevation">1.5dp</item>
     </style>
 
-    <!-- Equals: Solid Purple - strongest visual -->
+    <!-- Equals: Solid Black - strongest visual -->
     <style name="CalcButtonEquals" parent="CalcButtonBase" tools:targetApi="28">
-        <item name="backgroundTint">?attr/calcAccent</item>
-        <item name="android:textColor">?attr/calcTextPrimary</item>
+        <item name="backgroundTint">#FF000000</item>
+        <item name="android:textColor">#FFFFFFFF</item>
         <item name="android:textSize">32sp</item>
         <item name="elevation">8dp</item>
         <item name="cornerRadius">16dp</item>

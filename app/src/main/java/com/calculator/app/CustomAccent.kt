@@ -2,12 +2,11 @@ package com.calculator.app
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.edit
+import androidx.core.graphics.ColorUtils
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.card.MaterialCardView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 object CustomAccent {
     private const val PREFS = "calcduo_settings"
@@ -53,23 +52,16 @@ object CustomAccent {
         button.setTextColor(readableTextColor(accent))
     }
 
-    fun tintFab(context: Context, fab: FloatingActionButton) {
+    fun applyKeyboardRipple(context: Context, root: View) {
         val accent = get(context) ?: return
-        fab.backgroundTintList = ColorStateList.valueOf(accent)
-    }
-
-    fun tintTextView(context: Context, view: TextView) {
-        val accent = get(context) ?: return
-        view.setTextColor(accent)
-    }
-
-    fun tintImageView(context: Context, view: ImageView) {
-        val accent = get(context) ?: return
-        view.imageTintList = ColorStateList.valueOf(accent)
-    }
-
-    fun tintCardStroke(context: Context, card: MaterialCardView) {
-        val accent = get(context) ?: return
-        card.strokeColor = accent
+        val ripple = ColorStateList.valueOf(ColorUtils.setAlphaComponent(accent, 0x66))
+        fun walk(view: View) {
+            if (view is MaterialButton) {
+                view.rippleColor = ripple
+            } else if (view is ViewGroup) {
+                for (i in 0 until view.childCount) walk(view.getChildAt(i))
+            }
+        }
+        walk(root)
     }
 }
