@@ -2,7 +2,7 @@
   <img src="https://img.shields.io/badge/Android-8.0%2B-3DDC84?style=flat-square&logo=android" alt="Android">
   
   <img src="https://img.shields.io/badge/License-Apache%202.0-blue?style=flat-square" alt="License">
-  <a href="https://github.com/soe1hom-arch/calcduo/releases/latest"><img src="https://img.shields.io/badge/Release-1.6.3-7B1FA2?style=flat-square&logo=github" alt="Release"></a>
+  <a href="https://github.com/soe1hom-arch/calcduo/releases/latest"><img src="https://img.shields.io/badge/Release-1.6.4-7B1FA2?style=flat-square&logo=github" alt="Release"></a>
 </p>
 
 <p align="center">

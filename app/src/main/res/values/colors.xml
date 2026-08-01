@@ -24,24 +24,8 @@
     <color name="text_secondary">#FF6E6B76</color>
     <color name="text_disabled">#FF9E9BA6</color>
 
-    <!-- Button Categories -->
-    <color name="btn_number_bg">@color/bg_button</color>
-    <color name="btn_number_text">@color/text_primary</color>
-    <color name="btn_operator_bg">#FFEDE7FF</color>
-    <color name="btn_operator_text">@color/accent_purple</color>
-    <color name="btn_function_bg">#FFE8E8EE</color>
-    <color name="btn_function_text">@color/text_secondary</color>
-    <color name="btn_equals_bg">@color/accent_purple</color>
-    <color name="btn_equals_text">#FFFFFFFF</color>
-    <color name="btn_danger_bg">@color/danger_bg</color>
-    <color name="btn_danger_text">@color/danger</color>
-
     <!-- Dividers -->
     <color name="divider_subtle">#FFE0E0E8</color>
-
-    <!-- Shadows -->
-
-    <color name="display_background">#FFF8F8FF</color>
 
     <color name="md_theme_primaryContainer">#FFEDE7FF</color>
 
@@ -51,7 +35,6 @@
     <color name="grey_bg_card">#FF2A2A3E</color>
     <color name="grey_bg_keyboard">#FF202034</color>
     <color name="grey_bg_button">#FF32324A</color>
-    <color name="grey_bg_button_pressed">#FF3D3D58</color>
     <color name="grey_text_primary">#FFF0F0FF</color>
     <color name="grey_text_secondary">#FFB8B8D0</color>
     <color name="grey_text_disabled">#FF80809A</color>

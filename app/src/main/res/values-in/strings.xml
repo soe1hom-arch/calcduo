@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CalcDuo</string>
+    <string name="nav_open">Buka navigasi</string>
+
+    <!-- Menu -->
+    <string name="menu_settings">Pengaturan</string>
+    <string name="menu_history">Riwayat</string>
+    <string name="menu_clear_all">Bersihkan Semua</string>
+    <string name="menu_about">Tentang</string>
+    <string name="menu_privacy">Kebijakan Privasi</string>
+
+    <!-- Layouts -->
+    <string name="app_tagline">Kalkulator Ganda</string>
+    <string name="tabs">Tab</string>
+    <string name="no_calculators">Belum ada kalkulator</string>
+    <string name="add">Tambah</string>
+    <string name="clear">Bersihkan</string>
+    <string name="empty_state">Belum ada kalkulator. Ketuk + untuk menambah.</string>
+    <string name="calculator_label">Kalkulator</string>
+    <string name="copy_result">Salin hasil</string>
+    <string name="add_calculator_tab">Tambah tab kalkulator baru</string>
+
+    <!-- Notes -->
+    <string name="notes_title">Catatan</string>
+    <string name="notes_hint">Tulis catatanmu di sini…</string>
+
+    <!-- Settings dialog -->
+    <string name="settings_theme">TEMA</string>
+    <string name="theme_system">Sistem</string>
+    <string name="theme_light">Terang</string>
+    <string name="theme_dark">Gelap</string>
+    <string name="theme_grey">Abu-abu</string>
+    <string name="settings_feedback">UMPAN BALIK</string>
+    <string name="settings_haptic">Umpan Balik Getar</string>
+
+    <!-- About dialog -->
+    <string name="about_version">v1.6.4</string>
+    <string name="about_tagline">Kalkulator Ganda Premium</string>
+    <string name="about_description">Dua kalkulator berdampingan</string>
+    <string name="about_developer">Pengembang</string>
+    <string name="about_license">Lisensi</string>
+    <string name="about_source">Sumber</string>
+    <string name="about_credits">Berdasarkan AOSP ExactCalculator</string>
+
+    <!-- Calculator labels -->
+    <string name="calculator_label_1">Kalkulator 1</string>
+    <string name="calculator_label_2">Kalkulator 2</string>
+
+    <!-- Dialogs & toasts -->
+    <string name="history_title">Riwayat Perhitungan</string>
+    <string name="history_clear">Bersihkan Riwayat</string>
+    <string name="no_history">Belum ada riwayat</string>
+    <string name="ok">OK</string>
+    <string name="browser_unavailable">Browser tidak tersedia</string>
+    <string name="copied_result">Disalin: %1$s</string>
+    <plurals name="notes_chars">
+        <item quantity="other">%1$d karakter</item>
+    </plurals>
+
+    <!-- Privacy -->
+    <string name="privacy_body">CalcDuo tidak mengumpulkan, menyimpan, atau membagikan data pribadi apa pun.<br/><br/>Aplikasi ini menggunakan izin VIBRATE hanya untuk umpan balik getar saat tombol ditekan. Tidak ada koneksi internet yang dibutuhkan, dan tidak ada data yang dikirim.<br/><br/>Kontak: <a href="https://github.com/soe1hom-arch">github.com/soe1hom-arch</a><br/>Pembaruan terakhir: Juli 2026</string>
+</resources>

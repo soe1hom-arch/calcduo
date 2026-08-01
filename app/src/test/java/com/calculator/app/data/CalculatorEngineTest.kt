@@ -177,6 +177,99 @@ class CalculatorEngineTest {
         assertEquals("2", state.result)
     }
 
+    // ─── After Equals / Unary Commit ───
+
+    @Test
+    fun testNumberAfterEqualsStartsFresh() {
+        var state = CalculatorEngine.processAction(CalculatorState(), CalculatorAction.Number("3"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Operator("+"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("4"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Equals)
+        assertEquals("7", state.result)
+
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("5"))
+        assertEquals("5", state.expression)
+        assertEquals("5", state.result)
+    }
+
+    @Test
+    fun testOperatorAfterEqualsContinuesFromResult() {
+        var state = CalculatorEngine.processAction(CalculatorState(), CalculatorAction.Number("3"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Operator("+"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("4"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Equals)
+        assertEquals("7", state.result)
+
+        state = CalculatorEngine.processAction(state, CalculatorAction.Operator("+"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("2"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Equals)
+        assertEquals("9", state.result)
+    }
+
+    @Test
+    fun testHistoryLogCappedAt100() {
+        var state = CalculatorState()
+        repeat(105) {
+            state = CalculatorEngine.processAction(state, CalculatorAction.Number("1"))
+            state = CalculatorEngine.processAction(state, CalculatorAction.Operator("+"))
+            state = CalculatorEngine.processAction(state, CalculatorAction.Number("1"))
+            state = CalculatorEngine.processAction(state, CalculatorAction.Equals)
+        }
+        assertEquals(100, state.historyLog.size)
+    }
+
+    @Test
+    fun testParseHistoryEntry() {
+        val parsed = CalculatorEngine.parseHistoryEntry("3 + 4 = 7")
+        assertNotNull(parsed)
+        assertEquals("3 + 4", parsed?.first)
+        assertEquals("7", parsed?.second)
+        assertNull(CalculatorEngine.parseHistoryEntry("not history"))
+    }
+
+    @Test
+    fun testUnaryOpCommittedToExpression() {
+        var state = CalculatorEngine.processAction(CalculatorState(), CalculatorAction.Number("16"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.SquareRoot)
+        assertEquals("4", state.expression)
+        assertEquals("4", state.result)
+
+        state = CalculatorEngine.processAction(state, CalculatorAction.Equals)
+        assertEquals("4", state.result)
+    }
+
+    @Test
+    fun testUnaryOpThenOperatorUsesResult() {
+        var state = CalculatorEngine.processAction(CalculatorState(), CalculatorAction.Number("16"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.SquareRoot)
+        assertEquals("4", state.result)
+
+        state = CalculatorEngine.processAction(state, CalculatorAction.Operator("+"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("5"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Equals)
+        assertEquals("9", state.result)
+    }
+
+    @Test
+    fun testPercentThenEquals() {
+        var state = CalculatorEngine.processAction(CalculatorState(), CalculatorAction.Number("200"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Percent)
+        assertEquals("2", state.result)
+
+        state = CalculatorEngine.processAction(state, CalculatorAction.Equals)
+        assertEquals("2", state.result)
+    }
+
+    @Test
+    fun testPercentThenOperatorUsesResult() {
+        var state = CalculatorEngine.processAction(CalculatorState(), CalculatorAction.Number("200"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Percent)
+        state = CalculatorEngine.processAction(state, CalculatorAction.Operator("+"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("10"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Equals)
+        assertEquals("12", state.result)
+    }
+
     @Test
     fun testOperatorPrecedence() {
         // Test: 2 + 3 × 4 = 14 (multiplication first)
@@ -228,11 +321,21 @@ class CalculatorEngineTest {
         assertEquals(8.0, CalculatorEngine.evaluate("2^3"), 0.001)
     }
 
+    @Test
+    fun testEvaluatePercent() {
+        assertEquals(2.0, CalculatorEngine.evaluate("200%"), 0.001)
+    }
+
     // ─── Format ───
 
     @Test
     fun testFormatInteger() {
         assertEquals("42", CalculatorEngine.formatResult(42.0))
+    }
+
+    @Test
+    fun testFormatThousandsSeparator() {
+        assertEquals("1\u202F234", CalculatorEngine.formatResult(1234.0))
     }
 
     @Test

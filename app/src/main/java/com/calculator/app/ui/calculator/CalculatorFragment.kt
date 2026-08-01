@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.calculator.app.data.CalculatorAction
 import com.calculator.app.data.CalculatorState
 import com.calculator.app.databinding.FragmentCalculatorBinding
+import com.calculator.app.R
 import com.google.android.material.color.MaterialColors
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -86,6 +87,14 @@ class CalculatorFragment : Fragment() {
         viewModel.clear()
     }
 
+    fun restoreHistory(expression: String, result: String) {
+        viewModel.restore(expression, result)
+    }
+
+    fun clearHistory() {
+        viewModel.clearHistory()
+    }
+
     private fun setupTapToSelect() {
         binding.root.setOnClickListener {
             onTabSelectedListener?.invoke(tabId)
@@ -139,16 +148,16 @@ class CalculatorFragment : Fragment() {
         binding.btnCopyResult.setOnClickListener {
             val text = binding.tvResult.text.toString()
             if (text.isNotEmpty() && text != "0" && text != "Error") {
-                clipboard?.setPrimaryClip(ClipData.newPlainText("CalcDuo", text))
-                Toast.makeText(context, "Copied: $text", Toast.LENGTH_SHORT).show()
+                clipboard?.setPrimaryClip(ClipData.newPlainText(getString(R.string.app_name), text))
+                Toast.makeText(context, getString(R.string.copied_result, text), Toast.LENGTH_SHORT).show()
             }
         }
 
         binding.tvExpression.setOnClickListener {
             val text = binding.tvExpression.text.toString()
             if (text.isNotEmpty()) {
-                clipboard?.setPrimaryClip(ClipData.newPlainText("CalcDuo", text))
-                Toast.makeText(context, "Copied: $text", Toast.LENGTH_SHORT).show()
+                clipboard?.setPrimaryClip(ClipData.newPlainText(getString(R.string.app_name), text))
+                Toast.makeText(context, getString(R.string.copied_result, text), Toast.LENGTH_SHORT).show()
             }
         }
     }

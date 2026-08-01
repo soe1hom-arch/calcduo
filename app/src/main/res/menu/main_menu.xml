@@ -3,27 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_settings"
-        android:title="Settings"
+        android:title="@string/menu_settings"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_history"
-        android:title="History"
+        android:title="@string/menu_history"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_clear_all"
-        android:title="Clear All"
+        android:title="@string/menu_clear_all"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_notes"
-        android:title="Notes"
+        android:title="@string/notes_title"
         android:checkable="true"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_privacy"
-        android:title="Privacy Policy"
+        android:title="@string/menu_privacy"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_about"
-        android:title="About"
+        android:title="@string/menu_about"
         app:showAsAction="never" />
 </menu>

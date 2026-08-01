@@ -33,6 +33,8 @@
         <item name="backgroundTint">?attr/calcAccentDark</item>
         <item name="android:textColor">?attr/calcAccent</item>
         <item name="android:textSize">28sp</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="strokeColor">#FF5F00</item>
     </style>
 
     <!-- Functions: Gray Surface -->
@@ -43,13 +45,6 @@
         <item name="elevation">1.5dp</item>
     </style>
 
-    <!-- AC/Danger: Soft Red -->
-    <style name="CalcButtonClear" parent="CalcButtonBase">
-        <item name="backgroundTint">?attr/calcDangerBackground</item>
-        <item name="android:textColor">?attr/calcDanger</item>
-        <item name="android:textSize">22sp</item>
-    </style>
-
     <!-- Equals: Solid Purple - strongest visual -->
     <style name="CalcButtonEquals" parent="CalcButtonBase">
         <item name="backgroundTint">?attr/calcAccent</item>
@@ -57,5 +52,7 @@
         <item name="android:textSize">32sp</item>
         <item name="elevation">3dp</item>
         <item name="cornerRadius">16dp</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="strokeColor">#FF5F00</item>
     </style>
 </resources>

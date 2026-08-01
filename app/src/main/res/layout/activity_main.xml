@@ -19,7 +19,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorSurface"
             android:elevation="0dp"
-            app:title="CalcDuo"
+            app:title="@string/app_name"
             app:titleTextColor="?attr/colorOnSurface"
             app:navigationIcon="@drawable/ic_menu"
             app:navigationContentDescription="@string/nav_open"
@@ -109,7 +109,7 @@
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="6dp"
-                    android:text="Clear"
+                    android:text="@string/clear"
                     android:textColor="?attr/calcAccent"
                     android:textSize="12sp"
                     android:textStyle="bold"
@@ -131,6 +131,7 @@
                     android:background="@null"
                     android:gravity="top|start"
                     android:hint="@string/notes_hint"
+                    android:importantForAutofill="no"
                     android:inputType="textMultiLine"
                     android:lines="8"
                     android:minLines="4"
@@ -171,7 +172,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="CalcDuo"
+                android:text="@string/app_name"
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="28sp"
                 android:textStyle="bold" />
@@ -179,7 +180,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Dual Calculator"
+                android:text="@string/app_tagline"
                 android:textColor="?attr/colorOnSurfaceVariant"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -189,7 +190,7 @@
             android:paddingHorizontal="20dp"
             android:paddingTop="20dp"
             android:paddingBottom="8dp"
-            android:text="Tabs"
+            android:text="@string/tabs"
             android:textColor="?attr/colorOnSurface"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -208,7 +209,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:padding="32dp"
-            android:text="No calculators yet"
+            android:text="@string/no_calculators"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="14sp"
             android:visibility="gone" />
@@ -217,9 +218,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="Add"
+            android:text="@string/add"
             android:textColor="?attr/colorOnSurface"
-            android:contentDescription="Add new calculator tab"
+            android:contentDescription="@string/add_calculator_tab"
             app:icon="@android:drawable/ic_input_add"
             app:iconTint="?attr/colorOnSurface"
             app:backgroundTint="?attr/colorSurfaceVariant" />

@@ -45,7 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="CalcDuo"
+        android:text="@string/app_name"
         android:textColor="?attr/calcTextPrimary"
         android:textSize="24sp"
         android:textStyle="bold" />
@@ -54,7 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="v1.6.0"
+        android:text="@string/about_version"
         android:textColor="?attr/calcTextSecondary"
         android:textSize="13sp"
         android:layout_marginBottom="16dp" />
@@ -69,7 +69,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Premium Dual Calculator"
+        android:text="@string/about_tagline"
         android:textColor="?attr/calcTextPrimary"
         android:textSize="15sp" />
 
@@ -77,7 +77,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Two calculators side-by-side"
+        android:text="@string/about_description"
         android:textColor="?attr/calcTextSecondary"
         android:textSize="13sp"
         android:layout_marginBottom="20dp" />
@@ -103,7 +103,7 @@
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="Developer"
+                android:text="@string/about_developer"
                 android:textColor="?attr/calcTextSecondary"
                 android:textSize="13sp" />
             <TextView
@@ -124,7 +124,7 @@
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="License"
+                android:text="@string/about_license"
                 android:textColor="?attr/calcTextSecondary"
                 android:textSize="13sp" />
             <TextView
@@ -143,7 +143,7 @@
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="Source"
+                android:text="@string/about_source"
                 android:textColor="?attr/calcTextSecondary"
                 android:textSize="13sp" />
             <TextView
@@ -165,7 +165,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Based on AOSP ExactCalculator"
+        android:text="@string/about_credits"
         android:textColor="?attr/calcTextDisabled"
         android:textSize="11sp"
         android:layout_marginTop="16dp" />

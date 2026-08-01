@@ -75,11 +75,4 @@
         <item name="android:windowBackground">@color/accent_purple</item>
     </style>
 
-    <style name="Theme.CalcDuo.BottomSheet" parent="Theme.Material3.DayNight.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/CalcDuoBottomSheetStyle</item>
-    </style>
-
-    <style name="CalcDuoBottomSheetStyle" parent="Widget.Material3.BottomSheet">
-        <item name="android:background">@android:color/transparent</item>
-    </style>
 </resources>

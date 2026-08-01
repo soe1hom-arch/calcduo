@@ -10,6 +10,7 @@ import kotlin.math.ln
 import kotlin.math.absoluteValue
 import kotlin.math.PI
 import kotlin.math.E
+import java.util.Locale
 
 data class CalculatorState(
     val expression: String = "",
@@ -19,7 +20,8 @@ data class CalculatorState(
     val history: String = "", // shows previous operation
     val memory: Double = 0.0,
     val hasMemory: Boolean = false,
-    val historyLog: List<String> = emptyList()
+    val historyLog: List<String> = emptyList(),
+    val justEvaluated: Boolean = false
 )
 
 sealed class CalculatorAction {
@@ -52,6 +54,8 @@ sealed class CalculatorAction {
 
 object CalculatorEngine {
 
+    private const val MAX_HISTORY_LOG = 100
+
     fun processAction(state: CalculatorState, action: CalculatorAction): CalculatorState {
         return try {
             when (action) {
@@ -63,17 +67,21 @@ object CalculatorEngine {
                     // Append to history log if calculation succeeded
                     if (!result.isError && result.history.isNotEmpty()) {
                         val entry = "${result.history} ${result.result}"
-                        result.copy(historyLog = state.historyLog + entry)
+                        result.copy(historyLog = (state.historyLog + entry).takeLast(MAX_HISTORY_LOG))
                     } else result
                 }
                 is CalculatorAction.Clear -> CalculatorState()
                 is CalculatorAction.Backspace -> handleBackspace(state)
                 is CalculatorAction.Percent -> handlePercent(state)
                 is CalculatorAction.ToggleSign -> handleToggleSign(state)
-                is CalculatorAction.ParenthesisOpen -> state.copy(
-                    expression = state.expression + "(",
-                    result = "("
-                )
+                is CalculatorAction.ParenthesisOpen -> {
+                    val base = if (state.justEvaluated) "" else state.expression
+                    state.copy(
+                        expression = base + "(",
+                        result = "(",
+                        justEvaluated = false
+                    )
+                }
                 is CalculatorAction.ParenthesisClose -> {
                     val openCount = state.expression.count { it == '(' }
                     val closeCount = state.expression.count { it == ')' }
@@ -89,24 +97,36 @@ object CalculatorEngine {
                 is CalculatorAction.SquareRoot -> handleUnaryOp(state, "sqrt")
                 is CalculatorAction.Square -> handleUnaryOp(state, "sqr")
                 is CalculatorAction.Reciprocal -> handleUnaryOp(state, "1/")
-                is CalculatorAction.Pi -> state.copy(
-                    expression = state.expression + PI.toString().take(8),
-                    result = PI.toString().take(8)
-                )
-                is CalculatorAction.Euler -> state.copy(
-                    expression = state.expression + E.toString().take(8),
-                    result = E.toString().take(8)
-                )
+                is CalculatorAction.Pi -> {
+                    val pi = PI.toString().take(8)
+                    if (state.justEvaluated) {
+                        state.copy(expression = pi, result = pi, history = "", justEvaluated = false)
+                    } else {
+                        state.copy(expression = state.expression + pi, result = pi)
+                    }
+                }
+                is CalculatorAction.Euler -> {
+                    val euler = E.toString().take(8)
+                    if (state.justEvaluated) {
+                        state.copy(expression = euler, result = euler, history = "", justEvaluated = false)
+                    } else {
+                        state.copy(expression = state.expression + euler, result = euler)
+                    }
+                }
                 is CalculatorAction.Power -> handleOperator(state, "^")
                 is CalculatorAction.MemoryClear -> state.copy(memory = 0.0, hasMemory = false)
                 is CalculatorAction.MemoryRecall -> {
                     if (!state.hasMemory) state
                     else {
                         val memStr = CalculatorEngine.formatResult(state.memory)
-                        state.copy(
-                            expression = state.expression + memStr,
-                            result = memStr
-                        )
+                        if (state.justEvaluated) {
+                            state.copy(expression = memStr, result = memStr, history = "", justEvaluated = false)
+                        } else {
+                            state.copy(
+                                expression = state.expression + memStr,
+                                result = memStr
+                            )
+                        }
                     }
                 }
                 is CalculatorAction.MemoryAdd -> {
@@ -140,6 +160,16 @@ object CalculatorEngine {
     private fun handleNumber(state: CalculatorState, value: String): CalculatorState {
         if (state.isError) return CalculatorState(expression = value, result = value)
 
+        // After a calculation, a new number starts a fresh expression
+        if (state.justEvaluated) {
+            return state.copy(
+                expression = value,
+                result = value,
+                history = "",
+                justEvaluated = false
+            )
+        }
+
         val newExpr = state.expression + value
 
         // Start fresh if we just pressed an operator or result is an operator symbol
@@ -154,6 +184,11 @@ object CalculatorEngine {
     private fun handleDecimal(state: CalculatorState): CalculatorState {
         if (state.isError) return CalculatorState(expression = "0.", result = "0.")
 
+        // After a calculation, start a fresh decimal
+        if (state.justEvaluated) {
+            return state.copy(expression = "0.", result = "0.", history = "", justEvaluated = false)
+        }
+
         // Get the last number in the expression
         val lastNumber = state.expression.split(Regex("[+\\-×÷^()]")).lastOrNull() ?: ""
         if (lastNumber.contains(".")) return state
@@ -164,8 +199,10 @@ object CalculatorEngine {
     }
 
     private fun handleOperator(state: CalculatorState, op: String): CalculatorState {
-        if (state.isError) return state.copy(isError = false, errorMessage = "", result = "0")
-        val expr = state.expression.trimEnd()
+        if (state.isError) return state.copy(isError = false, errorMessage = "", result = "0", justEvaluated = false)
+
+        // After a calculation, continue from the displayed result
+        val expr = if (state.justEvaluated) state.result else state.expression.trimEnd()
 
         // Replace trailing operator
         val cleanedExpr = expr.replace(Regex("[+\\-×÷^]$"), "").trimEnd()
@@ -175,6 +212,7 @@ object CalculatorEngine {
             expression = newExpr,
             result = state.result,
             history = if (state.result != "0" && state.result != "Error") state.result else state.history,
+            justEvaluated = false
         )
     }
     private fun handleEquals(state: CalculatorState): CalculatorState {
@@ -188,12 +226,15 @@ object CalculatorEngine {
             result = formatted,
             history = state.expression + " =",
             isError = result.isNaN() || result.isInfinite(),
-            errorMessage = if (result.isNaN() || result.isInfinite()) "Cannot divide by zero" else ""
+            errorMessage = if (result.isNaN() || result.isInfinite()) "Cannot divide by zero" else "",
+            justEvaluated = true
         )
     }
 
     private fun handleBackspace(state: CalculatorState): CalculatorState {
         if (state.expression.isEmpty() || state.isError) return CalculatorState()
+        // After a calculation, backspace clears the result
+        if (state.justEvaluated) return CalculatorState()
 
         val newExpr = state.expression.dropLast(1).trimEnd()
         if (newExpr.isEmpty()) return CalculatorState()
@@ -216,9 +257,12 @@ object CalculatorEngine {
         return try {
             val value = evaluate(state.expression)
             val percent = value / 100.0
+            val formatted = formatResult(percent)
             state.copy(
-                expression = state.expression + "%",
-                result = formatResult(percent)
+                expression = formatted,
+                result = formatted,
+                history = "${state.result} % =",
+                justEvaluated = true
             )
         } catch (e: Exception) {
             state
@@ -227,12 +271,22 @@ object CalculatorEngine {
 
     private fun handleToggleSign(state: CalculatorState): CalculatorState {
         if (state.expression.isEmpty() || state.isError) return state
-        // Simple toggle: wrap in negation if not already
-        return if (state.expression.startsWith("-(") && state.expression.endsWith(")")) {
-            val inner = state.expression.removePrefix("-(").removeSuffix(")")
-            state.copy(expression = inner, result = inner)
+
+        val baseExpr = if (state.justEvaluated) state.result else state.expression
+        val trimmed = baseExpr.trim()
+
+        // Plain number → toggle sign directly ("5" ↔ "-5")
+        if (trimmed.toDoubleOrNull() != null) {
+            val negated = if (trimmed.startsWith("-")) trimmed.removePrefix("-") else "-$trimmed"
+            return state.copy(expression = negated, result = negated, justEvaluated = false)
+        }
+
+        // Wrapped negation → unwrap
+        return if (trimmed.startsWith("-(") && trimmed.endsWith(")")) {
+            val inner = trimmed.removePrefix("-(").removeSuffix(")")
+            state.copy(expression = inner, result = inner, justEvaluated = false)
         } else {
-            state.copy(expression = "-(${state.expression})", result = "-(${state.result})")
+            state.copy(expression = "-($trimmed)", result = "-(${state.result})", justEvaluated = false)
         }
     }
 
@@ -257,10 +311,12 @@ object CalculatorEngine {
             if (result.isNaN() || result.isInfinite()) {
                 state.copy(isError = true, errorMessage = "Math Error", result = "Error")
             } else {
+                val formatted = formatResult(result)
                 state.copy(
-                    expression = state.expression,
-                    result = formatResult(result),
-                    history = "$op(${formatResult(value)}) ="
+                    expression = formatted,
+                    result = formatted,
+                    history = "$op(${formatResult(value)}) =",
+                    justEvaluated = true
                 )
             }
         } catch (e: Exception) {
@@ -274,6 +330,7 @@ object CalculatorEngine {
             .replace("÷", "/")
             .replace("^", "**")
             .replace(" ", "")
+            .replace("%", "/100")
             .replace("--", "+")
             .replace("+-", "-")
             .replace("-+", "-")
@@ -284,6 +341,12 @@ object CalculatorEngine {
         } catch (e: Exception) {
             Double.NaN
         }
+    }
+
+    fun parseHistoryEntry(entry: String): Pair<String, String>? {
+        val eq = entry.lastIndexOf(" = ")
+        if (eq <= 0 || eq + 3 >= entry.length) return null
+        return entry.substring(0, eq) to entry.substring(eq + 3)
     }
 
     private fun evaluateSimple(expr: String): Double {
@@ -393,19 +456,18 @@ object CalculatorEngine {
 
     fun formatResult(value: Double): String {
         if (value.isNaN() || value.isInfinite()) return "Error"
-        if (value == value.toLong().toDouble()) {
-            val longVal = value.toLong()
-            if (longVal.toString().length > 15) return String.format("%.6e", value)
-            return addThousandsSeparator(longVal.toString())
+        val formatted = if (value == value.toLong().toDouble()) {
+            addThousandsSeparator(value.toLong().toString())
+        } else {
+            val s = String.format(Locale.US, "%.10f", value).trimEnd('0').trimEnd('.')
+            val parts = s.split(".")
+            if (parts.size == 2) {
+                addThousandsSeparator(parts[0]) + "." + parts[1]
+            } else {
+                addThousandsSeparator(s)
+            }
         }
-        val s = String.format("%.10f", value).trimEnd('0').trimEnd('.')
-        val formatted = if (s.length > 15) String.format("%.6e", value) else s
-        // Add thousand separators to the integer part
-        val parts = formatted.split(".")
-        if (parts.size == 2) {
-            return addThousandsSeparator(parts[0]) + "." + parts[1]
-        }
-        return addThousandsSeparator(formatted)
+        return if (formatted.length > 15) String.format(Locale.US, "%.6e", value) else formatted
     }
 
     private fun addThousandsSeparator(num: String): String {
@@ -414,7 +476,7 @@ object CalculatorEngine {
         var count = 0
         for (i in num.length - 1 downTo 0) {
             if (count > 0 && count % 3 == 0) {
-                sb.append('.')
+                sb.append('\u202F')
             }
             sb.append(num[i])
             count++

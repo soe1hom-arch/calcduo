@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="?attr/calcCardBackground"
-    android:clipToOutline="true"
     android:padding="24dp">
 
     <!-- Header -->
@@ -20,7 +19,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@android:drawable/ic_menu_preferences"
-            android:tint="?attr/calcAccent"
+            app:tint="?attr/calcAccent"
             android:contentDescription="@null" />
 
         <TextView
@@ -28,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="12dp"
-            android:text="Settings"
+            android:text="@string/menu_settings"
             android:textColor="?attr/calcTextPrimary"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -58,7 +57,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="THEME"
+        android:text="@string/settings_theme"
         android:textColor="?attr/calcAccent"
         android:textSize="11sp"
         android:textStyle="bold"
@@ -79,7 +78,7 @@
             style="@style/Widget.Material3.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="System"
+            android:text="@string/theme_system"
             android:textColor="?attr/calcTextPrimary"
             app:chipBackgroundColor="?attr/calcButtonBackground"
             app:chipStrokeColor="?attr/calcDivider" />
@@ -89,7 +88,7 @@
             style="@style/Widget.Material3.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Light"
+            android:text="@string/theme_light"
             android:textColor="?attr/calcTextPrimary"
             app:chipBackgroundColor="?attr/calcButtonBackground"
             app:chipStrokeColor="?attr/calcDivider" />
@@ -99,7 +98,7 @@
             style="@style/Widget.Material3.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dark"
+            android:text="@string/theme_dark"
             android:textColor="?attr/calcTextPrimary"
             app:chipBackgroundColor="?attr/calcButtonBackground"
             app:chipStrokeColor="?attr/calcDivider" />
@@ -109,7 +108,7 @@
             style="@style/Widget.Material3.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Grey"
+            android:text="@string/theme_grey"
             android:textColor="?attr/calcTextPrimary"
             app:chipBackgroundColor="?attr/calcButtonBackground"
             app:chipStrokeColor="?attr/calcDivider" />
@@ -127,7 +126,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="FEEDBACK"
+        android:text="@string/settings_feedback"
         android:textColor="?attr/calcAccent"
         android:textSize="11sp"
         android:textStyle="bold"
@@ -145,7 +144,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Haptic Feedback"
+            android:text="@string/settings_haptic"
             android:textColor="?attr/calcTextPrimary"
             android:textSize="16sp" />
 

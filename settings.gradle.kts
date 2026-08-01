@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "CalculatorApp"
+rootProject.name = "CalcDuo"
 include(":app")

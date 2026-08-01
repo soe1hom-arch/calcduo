@@ -2,7 +2,7 @@ package com.calculator.app
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
+import android.annotation.SuppressLint
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.Editable
@@ -16,11 +16,18 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.edit
 import androidx.core.view.GravityCompat
+import androidx.core.net.toUri
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.color.MaterialColors
 import com.calculator.app.data.CalculatorAction
+import com.calculator.app.data.CalculatorEngine
 import com.calculator.app.databinding.ActivityMainBinding
 import com.calculator.app.ui.calculator.CalculatorFragment
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,6 +37,11 @@ class MainActivity : AppCompatActivity() {
     private var notesVisible = false
     private var isFullMode = false
     private val notesPrefsKey = "calcduo_notes"
+    private var notesSaveJob: Job? = null
+
+    companion object {
+        private const val NOTES_DEBOUNCE_MS = 300L
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,8 +60,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupCalculators() {
         // Always create exactly 2 permanent calculators
-        val frag1 = CalculatorFragment.newInstance(0, "Calculator 1")
-        val frag2 = CalculatorFragment.newInstance(1, "Calculator 2")
+        val frag1 = CalculatorFragment.newInstance(0, getString(R.string.calculator_label_1))
+        val frag2 = CalculatorFragment.newInstance(1, getString(R.string.calculator_label_2))
         calculatorFragments.add(frag1)
         calculatorFragments.add(frag2)
 
@@ -189,31 +201,25 @@ class MainActivity : AppCompatActivity() {
 
     private fun clearAll() = calculatorFragments.forEach { it.clear() }
 
+    @SuppressLint("InflateParams")
     private fun showAbout() {
         val dialog = com.google.android.material.bottomsheet.BottomSheetDialog(this)
-        val view = LayoutInflater.from(this).inflate(R.layout.dialog_about, null)
+        val view = LayoutInflater.from(this).inflate(R.layout.dialog_about, null, false)
         dialog.setContentView(view)
         view.findViewById<View>(R.id.btn_about_close).setOnClickListener { dialog.dismiss() }
         view.findViewById<View>(R.id.tv_about_github).setOnClickListener {
             try {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/soe1hom-arch/calcduo"))
+                val intent = Intent(Intent.ACTION_VIEW, "https://github.com/soe1hom-arch/calcduo".toUri())
                 startActivity(intent)
             } catch (e: Exception) {
-                Toast.makeText(this, "Browser not available", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.browser_unavailable), Toast.LENGTH_SHORT).show()
             }
         }
         dialog.show()
     }
 
     private fun showPrivacy() {
-        val msg = android.text.Html.fromHtml(
-            "CalcDuo does not collect, store, or share any personal data.<br><br>" +
-            "This app uses the VIBRATE permission solely for haptic feedback on button presses. " +
-            "No internet connection is required, and no data is transmitted.<br><br>" +
-            "Contact: <a href='https://github.com/soe1hom-arch'>github.com/soe1hom-arch</a><br>" +
-            "Last updated: July 2026",
-            android.text.Html.FROM_HTML_MODE_LEGACY
-        )
+        val msg = android.text.Html.fromHtml(getString(R.string.privacy_body), android.text.Html.FROM_HTML_MODE_LEGACY)
         val tv = android.widget.TextView(this).apply {
             text = msg
             movementMethod = android.text.method.LinkMovementMethod.getInstance()
@@ -223,7 +229,7 @@ class MainActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.menu_privacy))
             .setView(tv)
-            .setPositiveButton("OK", null)
+            .setPositiveButton(getString(R.string.ok), null)
             .show()
     }
 
@@ -246,8 +252,12 @@ class MainActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 val t = s?.toString() ?: ""
-                saveNotes(t)
                 updateNotesCount(t.length)
+                notesSaveJob?.cancel()
+                notesSaveJob = lifecycleScope.launch {
+                    delay(NOTES_DEBOUNCE_MS)
+                    saveNotes(t)
+                }
             }
         })
         binding.btnClearNotes.setOnClickListener {
@@ -259,11 +269,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateNotesCount(count: Int) {
         if (::binding.isInitialized) {
-            binding.tvNotesCount?.text = "$count chars"
+            binding.tvNotesCount?.text = resources.getQuantityString(R.plurals.notes_chars, count, count)
         }
     }
 
-    private fun saveNotes(t: String) = getSharedPreferences("calcduo_prefs", Context.MODE_PRIVATE).edit().putString(notesPrefsKey, t).apply()
+    private fun saveNotes(t: String) = getSharedPreferences("calcduo_prefs", Context.MODE_PRIVATE).edit {
+        putString(notesPrefsKey, t)
+    }
 
     private fun toggleNotes() {
         notesVisible = !notesVisible
@@ -271,13 +283,14 @@ class MainActivity : AppCompatActivity() {
         binding.toolbar.menu.findItem(R.id.action_notes)?.isChecked = notesVisible
     }
 
+    @SuppressLint("InflateParams")
     private fun showSettings() {
         val prefs = getSharedPreferences("calcduo_settings", Context.MODE_PRIVATE)
         val hapticEnabled = prefs.getBoolean("haptic", true)
         val themeMode = prefs.getString("theme", "system") ?: "system"
 
         val dialog = com.google.android.material.bottomsheet.BottomSheetDialog(this)
-        val view = LayoutInflater.from(this).inflate(R.layout.dialog_settings, null)
+        val view = LayoutInflater.from(this).inflate(R.layout.dialog_settings, null, false)
         dialog.setContentView(view)
         view.findViewById<View>(R.id.btn_settings_close).setOnClickListener { dialog.dismiss() }
 
@@ -295,7 +308,7 @@ class MainActivity : AppCompatActivity() {
             if (checkedIds.isNotEmpty()) {
                 val newMode = chipMap[checkedIds[0]] ?: "system"
                 if (newMode != themeMode) {
-                    prefs.edit().putString("theme", newMode).apply()
+                    prefs.edit { putString("theme", newMode) }
                     applyTheme(newMode)
                     recreate()
                 }
@@ -305,7 +318,7 @@ class MainActivity : AppCompatActivity() {
         val hapticSwitch = view.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switch_haptic)
         hapticSwitch.isChecked = hapticEnabled
         hapticSwitch.setOnCheckedChangeListener { _, isChecked ->
-            prefs.edit().putBoolean("haptic", isChecked).apply()
+            prefs.edit { putBoolean("haptic", isChecked) }
         }
 
         dialog.show()
@@ -345,13 +358,21 @@ class MainActivity : AppCompatActivity() {
         val fragment = calculatorFragments.getOrNull(idx)
         val log = fragment?.getHistoryLog() ?: emptyList()
         if (log.isEmpty()) {
-            Toast.makeText(this, "No history yet", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.no_history), Toast.LENGTH_SHORT).show()
             return
         }
         AlertDialog.Builder(this)
-            .setTitle("Calculation History")
-            .setItems(log.toTypedArray(), null)
-            .setPositiveButton("OK", null)
+            .setTitle(getString(R.string.history_title))
+            .setItems(log.toTypedArray()) { _, which ->
+                val parsed = CalculatorEngine.parseHistoryEntry(log[which])
+                if (parsed != null) {
+                    fragment?.restoreHistory(parsed.first, parsed.second)
+                }
+            }
+            .setNegativeButton(getString(R.string.history_clear)) { _, _ ->
+                fragment?.clearHistory()
+            }
+            .setPositiveButton(getString(R.string.ok), null)
             .show()
     }
 }

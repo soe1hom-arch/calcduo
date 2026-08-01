@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lint>
+    <!-- Math symbols, glyphs, and proper nouns are intentionally hardcoded -->
+    <issue id="HardcodedText">
+        <ignore path="src/main/res/layout/shared_keyboard.xml" />
+        <ignore path="src/main/res/layout/dialog_about.xml" />
+        <ignore path="src/main/res/layout/fragment_calculator.xml" />
+        <ignore path="src/main/res/layout/dialog_settings.xml" />
+    </issue>
+    <issue id="DisableBaselineAlignment">
+        <ignore path="src/main/res/layout/shared_keyboard.xml" />
+    </issue>
+</lint>

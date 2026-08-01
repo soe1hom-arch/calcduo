@@ -36,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="sans-serif-medium"
-                    android:text="Calculator"
+                    android:text="@string/calculator_label"
                     android:textColor="?attr/calcTextDisabled"
                     android:textSize="11sp" />
 
@@ -116,9 +116,9 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="8dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Copy result"
+                    android:contentDescription="@string/copy_result"
                     android:src="@android:drawable/ic_menu_set_as"
-                    android:tint="?attr/calcTextDisabled"
+                    app:tint="?attr/calcTextDisabled"
                     android:visibility="gone" />
 
             </LinearLayout>

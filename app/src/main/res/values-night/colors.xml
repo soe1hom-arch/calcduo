@@ -24,22 +24,8 @@
     <color name="text_secondary">#FFB8B8C2</color>
     <color name="text_disabled">#FF7D7D88</color>
 
-    <!-- Button Categories -->
-    <color name="btn_number_bg">@color/bg_button</color>
-    <color name="btn_number_text">@color/text_primary</color>
-    <color name="btn_operator_bg">#FF2A2040</color>
-    <color name="btn_operator_text">@color/accent_purple</color>
-    <color name="btn_function_bg">#FF222228</color>
-    <color name="btn_function_text">@color/text_secondary</color>
-    <color name="btn_equals_bg">@color/accent_purple</color>
-    <color name="btn_equals_text">@color/text_primary</color>
-    <color name="btn_danger_bg">@color/danger_bg</color>
-    <color name="btn_danger_text">@color/danger</color>
-
     <!-- Dividers -->
     <color name="divider_subtle">#FF303036</color>
-
-    <!-- Shadows -->
 
     <color name="md_theme_primaryContainer">#FF2A2040</color>
 
@@ -49,7 +35,6 @@
     <color name="grey_bg_card">#FF2A2A3E</color>
     <color name="grey_bg_keyboard">#FF202034</color>
     <color name="grey_bg_button">#FF32324A</color>
-    <color name="grey_bg_button_pressed">#FF3D3D58</color>
     <color name="grey_text_primary">#FFF0F0FF</color>
     <color name="grey_text_secondary">#FFB8B8D0</color>
     <color name="grey_text_disabled">#FF80809A</color>
