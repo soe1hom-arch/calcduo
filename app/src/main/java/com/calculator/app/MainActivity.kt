@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.LayoutInflater
 import android.view.HapticFeedbackConstants
+import android.widget.LinearLayout
 import android.widget.Toast
 import android.view.animation.AnimationUtils
 import androidx.activity.OnBackPressedCallback
@@ -101,6 +102,8 @@ class MainActivity : AppCompatActivity() {
             binding.keyboard.btnMultiply to CalculatorAction.Operator("×"),
             binding.keyboard.btnDivide to CalculatorAction.Operator("÷"),
             binding.keyboard.btnAc to CalculatorAction.Clear,
+            binding.keyboard.btnAcFull to CalculatorAction.Clear,
+            binding.keyboard.btnBackspaceFull to CalculatorAction.Backspace,
             binding.keyboard.btnEquals to CalculatorAction.Equals,
             binding.keyboard.btnDecimal to CalculatorAction.Decimal,
             binding.keyboard.btnBackspace to CalculatorAction.Backspace,
@@ -155,6 +158,12 @@ class MainActivity : AppCompatActivity() {
         val toggleText = if (isFullMode) "∧" else "∨"
         binding.keyboard.btnToggleMode.text = toggleText
         binding.keyboard.btnToggleModeFull.text = toggleText
+
+        val displayWeight = if (isFullMode) 0.30f else 0.40f
+        val keyboardWeight = if (isFullMode) 0.70f else 0.60f
+        (binding.containerDisplays.layoutParams as LinearLayout.LayoutParams).weight = displayWeight
+        (binding.containerKeyboard.layoutParams as LinearLayout.LayoutParams).weight = keyboardWeight
+        binding.root.requestLayout()
     }
 
     // ─────────────── Tab Selection ───────────────
