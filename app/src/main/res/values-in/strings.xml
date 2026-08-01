@@ -47,6 +47,12 @@
     <string name="settings_accent">AKSEN KUSTOM</string>
     <string name="accent_default">Default</string>
     <string name="accent_swatch">Warna aksen</string>
+    <string name="accent_custom">Kustom…</string>
+    <string name="accent_picker_title">Warna Aksen Kustom</string>
+    <string name="accent_picker_hex_hint">Hex #RRGGBB</string>
+    <string name="picker_satval_desc">Area saturasi dan kecerahan</string>
+    <string name="picker_hue_desc">Penggeser rona</string>
+    <string name="save">Simpan</string>
     <string name="settings_haptic">Umpan Balik Getar</string>
 
     <!-- About dialog -->

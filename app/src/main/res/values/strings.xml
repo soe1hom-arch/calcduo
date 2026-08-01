@@ -47,6 +47,12 @@
     <string name="settings_accent">CUSTOM ACCENT</string>
     <string name="accent_default">Default</string>
     <string name="accent_swatch">Accent color</string>
+    <string name="accent_custom">Custom…</string>
+    <string name="accent_picker_title">Custom Accent Color</string>
+    <string name="accent_picker_hex_hint">Hex #RRGGBB</string>
+    <string name="picker_satval_desc">Saturation and brightness area</string>
+    <string name="picker_hue_desc">Hue slider</string>
+    <string name="save">Save</string>
     <string name="settings_haptic">Haptic Feedback</string>
 
     <!-- About dialog -->

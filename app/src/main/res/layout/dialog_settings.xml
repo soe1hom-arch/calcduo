@@ -413,6 +413,16 @@
             app:chipStrokeColor="#80FFFFFF"
             app:chipStrokeWidth="1dp" />
 
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_accent_custom"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/accent_custom"
+            android:textColor="?attr/calcTextPrimary"
+            app:chipBackgroundColor="?attr/calcButtonBackground"
+            app:chipStrokeColor="?attr/calcDivider" />
+
     </com.google.android.material.chip.ChipGroup>
 
     <!-- Divider -->

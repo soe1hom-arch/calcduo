@@ -329,28 +329,55 @@ class MainActivity : AppCompatActivity() {
             R.id.swatch_slate to "#607D8B"
         )
         val currentAccent = prefs.getString("accent_custom", null)
+        val customChip = view.findViewById<com.google.android.material.chip.Chip>(R.id.chip_accent_custom)
         if (currentAccent == null) {
             accentGroup.check(R.id.chip_accent_default)
         } else {
+            var matched = false
             for ((id, hex) in swatchMap) {
-                if (hex == currentAccent) { accentGroup.check(id); break }
+                if (hex == currentAccent) {
+                    accentGroup.check(id)
+                    matched = true
+                    break
+                }
+            }
+            if (!matched) {
+                accentGroup.check(R.id.chip_accent_custom)
+                CustomAccent.get(this)?.let { accentColor ->
+                    customChip.chipBackgroundColor = android.content.res.ColorStateList.valueOf(accentColor)
+                    customChip.setTextColor(CustomAccent.readableTextColor(accentColor))
+                }
             }
         }
         accentGroup.setOnCheckedStateChangeListener { _, checkedIds ->
             if (checkedIds.isEmpty()) return@setOnCheckedStateChangeListener
             val id = checkedIds[0]
-            if (id == R.id.chip_accent_default) {
-                if (prefs.contains("accent_custom")) {
-                    CustomAccent.set(this, null)
-                    ThemeUtils.apply(this)
-                    recreate()
+            when (id) {
+                R.id.chip_accent_default -> {
+                    if (prefs.contains("accent_custom")) {
+                        CustomAccent.set(this, null)
+                        ThemeUtils.apply(this)
+                        recreate()
+                    }
                 }
-            } else {
-                val hex = swatchMap[id]
-                if (hex != null && hex != prefs.getString("accent_custom", null)) {
-                    CustomAccent.set(this, hex)
-                    ThemeUtils.apply(this)
-                    recreate()
+                R.id.chip_accent_custom -> {
+                    val initial = CustomAccent.get(this) ?: 0xFF7C4DFF.toInt()
+                    ColorPickerDialog.show(this, initial) { picked ->
+                        val hex = String.format("#%06X", 0xFFFFFF and picked)
+                        if (hex != prefs.getString("accent_custom", null)) {
+                            CustomAccent.set(this, hex)
+                            ThemeUtils.apply(this)
+                            recreate()
+                        }
+                    }
+                }
+                else -> {
+                    val hex = swatchMap[id]
+                    if (hex != null && hex != prefs.getString("accent_custom", null)) {
+                        CustomAccent.set(this, hex)
+                        ThemeUtils.apply(this)
+                        recreate()
+                    }
                 }
             }
         }
