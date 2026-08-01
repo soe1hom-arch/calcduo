@@ -13,6 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.ViewModelProvider
+import com.calculator.app.CustomAccent
 import com.calculator.app.data.CalculatorAction
 import com.calculator.app.data.CalculatorEngine
 import com.calculator.app.data.CalculatorState
@@ -121,6 +122,7 @@ class CalculatorFragment : Fragment() {
         binding.tvResult.text = CalculatorEngine.formatDisplayNumber(state.result)
         binding.tvHistory.text = CalculatorEngine.formatExpression(state.history).ifEmpty { "" }
         binding.tvMemoryIndicator.visibility = if (state.hasMemory) View.VISIBLE else View.GONE
+        context?.let { CustomAccent.tintTextView(it, binding.tvMemoryIndicator) }
         
         // Show copy button only when result is meaningful
         val hasResult = state.result.isNotEmpty() && state.result != "0" && state.result != "Error"

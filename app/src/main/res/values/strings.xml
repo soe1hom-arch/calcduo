@@ -44,6 +44,9 @@
     <string name="palette_pink">Pink</string>
     <string name="palette_grey">Grey</string>
     <string name="settings_feedback">FEEDBACK</string>
+    <string name="settings_accent">CUSTOM ACCENT</string>
+    <string name="accent_default">Default</string>
+    <string name="accent_swatch">Accent color</string>
     <string name="settings_haptic">Haptic Feedback</string>
 
     <!-- About dialog -->

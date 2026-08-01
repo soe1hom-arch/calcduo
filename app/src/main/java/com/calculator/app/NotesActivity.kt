@@ -45,6 +45,7 @@ class NotesActivity : AppCompatActivity() {
 
         binding.rvNotes.layoutManager = LinearLayoutManager(this)
         binding.rvNotes.adapter = adapter
+        CustomAccent.tintFab(this, binding.fabAddNote)
         binding.fabAddNote.setOnClickListener { openEditor(null) }
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -192,12 +193,14 @@ class NotesActivity : AppCompatActivity() {
                 val selected = selectedIds.contains(note.id)
                 b.tvNoteCheck.visibility = if (selected) View.VISIBLE else View.GONE
                 val card = b.root as MaterialCardView
+                CustomAccent.tintCardStroke(ctx, card)
                 if (selected) {
                     val density = ctx.resources.displayMetrics.density
                     card.strokeWidth = (2 * density).toInt()
                 } else {
                     card.strokeWidth = 0
                 }
+                CustomAccent.tintTextView(ctx, b.tvNoteCheck)
 
                 b.root.setOnClickListener { onItemClick(note) }
                 b.root.setOnLongClickListener { onItemLongClick(note); true }

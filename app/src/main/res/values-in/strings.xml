@@ -44,6 +44,9 @@
     <string name="palette_pink">Merah muda</string>
     <string name="palette_grey">Abu-abu</string>
     <string name="settings_feedback">UMPAN BALIK</string>
+    <string name="settings_accent">AKSEN KUSTOM</string>
+    <string name="accent_default">Default</string>
+    <string name="accent_swatch">Warna aksen</string>
     <string name="settings_haptic">Umpan Balik Getar</string>
 
     <!-- About dialog -->

@@ -45,6 +45,12 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, NotesActivity::class.java))
         }
         setupKeyboard()
+        CustomAccent.applyOperatorButton(this, binding.keyboard.btnAdd)
+        CustomAccent.applyOperatorButton(this, binding.keyboard.btnSubtract)
+        CustomAccent.applyOperatorButton(this, binding.keyboard.btnMultiply)
+        CustomAccent.applyOperatorButton(this, binding.keyboard.btnDivide)
+        CustomAccent.applyOperatorButton(this, binding.keyboard.btnDivide2)
+        CustomAccent.applyEqualsButton(this, binding.keyboard.btnEquals)
         setupCalculators()
         setupDisplayTapToCollapse()
     }
@@ -257,6 +263,11 @@ class MainActivity : AppCompatActivity() {
         dialog.setContentView(view)
         view.findViewById<View>(R.id.btn_settings_close).setOnClickListener { dialog.dismiss() }
 
+        view.findViewById<android.widget.ImageView>(R.id.img_settings_icon)?.let { CustomAccent.tintImageView(this, it) }
+        listOf(R.id.tv_label_theme, R.id.tv_label_palette, R.id.tv_label_accent, R.id.tv_label_feedback).forEach { id ->
+            view.findViewById<android.widget.TextView>(id)?.let { CustomAccent.tintTextView(this, it) }
+        }
+
         val chipGroup = view.findViewById<com.google.android.material.chip.ChipGroup>(R.id.chip_group_theme)
         val chipMap = mapOf(
             R.id.chip_theme_system to "system",
@@ -296,6 +307,48 @@ class MainActivity : AppCompatActivity() {
                 val newPalette = paletteMap[checkedIds[0]] ?: "purple"
                 if (newPalette != currentPalette) {
                     prefs.edit { putString("palette", newPalette) }
+                    ThemeUtils.apply(this)
+                    recreate()
+                }
+            }
+        }
+
+        val accentGroup = view.findViewById<com.google.android.material.chip.ChipGroup>(R.id.chip_group_accent)
+        val swatchMap = mapOf(
+            R.id.swatch_red to "#FF5252",
+            R.id.swatch_orange to "#FF6D2E",
+            R.id.swatch_amber to "#FFC107",
+            R.id.swatch_green to "#2E9E5B",
+            R.id.swatch_teal to "#009688",
+            R.id.swatch_cyan to "#00ACC1",
+            R.id.swatch_blue to "#2F6FED",
+            R.id.swatch_indigo to "#3F51B5",
+            R.id.swatch_purple to "#7C4DFF",
+            R.id.swatch_pink to "#D6487E",
+            R.id.swatch_brown to "#795548",
+            R.id.swatch_slate to "#607D8B"
+        )
+        val currentAccent = prefs.getString("accent_custom", null)
+        if (currentAccent == null) {
+            accentGroup.check(R.id.chip_accent_default)
+        } else {
+            for ((id, hex) in swatchMap) {
+                if (hex == currentAccent) { accentGroup.check(id); break }
+            }
+        }
+        accentGroup.setOnCheckedStateChangeListener { _, checkedIds ->
+            if (checkedIds.isEmpty()) return@setOnCheckedStateChangeListener
+            val id = checkedIds[0]
+            if (id == R.id.chip_accent_default) {
+                if (prefs.contains("accent_custom")) {
+                    CustomAccent.set(this, null)
+                    ThemeUtils.apply(this)
+                    recreate()
+                }
+            } else {
+                val hex = swatchMap[id]
+                if (hex != null && hex != prefs.getString("accent_custom", null)) {
+                    CustomAccent.set(this, hex)
                     ThemeUtils.apply(this)
                     recreate()
                 }
