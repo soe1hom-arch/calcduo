@@ -107,7 +107,7 @@
         android:id="@+id/fullModeSection"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
+        android:layout_weight="5"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -253,6 +253,46 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:text="∧" />
+        </LinearLayout>
+
+        <!-- Sci Row 5: MC MR M+ M− -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_mc"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="MC" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_mr"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="MR" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_m_plus"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="M+" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_m_minus"
+                style="@style/CalcButtonFunction"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="M−" />
         </LinearLayout>
     </LinearLayout>
 
