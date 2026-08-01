@@ -53,6 +53,10 @@ class MainActivity : AppCompatActivity() {
         setupToolbar()
         setupBackPressed()
         setupNotes()
+        binding.rowDrawerNotes.setOnClickListener {
+            toggleNotes()
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        }
         setupKeyboard()
         setupCalculators()
         setupDisplayTapToCollapse()
@@ -191,7 +195,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.action_settings -> { showSettings(); true }
                 R.id.action_history -> { showHistory(); true }
                 R.id.action_clear_all -> { clearAll(); true }
-                R.id.action_notes -> { toggleNotes(); true }
                 R.id.action_privacy -> { showPrivacy(); true }
                 R.id.action_about -> { showAbout(); true }
                 else -> false
@@ -280,7 +283,6 @@ class MainActivity : AppCompatActivity() {
     private fun toggleNotes() {
         notesVisible = !notesVisible
         binding.panelNotes.visibility = if (notesVisible) View.VISIBLE else View.GONE
-        binding.toolbar.menu.findItem(R.id.action_notes)?.isChecked = notesVisible
     }
 
     @SuppressLint("InflateParams")

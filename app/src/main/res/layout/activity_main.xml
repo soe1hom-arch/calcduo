@@ -141,17 +141,6 @@
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_empty_state"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/empty_state"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            android:textSize="16sp"
-            android:visibility="gone" />
-
     </LinearLayout>
 
     <!-- Sidebar Drawer -->
@@ -184,45 +173,29 @@
                 android:textColor="?attr/colorOnSurfaceVariant"
                 android:textSize="14sp" />
         </LinearLayout>
-        <TextView
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/row_drawer_notes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="20dp"
-            android:paddingBottom="8dp"
-            android:text="@string/tabs"
-            android:textColor="?attr/colorOnSurface"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_sidebar_tabs"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:clipToPadding="false"
-            android:paddingHorizontal="12dp"
-            android:paddingTop="4dp" />
-        <TextView
-            android:id="@+id/tv_empty_sidebar"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:padding="32dp"
-            android:text="@string/no_calculators"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            android:textSize="14sp"
-            android:visibility="gone" />
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/fab_add_calculator"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="@string/add"
-            android:textColor="?attr/colorOnSurface"
-            android:contentDescription="@string/add_calculator_tab"
-            app:icon="@android:drawable/ic_input_add"
-            app:iconTint="?attr/colorOnSurface"
-            app:backgroundTint="?attr/colorSurfaceVariant" />
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardBackgroundColor="?attr/colorSurfaceVariant"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:rippleColor="?attr/colorOnSurfaceVariant">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:drawableStartCompat="@android:drawable/ic_menu_edit"
+                android:drawablePadding="12dp"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:text="@string/notes_title"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="16sp"
+                app:drawableTint="?attr/colorOnSurface" />
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -14,11 +14,6 @@
         android:title="@string/menu_clear_all"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_notes"
-        android:title="@string/notes_title"
-        android:checkable="true"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_privacy"
         android:title="@string/menu_privacy"
         app:showAsAction="never" />

@@ -12,14 +12,9 @@
 
     <!-- Layouts -->
     <string name="app_tagline">Kalkulator Ganda</string>
-    <string name="tabs">Tab</string>
-    <string name="no_calculators">Belum ada kalkulator</string>
-    <string name="add">Tambah</string>
     <string name="clear">Bersihkan</string>
-    <string name="empty_state">Belum ada kalkulator. Ketuk + untuk menambah.</string>
     <string name="calculator_label">Kalkulator</string>
     <string name="copy_result">Salin hasil</string>
-    <string name="add_calculator_tab">Tambah tab kalkulator baru</string>
 
     <!-- Notes -->
     <string name="notes_title">Catatan</string>
