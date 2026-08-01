@@ -29,6 +29,7 @@ class NoteEditorActivity : AppCompatActivity() {
         ThemeUtils.apply(this)
         binding = ActivityNoteEditorBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        ThemeUtils.applySystemBarInsets(binding.root, includeIme = true)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

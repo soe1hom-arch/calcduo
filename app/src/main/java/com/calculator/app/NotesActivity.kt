@@ -38,6 +38,7 @@ class NotesActivity : AppCompatActivity() {
         ThemeUtils.apply(this)
         binding = ActivityNotesBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        ThemeUtils.applySystemBarInsets(binding.root)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
