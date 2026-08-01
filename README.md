@@ -124,7 +124,6 @@ No data collected. No internet access required. Fully offline.
 ## License
 
 ```
-Copyright 2016 The Android Open Source Project
 Copyright 2026 soe1hom-arch
 Apache License 2.0
 ```

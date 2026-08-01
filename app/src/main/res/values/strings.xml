@@ -62,7 +62,7 @@
     <string name="about_developer">Developer</string>
     <string name="about_license">License</string>
     <string name="about_source">Source</string>
-    <string name="about_credits">Based on AOSP ExactCalculator</string>
+    <string name="about_credits">© 2026 soe1hom-arch</string>
 
     <!-- Calculator labels -->
     <string name="calculator_label_1">Calculator 1</string>
