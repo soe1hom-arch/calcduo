@@ -25,14 +25,17 @@
 | | |
 |---|---|
 | **Dual Display** | Two calculators on screen at once |
-| **Standard Mode** | AC, ⌫, %, ÷, ×, −, +, ±, ., = |
-| **Scientific Mode** | sin, cos, tan, log, ln, √, x², 1/x, xʸ, π, e |
-| **Smart Engine** | Parentheses, operator precedence, error handling |
-| **History** | Saved calculations per calculator |
+| **Standard Mode** | AC, ⌫, ÷, ×, −, +, ±, ., = |
+| **Scientific Mode** | sin, cos, tan, log, ln, √, x², 1/x, xʸ, π, e, parentheses, % |
 | **Memory** | MC / MR / M+ / M− with indicator |
-| **Notes** | Built-in notepad |
+| **Smart Engine** | Parentheses, operator precedence, error handling, thousands separator (10.000) |
+| **History** | Saved calculations per calculator |
+| **Notes** | Full-screen notepad with autosave, multiple notes & multi-select delete |
 | **Themes** | System, Light, Dark, Grey |
+| **Color Palettes** | Purple, Orange, Green, Blue, Pink, Grey |
+| **Custom Accent** | 12 preset colors + free HSV color picker |
 | **Haptic** | Optional key vibration |
+| **Languages** | English & Indonesian |
 | **Offline** | No internet needed |
 
 ---
@@ -45,9 +48,11 @@
 
 ### Scientific
 
-`sin` `cos` `tan` `÷` / `log` `ln` `√` `x²` / `1/x` `xʸ` `π` `e` / `(` `)` `%` `∧`
+`AC` `⌫` `sin` `÷` / `cos` `tan` `log` `ln` / `√` `x²` `1/x` `xʸ` / `π` `e` `(` `)` / `%` `∧` / `MC` `MR` `M+` `M−` / `7` `8` `9` `×` / `4` `5` `6` `−` / `1` `2` `3` `+` / `±` `0` `.` `=`
 
-Tap **∨** to expand, **∧** to collapse.
+Tap **∨** to expand, **∧** to collapse. In scientific mode the output panel shrinks to 30% and the keyboard grows to 70% so the keys stay comfortable.
+
+Personalize the look from the settings menu: theme mode, color palette, and a custom accent color (preset swatches or a free color picker).
 
 ---
 
@@ -106,6 +111,7 @@ Push to `main` → auto debug build. Tag `v*` → signed release.
 | **Android** | 8.0+ (API 26) |
 | **Size** | ~5 MB |
 | **Permissions** | Vibrate (haptic only) |
+| **Orientation** | Portrait (locked) |
 
 ---
 
