@@ -5,8 +5,6 @@ import android.content.Intent
 import android.annotation.SuppressLint
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.LayoutInflater
 import android.view.HapticFeedbackConstants
@@ -19,29 +17,18 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
 import androidx.core.view.GravityCompat
 import androidx.core.net.toUri
-import androidx.lifecycle.lifecycleScope
 import com.google.android.material.color.MaterialColors
 import com.calculator.app.data.CalculatorAction
 import com.calculator.app.data.CalculatorEngine
 import com.calculator.app.databinding.ActivityMainBinding
 import com.calculator.app.ui.calculator.CalculatorFragment
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val calculatorFragments = mutableListOf<CalculatorFragment>()
     private var activeTabIndex = 0
-    private var notesVisible = false
     private var isFullMode = false
-    private val notesPrefsKey = "calcduo_notes"
-    private var notesSaveJob: Job? = null
-
-    companion object {
-        private const val NOTES_DEBOUNCE_MS = 300L
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,10 +39,9 @@ class MainActivity : AppCompatActivity() {
 
         setupToolbar()
         setupBackPressed()
-        setupNotes()
         binding.rowDrawerNotes.setOnClickListener {
-            toggleNotes()
             binding.drawerLayout.closeDrawer(GravityCompat.START)
+            startActivity(Intent(this, NotesActivity::class.java))
         }
         setupKeyboard()
         setupCalculators()
@@ -244,45 +230,6 @@ class MainActivity : AppCompatActivity() {
                 else { isEnabled = false; onBackPressedDispatcher.onBackPressed(); isEnabled = true }
             }
         })
-    }
-
-    private fun setupNotes() {
-        val n = getSharedPreferences("calcduo_prefs", Context.MODE_PRIVATE).getString(notesPrefsKey, "") ?: ""
-        if (n.isNotEmpty()) binding.etNotes.setText(n)
-        updateNotesCount(n.length)
-        binding.etNotes.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                val t = s?.toString() ?: ""
-                updateNotesCount(t.length)
-                notesSaveJob?.cancel()
-                notesSaveJob = lifecycleScope.launch {
-                    delay(NOTES_DEBOUNCE_MS)
-                    saveNotes(t)
-                }
-            }
-        })
-        binding.btnClearNotes.setOnClickListener {
-            binding.etNotes.setText("")
-            saveNotes("")
-            updateNotesCount(0)
-        }
-    }
-
-    private fun updateNotesCount(count: Int) {
-        if (::binding.isInitialized) {
-            binding.tvNotesCount?.text = resources.getQuantityString(R.plurals.notes_chars, count, count)
-        }
-    }
-
-    private fun saveNotes(t: String) = getSharedPreferences("calcduo_prefs", Context.MODE_PRIVATE).edit {
-        putString(notesPrefsKey, t)
-    }
-
-    private fun toggleNotes() {
-        notesVisible = !notesVisible
-        binding.panelNotes.visibility = if (notesVisible) View.VISIBLE else View.GONE
     }
 
     @SuppressLint("InflateParams")

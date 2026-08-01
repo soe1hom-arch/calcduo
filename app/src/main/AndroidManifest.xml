@@ -24,6 +24,17 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".NotesActivity"
+            android:exported="false"
+            android:theme="@style/Theme.CalculatorApp" />
+
+        <activity
+            android:name=".NoteEditorActivity"
+            android:exported="false"
+            android:theme="@style/Theme.CalculatorApp"
+            android:windowSoftInputMode="adjustResize" />
+
     </application>
 
 </manifest>

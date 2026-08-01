@@ -19,6 +19,13 @@
     <!-- Notes -->
     <string name="notes_title">Catatan</string>
     <string name="notes_hint">Tulis catatanmu di sini…</string>
+    <string name="notes_title_hint">Judul</string>
+    <string name="notes_untitled">Tanpa judul</string>
+    <string name="notes_new">Catatan baru</string>
+    <string name="notes_empty">Belum ada catatan. Ketuk + untuk membuatnya.</string>
+    <string name="notes_delete">Hapus</string>
+    <string name="notes_delete_message">Catatan ini akan dihapus permanen.</string>
+    <string name="cancel">Batal</string>
 
     <!-- Settings dialog -->
     <string name="settings_theme">TEMA</string>
