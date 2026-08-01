@@ -36,13 +36,10 @@
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
     <string name="theme_grey">Grey</string>
-    <string name="settings_palette">PALETTE</string>
-    <string name="palette_purple">Purple</string>
-    <string name="palette_orange">Orange</string>
-    <string name="palette_green">Green</string>
-    <string name="palette_blue">Blue</string>
-    <string name="palette_pink">Pink</string>
-    <string name="palette_grey">Grey</string>
+    <string name="settings_grid">GRID COLOR</string>
+    <string name="settings_button_edge">BUTTON EDGE</string>
+    <string name="color_default">Default</string>
+    <string name="color_custom">Custom…</string>
     <string name="settings_feedback">FEEDBACK</string>
     <string name="settings_accent">CUSTOM ACCENT</string>
     <string name="accent_default">Default</string>

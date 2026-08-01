@@ -51,6 +51,8 @@ class MainActivity : AppCompatActivity() {
         CustomAccent.applyOperatorButton(this, binding.keyboard.btnDivide)
         CustomAccent.applyOperatorButton(this, binding.keyboard.btnDivide2)
         CustomAccent.applyEqualsButton(this, binding.keyboard.btnEquals)
+        KeyboardColors.applyGrid(this, binding.keyboard.root)
+        KeyboardColors.applyEdge(this, binding.keyboard.root)
         setupCalculators()
         setupDisplayTapToCollapse()
     }
@@ -264,7 +266,10 @@ class MainActivity : AppCompatActivity() {
         view.findViewById<View>(R.id.btn_settings_close).setOnClickListener { dialog.dismiss() }
 
         view.findViewById<android.widget.ImageView>(R.id.img_settings_icon)?.let { CustomAccent.tintImageView(this, it) }
-        listOf(R.id.tv_label_theme, R.id.tv_label_palette, R.id.tv_label_accent, R.id.tv_label_feedback).forEach { id ->
+        listOf(
+            R.id.tv_label_theme, R.id.tv_label_grid, R.id.tv_label_edge,
+            R.id.tv_label_accent, R.id.tv_label_feedback
+        ).forEach { id ->
             view.findViewById<android.widget.TextView>(id)?.let { CustomAccent.tintTextView(this, it) }
         }
 
@@ -289,26 +294,71 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val paletteGroup = view.findViewById<com.google.android.material.chip.ChipGroup>(R.id.chip_group_palette)
-        val paletteMap = mapOf(
-            R.id.chip_palette_purple to "purple",
-            R.id.chip_palette_orange to "orange",
-            R.id.chip_palette_green to "green",
-            R.id.chip_palette_blue to "blue",
-            R.id.chip_palette_pink to "pink",
-            R.id.chip_palette_grey to "grey"
-        )
-        val currentPalette = prefs.getString("palette", "purple") ?: "purple"
-        for ((id, pal) in paletteMap) {
-            if (pal == currentPalette) { paletteGroup.check(id); break }
+        val gridGroup = view.findViewById<com.google.android.material.chip.ChipGroup>(R.id.chip_group_grid)
+        val gridCustom = view.findViewById<com.google.android.material.chip.Chip>(R.id.chip_grid_custom)
+        val currentGrid = prefs.getString("grid_color", null)
+        if (currentGrid == null) {
+            gridGroup.check(R.id.chip_grid_default)
+        } else {
+            gridGroup.check(R.id.chip_grid_custom)
+            parseHexColor(currentGrid)?.let { c ->
+                gridCustom.chipBackgroundColor = android.content.res.ColorStateList.valueOf(c)
+                gridCustom.setTextColor(CustomAccent.readableTextColor(c))
+            }
         }
-        paletteGroup.setOnCheckedStateChangeListener { _, checkedIds ->
-            if (checkedIds.isNotEmpty()) {
-                val newPalette = paletteMap[checkedIds[0]] ?: "purple"
-                if (newPalette != currentPalette) {
-                    prefs.edit { putString("palette", newPalette) }
+        gridGroup.setOnCheckedStateChangeListener { _, checkedIds ->
+            if (checkedIds.isEmpty()) return@setOnCheckedStateChangeListener
+            val id = checkedIds[0]
+            if (id == R.id.chip_grid_default) {
+                if (currentGrid != null) {
+                    KeyboardColors.setGrid(this, null)
                     ThemeUtils.apply(this)
                     recreate()
+                }
+            } else {
+                val initial = parseHexColor(currentGrid)
+                    ?: MaterialColors.getColor(this, R.attr.calcKeyboardBackground, 0xFF18181B.toInt())
+                ColorPickerDialog.show(this, initial) { picked ->
+                    val hex = String.format("#%06X", 0xFFFFFF and picked)
+                    if (hex != currentGrid) {
+                        KeyboardColors.setGrid(this, hex)
+                        ThemeUtils.apply(this)
+                        recreate()
+                    }
+                }
+            }
+        }
+
+        val edgeGroup = view.findViewById<com.google.android.material.chip.ChipGroup>(R.id.chip_group_edge)
+        val edgeCustom = view.findViewById<com.google.android.material.chip.Chip>(R.id.chip_edge_custom)
+        val currentEdge = prefs.getString("button_edge_color", null)
+        if (currentEdge == null) {
+            edgeGroup.check(R.id.chip_edge_default)
+        } else {
+            edgeGroup.check(R.id.chip_edge_custom)
+            parseHexColor(currentEdge)?.let { c ->
+                edgeCustom.chipBackgroundColor = android.content.res.ColorStateList.valueOf(c)
+                edgeCustom.setTextColor(CustomAccent.readableTextColor(c))
+            }
+        }
+        edgeGroup.setOnCheckedStateChangeListener { _, checkedIds ->
+            if (checkedIds.isEmpty()) return@setOnCheckedStateChangeListener
+            val id = checkedIds[0]
+            if (id == R.id.chip_edge_default) {
+                if (currentEdge != null) {
+                    KeyboardColors.setEdge(this, null)
+                    ThemeUtils.apply(this)
+                    recreate()
+                }
+            } else {
+                val initial = parseHexColor(currentEdge) ?: (CustomAccent.get(this) ?: 0xFFFF5F00.toInt())
+                ColorPickerDialog.show(this, initial) { picked ->
+                    val hex = String.format("#%06X", 0xFFFFFF and picked)
+                    if (hex != currentEdge) {
+                        KeyboardColors.setEdge(this, hex)
+                        ThemeUtils.apply(this)
+                        recreate()
+                    }
                 }
             }
         }
@@ -428,5 +478,11 @@ class MainActivity : AppCompatActivity() {
             }
             .setPositiveButton(getString(R.string.ok), null)
             .show()
+    }
+
+    private fun parseHexColor(hex: String?): Int? {
+        val t = hex?.trim()?.removePrefix("#") ?: return null
+        if (t.length != 6) return null
+        return t.toIntOrNull(16)?.let { 0xFF000000.toInt() or it }
     }
 }

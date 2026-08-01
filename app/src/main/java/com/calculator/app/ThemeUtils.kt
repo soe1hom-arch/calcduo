@@ -12,7 +12,6 @@ object ThemeUtils {
     fun apply(activity: AppCompatActivity) {
         val prefs = activity.getSharedPreferences("calcduo_settings", Context.MODE_PRIVATE)
         val mode = prefs.getString("theme", "system") ?: "system"
-        val palette = prefs.getString("palette", "purple") ?: "purple"
 
         AppCompatDelegate.setDefaultNightMode(
             when (mode) {
@@ -22,7 +21,7 @@ object ThemeUtils {
             }
         )
 
-        activity.setTheme(resolveTheme(mode, palette))
+        activity.setTheme(resolveTheme(mode))
     }
 
     fun applySystemBarInsets(root: View, includeIme: Boolean = false) {
@@ -34,44 +33,10 @@ object ThemeUtils {
         }
     }
 
-    private fun resolveTheme(mode: String, palette: String): Int {
-        if (mode == "grey") return R.style.Theme_CalculatorApp_Grey
-        val (base, light, dark) = when (palette) {
-            "orange" -> Triple(
-                R.style.Theme_CalculatorApp_Palette_Orange,
-                R.style.Theme_CalculatorApp_Palette_Orange_Light,
-                R.style.Theme_CalculatorApp_Palette_Orange_Dark
-            )
-            "green" -> Triple(
-                R.style.Theme_CalculatorApp_Palette_Green,
-                R.style.Theme_CalculatorApp_Palette_Green_Light,
-                R.style.Theme_CalculatorApp_Palette_Green_Dark
-            )
-            "blue" -> Triple(
-                R.style.Theme_CalculatorApp_Palette_Blue,
-                R.style.Theme_CalculatorApp_Palette_Blue_Light,
-                R.style.Theme_CalculatorApp_Palette_Blue_Dark
-            )
-            "pink" -> Triple(
-                R.style.Theme_CalculatorApp_Palette_Pink,
-                R.style.Theme_CalculatorApp_Palette_Pink_Light,
-                R.style.Theme_CalculatorApp_Palette_Pink_Dark
-            )
-            "grey" -> Triple(
-                R.style.Theme_CalculatorApp_Palette_Grey,
-                R.style.Theme_CalculatorApp_Palette_Grey_Light,
-                R.style.Theme_CalculatorApp_Palette_Grey_Dark
-            )
-            else -> Triple(
-                R.style.Theme_CalculatorApp_Palette_Purple,
-                R.style.Theme_CalculatorApp_Palette_Purple_Light,
-                R.style.Theme_CalculatorApp_Palette_Purple_Dark
-            )
-        }
-        return when (mode) {
-            "light" -> light
-            "dark" -> dark
-            else -> base
-        }
+    private fun resolveTheme(mode: String): Int = when (mode) {
+        "light" -> R.style.Theme_CalculatorApp_Light
+        "dark" -> R.style.Theme_CalculatorApp_Dark
+        "grey" -> R.style.Theme_CalculatorApp_Grey
+        else -> R.style.Theme_CalculatorApp
     }
 }

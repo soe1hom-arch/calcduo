@@ -36,13 +36,10 @@
     <string name="theme_light">Terang</string>
     <string name="theme_dark">Gelap</string>
     <string name="theme_grey">Abu-abu</string>
-    <string name="settings_palette">PALET</string>
-    <string name="palette_purple">Ungu</string>
-    <string name="palette_orange">Oranye</string>
-    <string name="palette_green">Hijau</string>
-    <string name="palette_blue">Biru</string>
-    <string name="palette_pink">Merah muda</string>
-    <string name="palette_grey">Abu-abu</string>
+    <string name="settings_grid">WARNA KISI</string>
+    <string name="settings_button_edge">TEPI TOMBOL</string>
+    <string name="color_default">Default</string>
+    <string name="color_custom">Kustom…</string>
     <string name="settings_feedback">UMPAN BALIK</string>
     <string name="settings_accent">AKSEN KUSTOM</string>
     <string name="accent_default">Default</string>

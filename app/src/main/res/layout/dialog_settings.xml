@@ -124,12 +124,12 @@
         android:background="?attr/calcDivider"
         android:layout_marginBottom="16dp" />
 
-    <!-- Palette Section -->
+    <!-- Grid Color Section -->
     <TextView
-        android:id="@+id/tv_label_palette"
+        android:id="@+id/tv_label_grid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/settings_palette"
+        android:text="@string/settings_grid"
         android:textColor="?attr/calcAccent"
         android:textSize="11sp"
         android:textStyle="bold"
@@ -137,7 +137,7 @@
         android:layout_marginBottom="12dp" />
 
     <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chip_group_palette"
+        android:id="@+id/chip_group_grid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:singleSelection="true"
@@ -146,61 +146,71 @@
         app:selectionRequired="true">
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_palette_purple"
+            android:id="@+id/chip_grid_default"
             style="@style/Widget.Material3.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/palette_purple"
+            android:text="@string/color_default"
             android:textColor="?attr/calcTextPrimary"
             app:chipBackgroundColor="?attr/calcButtonBackground"
             app:chipStrokeColor="?attr/calcDivider" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_palette_orange"
+            android:id="@+id/chip_grid_custom"
             style="@style/Widget.Material3.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/palette_orange"
+            android:text="@string/color_custom"
+            android:textColor="?attr/calcTextPrimary"
+            app:chipBackgroundColor="?attr/calcButtonBackground"
+            app:chipStrokeColor="?attr/calcDivider" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/calcDivider"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Button Edge Color Section -->
+    <TextView
+        android:id="@+id/tv_label_edge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_button_edge"
+        android:textColor="?attr/calcAccent"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.1"
+        android:layout_marginBottom="12dp" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chip_group_edge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:singleSelection="true"
+        android:layout_marginBottom="20dp"
+        app:chipSpacing="8dp"
+        app:selectionRequired="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_edge_default"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/color_default"
             android:textColor="?attr/calcTextPrimary"
             app:chipBackgroundColor="?attr/calcButtonBackground"
             app:chipStrokeColor="?attr/calcDivider" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_palette_green"
+            android:id="@+id/chip_edge_custom"
             style="@style/Widget.Material3.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/palette_green"
-            android:textColor="?attr/calcTextPrimary"
-            app:chipBackgroundColor="?attr/calcButtonBackground"
-            app:chipStrokeColor="?attr/calcDivider" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_palette_blue"
-            style="@style/Widget.Material3.Chip.Filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/palette_blue"
-            android:textColor="?attr/calcTextPrimary"
-            app:chipBackgroundColor="?attr/calcButtonBackground"
-            app:chipStrokeColor="?attr/calcDivider" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_palette_pink"
-            style="@style/Widget.Material3.Chip.Filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/palette_pink"
-            android:textColor="?attr/calcTextPrimary"
-            app:chipBackgroundColor="?attr/calcButtonBackground"
-            app:chipStrokeColor="?attr/calcDivider" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_palette_grey"
-            style="@style/Widget.Material3.Chip.Filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/palette_grey"
+            android:text="@string/color_custom"
             android:textColor="?attr/calcTextPrimary"
             app:chipBackgroundColor="?attr/calcButtonBackground"
             app:chipStrokeColor="?attr/calcDivider" />
