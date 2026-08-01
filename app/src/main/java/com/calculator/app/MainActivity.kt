@@ -14,6 +14,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.core.view.GravityCompat
 import androidx.core.net.toUri
@@ -175,6 +176,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        binding.toolbar.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_menu)
         binding.toolbar.setNavigationOnClickListener { binding.drawerLayout.openDrawer(GravityCompat.START) }
         binding.toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
@@ -310,9 +312,17 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, getString(R.string.no_history), Toast.LENGTH_SHORT).show()
             return
         }
+        val displayItems = log.map { entry ->
+            val parsed = CalculatorEngine.parseHistoryEntry(entry)
+            if (parsed != null) {
+                CalculatorEngine.formatExpression(parsed.first) + " = " + CalculatorEngine.formatDisplayNumber(parsed.second)
+            } else {
+                entry
+            }
+        }
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.history_title))
-            .setItems(log.toTypedArray()) { _, which ->
+            .setItems(displayItems.toTypedArray()) { _, which ->
                 val parsed = CalculatorEngine.parseHistoryEntry(log[which])
                 if (parsed != null) {
                     fragment?.restoreHistory(parsed.first, parsed.second)

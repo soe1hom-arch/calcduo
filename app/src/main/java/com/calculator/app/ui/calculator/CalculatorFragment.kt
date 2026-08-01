@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.ViewModelProvider
 import com.calculator.app.data.CalculatorAction
+import com.calculator.app.data.CalculatorEngine
 import com.calculator.app.data.CalculatorState
 import com.calculator.app.databinding.FragmentCalculatorBinding
 import com.calculator.app.R
@@ -116,9 +117,9 @@ class CalculatorFragment : Fragment() {
     private fun updateDisplay(state: CalculatorState) {
         if (_binding == null) return
 
-        binding.tvExpression.text = state.expression.ifEmpty { "" }
-        binding.tvResult.text = state.result
-        binding.tvHistory.text = state.history.ifEmpty { "" }
+        binding.tvExpression.text = CalculatorEngine.formatExpression(state.expression).ifEmpty { "" }
+        binding.tvResult.text = CalculatorEngine.formatDisplayNumber(state.result)
+        binding.tvHistory.text = CalculatorEngine.formatExpression(state.history).ifEmpty { "" }
         binding.tvMemoryIndicator.visibility = if (state.hasMemory) View.VISIBLE else View.GONE
         
         // Show copy button only when result is meaningful

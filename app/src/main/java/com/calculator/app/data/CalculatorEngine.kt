@@ -118,7 +118,7 @@ object CalculatorEngine {
                 is CalculatorAction.MemoryRecall -> {
                     if (!state.hasMemory) state
                     else {
-                        val memStr = CalculatorEngine.formatResult(state.memory)
+                        val memStr = CalculatorEngine.formatPlain(state.memory)
                         if (state.justEvaluated) {
                             state.copy(expression = memStr, result = memStr, history = "", justEvaluated = false)
                         } else {
@@ -219,11 +219,11 @@ object CalculatorEngine {
         if (state.expression.isBlank() || state.isError) return state
 
         val result = evaluate(state.expression)
-        val formatted = formatResult(result)
+        val raw = formatPlain(result)
 
         return state.copy(
             expression = state.expression,
-            result = formatted,
+            result = raw,
             history = state.expression + " =",
             isError = result.isNaN() || result.isInfinite(),
             errorMessage = if (result.isNaN() || result.isInfinite()) "Cannot divide by zero" else "",
@@ -243,7 +243,7 @@ object CalculatorEngine {
         return try {
             if (newExpr.contains(Regex("[+\\-×÷^]"))) {
                 val result = evaluate(newExpr)
-                state.copy(expression = newExpr, result = formatResult(result))
+                state.copy(expression = newExpr, result = formatPlain(result))
             } else {
                 state.copy(expression = newExpr, result = newExpr)
             }
@@ -257,10 +257,10 @@ object CalculatorEngine {
         return try {
             val value = evaluate(state.expression)
             val percent = value / 100.0
-            val formatted = formatResult(percent)
+            val raw = formatPlain(percent)
             state.copy(
-                expression = formatted,
-                result = formatted,
+                expression = raw,
+                result = raw,
                 history = "${state.result} % =",
                 justEvaluated = true
             )
@@ -311,11 +311,11 @@ object CalculatorEngine {
             if (result.isNaN() || result.isInfinite()) {
                 state.copy(isError = true, errorMessage = "Math Error", result = "Error")
             } else {
-                val formatted = formatResult(result)
+                val raw = formatPlain(result)
                 state.copy(
-                    expression = formatted,
-                    result = formatted,
-                    history = "$op(${formatResult(value)}) =",
+                    expression = raw,
+                    result = raw,
+                    history = "$op(${formatPlain(value)}) =",
                     justEvaluated = true
                 )
             }
@@ -454,6 +454,44 @@ object CalculatorEngine {
 
     }
 
+    fun formatPlain(value: Double): String =
+        if (value.isNaN() || value.isInfinite()) "Error"
+        else if (value == value.toLong().toDouble()) value.toLong().toString()
+        else value.toString()
+
+    fun formatExpression(raw: String): String {
+        val sb = StringBuilder(raw.length)
+        var i = 0
+        while (i < raw.length) {
+            val c = raw[i]
+            if (c.isDigit() || c == '.') {
+                val start = i
+                while (i < raw.length && (raw[i].isDigit() || raw[i] == '.')) i++
+                sb.append(formatNumberToken(raw.substring(start, i)))
+            } else {
+                sb.append(c)
+                i++
+            }
+        }
+        return sb.toString()
+    }
+
+    fun formatDisplayNumber(raw: String): String {
+        if (raw.isEmpty()) return raw
+        if (raw.any { !it.isDigit() && it != '.' && it != '-' }) return raw
+        val sign = if (raw.startsWith("-")) "-" else ""
+        val body = if (raw.startsWith("-")) raw.substring(1) else raw
+        val formatted = sign + formatNumberToken(body)
+        return if (formatted.length > 15) raw else formatted
+    }
+
+    private fun formatNumberToken(token: String): String {
+        val dot = token.indexOf('.')
+        val intPart = if (dot >= 0) token.substring(0, dot) else token
+        val rest = if (dot >= 0) token.substring(dot) else ""
+        return addThousandsSeparator(intPart) + rest
+    }
+
     fun formatResult(value: Double): String {
         if (value.isNaN() || value.isInfinite()) return "Error"
         val formatted = if (value == value.toLong().toDouble()) {
@@ -476,7 +514,7 @@ object CalculatorEngine {
         var count = 0
         for (i in num.length - 1 downTo 0) {
             if (count > 0 && count % 3 == 0) {
-                sb.append('\u202F')
+                sb.append('.')
             }
             sb.append(num[i])
             count++

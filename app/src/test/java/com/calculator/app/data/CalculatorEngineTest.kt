@@ -335,7 +335,45 @@ class CalculatorEngineTest {
 
     @Test
     fun testFormatThousandsSeparator() {
-        assertEquals("1\u202F234", CalculatorEngine.formatResult(1234.0))
+        assertEquals("1.234", CalculatorEngine.formatResult(1234.0))
+    }
+
+    @Test
+    fun testFormatExpressionGroupsNumbers() {
+        assertEquals("10.000+2.500", CalculatorEngine.formatExpression("10000+2500"))
+        assertEquals("10.000.5", CalculatorEngine.formatExpression("10000.5"))
+        assertEquals("sin(10.000)", CalculatorEngine.formatExpression("sin(10000)"))
+        assertEquals("-12.345", CalculatorEngine.formatExpression("-12345"))
+    }
+
+    @Test
+    fun testFormatDisplayNumber() {
+        assertEquals("10.000", CalculatorEngine.formatDisplayNumber("10000"))
+        assertEquals("-12.500", CalculatorEngine.formatDisplayNumber("-12500"))
+        assertEquals("3.14", CalculatorEngine.formatDisplayNumber("3.14"))
+        assertEquals("0.", CalculatorEngine.formatDisplayNumber("0."))
+        assertEquals("Error", CalculatorEngine.formatDisplayNumber("Error"))
+    }
+
+    @Test
+    fun testStateKeepsRawResult() {
+        var state = CalculatorEngine.processAction(CalculatorState(), CalculatorAction.Number("10000"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Operator("+"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("2500"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Equals)
+        assertEquals("12500", state.result)
+        assertEquals("10.000 + 2.500", CalculatorEngine.formatExpression(state.expression))
+        assertEquals("12.500", CalculatorEngine.formatDisplayNumber(state.result))
+    }
+
+    @Test
+    fun testContinueAfterEqualsKeepsRaw() {
+        var state = CalculatorEngine.processAction(CalculatorState(), CalculatorAction.Number("10000"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Equals)
+        state = CalculatorEngine.processAction(state, CalculatorAction.Operator("+"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("5"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Equals)
+        assertEquals("10005", state.result)
     }
 
     @Test
