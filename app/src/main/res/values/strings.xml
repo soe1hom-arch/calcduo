@@ -25,6 +25,9 @@
     <string name="notes_empty">No notes yet. Tap + to create one.</string>
     <string name="notes_delete">Delete</string>
     <string name="notes_delete_message">This note will be permanently deleted.</string>
+    <string name="notes_delete_selected_message">Selected notes will be permanently deleted.</string>
+    <string name="notes_select">Select</string>
+    <string name="notes_done">Done</string>
     <string name="cancel">Cancel</string>
 
     <!-- Settings dialog -->
@@ -59,6 +62,10 @@
     <plurals name="notes_chars">
         <item quantity="one">%1$d char</item>
         <item quantity="other">%1$d chars</item>
+    </plurals>
+    <plurals name="notes_selected_count">
+        <item quantity="one">%1$d selected</item>
+        <item quantity="other">%1$d selected</item>
     </plurals>
 
     <!-- Privacy -->

@@ -25,6 +25,9 @@
     <string name="notes_empty">Belum ada catatan. Ketuk + untuk membuatnya.</string>
     <string name="notes_delete">Hapus</string>
     <string name="notes_delete_message">Catatan ini akan dihapus permanen.</string>
+    <string name="notes_delete_selected_message">Catatan terpilih akan dihapus permanen.</string>
+    <string name="notes_select">Pilih</string>
+    <string name="notes_done">Selesai</string>
     <string name="cancel">Batal</string>
 
     <!-- Settings dialog -->
@@ -58,6 +61,9 @@
     <string name="copied_result">Disalin: %1$s</string>
     <plurals name="notes_chars">
         <item quantity="other">%1$d karakter</item>
+    </plurals>
+    <plurals name="notes_selected_count">
+        <item quantity="other">%1$d dipilih</item>
     </plurals>
 
     <!-- Privacy -->

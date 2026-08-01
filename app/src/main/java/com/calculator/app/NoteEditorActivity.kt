@@ -22,6 +22,7 @@ class NoteEditorActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNoteEditorBinding
     private var note: Note? = null
     private var saveJob: Job? = null
+    private var noteDeleted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,6 +94,7 @@ class NoteEditorActivity : AppCompatActivity() {
     }
 
     private fun persist() {
+        if (noteDeleted) return
         val current = note ?: return
         val notes = NotesStore.load(this)
         val isEmpty = current.title.isBlank() && current.content.isBlank()
@@ -118,6 +120,8 @@ class NoteEditorActivity : AppCompatActivity() {
             .setTitle(R.string.notes_delete)
             .setMessage(R.string.notes_delete_message)
             .setPositiveButton(R.string.notes_delete) { _, _ ->
+                noteDeleted = true
+                saveJob?.cancel()
                 val notes = NotesStore.load(this).filterNot { it.id == note?.id }
                 NotesStore.save(this, notes)
                 finish()
