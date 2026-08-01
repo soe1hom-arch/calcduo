@@ -8,6 +8,23 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 object ThemeUtils {
+
+    fun apply(activity: AppCompatActivity) {
+        val prefs = activity.getSharedPreferences("calcduo_settings", Context.MODE_PRIVATE)
+        val mode = prefs.getString("theme", "system") ?: "system"
+        val palette = prefs.getString("palette", "purple") ?: "purple"
+
+        AppCompatDelegate.setDefaultNightMode(
+            when (mode) {
+                "light" -> AppCompatDelegate.MODE_NIGHT_NO
+                "dark", "grey" -> AppCompatDelegate.MODE_NIGHT_YES
+                else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            }
+        )
+
+        activity.setTheme(resolveTheme(activity, mode, palette))
+    }
+
     fun applySystemBarInsets(root: View, includeIme: Boolean = false) {
         ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -17,26 +34,15 @@ object ThemeUtils {
         }
     }
 
-    fun apply(activity: AppCompatActivity) {
-        val mode = activity.getSharedPreferences("calcduo_settings", Context.MODE_PRIVATE)
-            .getString("theme", "system") ?: "system"
-        when (mode) {
-            "light" -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                activity.setTheme(R.style.Theme_CalculatorApp_Light)
-            }
-            "dark" -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                activity.setTheme(R.style.Theme_CalculatorApp_Dark)
-            }
-            "grey" -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                activity.setTheme(R.style.Theme_CalculatorApp_Grey)
-            }
-            else -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                activity.setTheme(R.style.Theme_CalculatorApp)
-            }
+    private fun resolveTheme(activity: AppCompatActivity, mode: String, palette: String): Int {
+        if (mode == "grey") return R.style.Theme_CalculatorApp_Grey
+        val suffix = when (mode) {
+            "light" -> "Light"
+            "dark" -> "Dark"
+            else -> ""
         }
+        val styleName = "Theme_CalculatorApp_Palette_${palette.replaceFirstChar { it.uppercase() }}$suffix"
+        val styleRes = activity.resources.getIdentifier(styleName, "style", activity.packageName)
+        return if (styleRes != 0) styleRes else R.style.Theme_CalculatorApp
     }
 }

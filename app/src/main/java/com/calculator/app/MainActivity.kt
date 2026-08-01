@@ -34,8 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val savedTheme = getSharedPreferences("calcduo_settings", Context.MODE_PRIVATE).getString("theme", "system") ?: "system"
-        applyTheme(savedTheme)
+        ThemeUtils.apply(this)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -273,7 +272,31 @@ class MainActivity : AppCompatActivity() {
                 val newMode = chipMap[checkedIds[0]] ?: "system"
                 if (newMode != themeMode) {
                     prefs.edit { putString("theme", newMode) }
-                    applyTheme(newMode)
+                    ThemeUtils.apply(this)
+                    recreate()
+                }
+            }
+        }
+
+        val paletteGroup = view.findViewById<com.google.android.material.chip.ChipGroup>(R.id.chip_group_palette)
+        val paletteMap = mapOf(
+            R.id.chip_palette_purple to "purple",
+            R.id.chip_palette_orange to "orange",
+            R.id.chip_palette_green to "green",
+            R.id.chip_palette_blue to "blue",
+            R.id.chip_palette_pink to "pink",
+            R.id.chip_palette_grey to "grey"
+        )
+        val currentPalette = prefs.getString("palette", "purple") ?: "purple"
+        for ((id, pal) in paletteMap) {
+            if (pal == currentPalette) { paletteGroup.check(id); break }
+        }
+        paletteGroup.setOnCheckedStateChangeListener { _, checkedIds ->
+            if (checkedIds.isNotEmpty()) {
+                val newPalette = paletteMap[checkedIds[0]] ?: "purple"
+                if (newPalette != currentPalette) {
+                    prefs.edit { putString("palette", newPalette) }
+                    ThemeUtils.apply(this)
                     recreate()
                 }
             }
@@ -286,27 +309,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         dialog.show()
-    }
-
-    private fun applyTheme(mode: String) {
-        when (mode) {
-            "light" -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                setTheme(R.style.Theme_CalculatorApp_Light)
-            }
-            "dark" -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                setTheme(R.style.Theme_CalculatorApp_Dark)
-            }
-            "grey" -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                setTheme(R.style.Theme_CalculatorApp_Grey)
-            }
-            else -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                setTheme(R.style.Theme_CalculatorApp)
-            }
-        }
     }
 
     private fun setupDisplayTapToCollapse() {
