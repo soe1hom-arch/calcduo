@@ -36,10 +36,12 @@
     <string name="theme_light">Terang</string>
     <string name="theme_dark">Gelap</string>
     <string name="theme_grey">Abu-abu</string>
-    <string name="settings_grid">WARNA KISI</string>
     <string name="settings_button_edge">TEPI TOMBOL</string>
+    <string name="settings_operator_edge">SISI TOMBOL OPERASI</string>
     <string name="color_default">Default</string>
     <string name="color_custom">Kustom…</string>
+    <string name="color_picker_title_edge">Warna Tepi Tombol</string>
+    <string name="color_picker_title_op_edge">Warna Sisi Tombol Operasi</string>
     <string name="settings_feedback">UMPAN BALIK</string>
     <string name="settings_accent">AKSEN KUSTOM</string>
     <string name="accent_default">Default</string>

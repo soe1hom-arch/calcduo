@@ -11,37 +11,38 @@ import androidx.core.graphics.ColorUtils
 import com.google.android.material.button.MaterialButton
 
 /**
- * User-configurable colors for the keyboard grid background and button edges.
+ * User-configurable colors for the keyboard button edges.
  */
 object KeyboardColors {
     private const val PREFS = "calcduo_settings"
-    const val KEY_GRID = "grid_color"
     const val KEY_EDGE = "button_edge_color"
-
-    fun gridColor(context: Context): Int? = readHex(context, KEY_GRID)
+    const val KEY_OPERATOR_EDGE = "operator_edge_color"
 
     fun edgeColor(context: Context): Int? = readHex(context, KEY_EDGE)
 
-    fun setGrid(context: Context, hex: String?) = write(context, KEY_GRID, hex)
+    fun operatorEdgeColor(context: Context): Int? = readHex(context, KEY_OPERATOR_EDGE)
 
     fun setEdge(context: Context, hex: String?) = write(context, KEY_EDGE, hex)
 
-    fun applyGrid(context: Context, keyboardRoot: View) {
-        val color = gridColor(context) ?: return
-        keyboardRoot.setBackgroundColor(color)
-    }
+    fun setOperatorEdge(context: Context, hex: String?) = write(context, KEY_OPERATOR_EDGE, hex)
 
     fun applyEdge(context: Context, root: View) {
         val color = edgeColor(context) ?: return
-        val density = context.resources.displayMetrics.density
-        val strokeWidth = (2f * density).toInt()
-        collectButtons(root).forEach { button ->
-            button.strokeWidth = strokeWidth
-            button.strokeColor = ColorStateList.valueOf(color)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                button.outlineSpotShadowColor = color
-                button.outlineAmbientShadowColor = ColorUtils.setAlphaComponent(color, 0x40)
-            }
+        collectButtons(root).forEach { applyStroke(it, color) }
+    }
+
+    fun applyOperatorEdge(context: Context, buttons: List<MaterialButton>) {
+        val color = operatorEdgeColor(context) ?: return
+        buttons.forEach { applyStroke(it, color) }
+    }
+
+    private fun applyStroke(button: MaterialButton, color: Int) {
+        val density = button.resources.displayMetrics.density
+        button.strokeWidth = (2f * density).toInt()
+        button.strokeColor = ColorStateList.valueOf(color)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            button.outlineSpotShadowColor = color
+            button.outlineAmbientShadowColor = ColorUtils.setAlphaComponent(color, 0x40)
         }
     }
 

@@ -32,7 +32,7 @@
 | **History** | Saved calculations per calculator |
 | **Notes** | Full-screen notepad with autosave, multiple notes & multi-select delete |
 | **Themes** | System, Light, Dark, Grey |
-| **Keyboard Colors** | Grid background & button edge coloring (Default + free picker) |
+| **Button Edges** | Edge & glow color for all keys or operator keys (Default + free picker) |
 | **Custom Accent** | 12 preset colors + free HSV color picker |
 | **Haptic** | Optional key vibration |
 | **Languages** | English & Indonesian |
@@ -52,7 +52,7 @@
 
 Tap **∨** to expand, **∧** to collapse. In scientific mode the output panel shrinks to 30% and the keyboard grows to 70% so the keys stay comfortable.
 
-Personalize the look from the settings menu: theme mode, keyboard grid/edge colors, and a custom accent color (preset swatches or a free color picker).
+Personalize the look from the settings menu: theme mode, button edge colors (all keys or operator keys), and a custom accent color (preset swatches or a free color picker).
 
 ---
 

@@ -19,8 +19,10 @@ import com.google.android.material.button.MaterialButton
  */
 object ColorPickerDialog {
 
-    fun show(context: Context, initialColor: Int, onColorPicked: (Int) -> Unit) {
+    fun show(context: Context, initialColor: Int, onColorPicked: (Int) -> Unit, title: String? = null) {
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_color_picker, null, false)
+        view.findViewById<android.widget.TextView>(R.id.picker_title).text =
+            title ?: context.getString(R.string.accent_picker_title)
         val satVal = view.findViewById<SatValView>(R.id.picker_satval)
         val hueSlider = view.findViewById<HueSliderView>(R.id.picker_hue)
         val preview = view.findViewById<View>(R.id.picker_preview)

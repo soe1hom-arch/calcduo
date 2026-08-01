@@ -51,8 +51,22 @@ class MainActivity : AppCompatActivity() {
         CustomAccent.applyOperatorButton(this, binding.keyboard.btnDivide)
         CustomAccent.applyOperatorButton(this, binding.keyboard.btnDivide2)
         CustomAccent.applyEqualsButton(this, binding.keyboard.btnEquals)
-        KeyboardColors.applyGrid(this, binding.keyboard.root)
         KeyboardColors.applyEdge(this, binding.keyboard.root)
+        KeyboardColors.applyOperatorEdge(
+            this,
+            listOf(
+                binding.keyboard.btnAc,
+                binding.keyboard.btnAcFull,
+                binding.keyboard.btnBackspace,
+                binding.keyboard.btnBackspaceFull,
+                binding.keyboard.btnDivide,
+                binding.keyboard.btnDivide2,
+                binding.keyboard.btnMultiply,
+                binding.keyboard.btnSubtract,
+                binding.keyboard.btnAdd,
+                binding.keyboard.btnEquals
+            )
+        )
         setupCalculators()
         setupDisplayTapToCollapse()
     }
@@ -267,7 +281,7 @@ class MainActivity : AppCompatActivity() {
 
         view.findViewById<android.widget.ImageView>(R.id.img_settings_icon)?.let { CustomAccent.tintImageView(this, it) }
         listOf(
-            R.id.tv_label_theme, R.id.tv_label_grid, R.id.tv_label_edge,
+            R.id.tv_label_theme, R.id.tv_label_op_edge, R.id.tv_label_edge,
             R.id.tv_label_accent, R.id.tv_label_feedback
         ).forEach { id ->
             view.findViewById<android.widget.TextView>(id)?.let { CustomAccent.tintTextView(this, it) }
@@ -294,38 +308,37 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val gridGroup = view.findViewById<com.google.android.material.chip.ChipGroup>(R.id.chip_group_grid)
-        val gridCustom = view.findViewById<com.google.android.material.chip.Chip>(R.id.chip_grid_custom)
-        val currentGrid = prefs.getString("grid_color", null)
-        if (currentGrid == null) {
-            gridGroup.check(R.id.chip_grid_default)
+        val opEdgeGroup = view.findViewById<com.google.android.material.chip.ChipGroup>(R.id.chip_group_op_edge)
+        val opEdgeCustom = view.findViewById<com.google.android.material.chip.Chip>(R.id.chip_op_edge_custom)
+        val currentOpEdge = prefs.getString("operator_edge_color", null)
+        if (currentOpEdge == null) {
+            opEdgeGroup.check(R.id.chip_op_edge_default)
         } else {
-            gridGroup.check(R.id.chip_grid_custom)
-            parseHexColor(currentGrid)?.let { c ->
-                gridCustom.chipBackgroundColor = android.content.res.ColorStateList.valueOf(c)
-                gridCustom.setTextColor(CustomAccent.readableTextColor(c))
+            opEdgeGroup.check(R.id.chip_op_edge_custom)
+            parseHexColor(currentOpEdge)?.let { c ->
+                opEdgeCustom.chipBackgroundColor = android.content.res.ColorStateList.valueOf(c)
+                opEdgeCustom.setTextColor(CustomAccent.readableTextColor(c))
             }
         }
-        gridGroup.setOnCheckedStateChangeListener { _, checkedIds ->
+        opEdgeGroup.setOnCheckedStateChangeListener { _, checkedIds ->
             if (checkedIds.isEmpty()) return@setOnCheckedStateChangeListener
             val id = checkedIds[0]
-            if (id == R.id.chip_grid_default) {
-                if (currentGrid != null) {
-                    KeyboardColors.setGrid(this, null)
+            if (id == R.id.chip_op_edge_default) {
+                if (currentOpEdge != null) {
+                    KeyboardColors.setOperatorEdge(this, null)
                     ThemeUtils.apply(this)
                     recreate()
                 }
             } else {
-                val initial = parseHexColor(currentGrid)
-                    ?: MaterialColors.getColor(this, R.attr.calcKeyboardBackground, 0xFF18181B.toInt())
-                ColorPickerDialog.show(this, initial) { picked ->
+                val initial = parseHexColor(currentOpEdge) ?: (CustomAccent.get(this) ?: 0xFFFF5F00.toInt())
+                ColorPickerDialog.show(this, initial, { picked ->
                     val hex = String.format("#%06X", 0xFFFFFF and picked)
-                    if (hex != currentGrid) {
-                        KeyboardColors.setGrid(this, hex)
+                    if (hex != currentOpEdge) {
+                        KeyboardColors.setOperatorEdge(this, hex)
                         ThemeUtils.apply(this)
                         recreate()
                     }
-                }
+                }, getString(R.string.color_picker_title_op_edge))
             }
         }
 
@@ -352,14 +365,14 @@ class MainActivity : AppCompatActivity() {
                 }
             } else {
                 val initial = parseHexColor(currentEdge) ?: (CustomAccent.get(this) ?: 0xFFFF5F00.toInt())
-                ColorPickerDialog.show(this, initial) { picked ->
+                ColorPickerDialog.show(this, initial, { picked ->
                     val hex = String.format("#%06X", 0xFFFFFF and picked)
                     if (hex != currentEdge) {
                         KeyboardColors.setEdge(this, hex)
                         ThemeUtils.apply(this)
                         recreate()
                     }
-                }
+                }, getString(R.string.color_picker_title_edge))
             }
         }
 
@@ -412,14 +425,14 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.chip_accent_custom -> {
                     val initial = CustomAccent.get(this) ?: 0xFF7C4DFF.toInt()
-                    ColorPickerDialog.show(this, initial) { picked ->
+                    ColorPickerDialog.show(this, initial, { picked ->
                         val hex = String.format("#%06X", 0xFFFFFF and picked)
                         if (hex != prefs.getString("accent_custom", null)) {
                             CustomAccent.set(this, hex)
                             ThemeUtils.apply(this)
                             recreate()
                         }
-                    }
+                    })
                 }
                 else -> {
                     val hex = swatchMap[id]

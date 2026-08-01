@@ -36,10 +36,12 @@
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
     <string name="theme_grey">Grey</string>
-    <string name="settings_grid">GRID COLOR</string>
     <string name="settings_button_edge">BUTTON EDGE</string>
+    <string name="settings_operator_edge">OPERATOR EDGE</string>
     <string name="color_default">Default</string>
     <string name="color_custom">Custom…</string>
+    <string name="color_picker_title_edge">Button Edge Color</string>
+    <string name="color_picker_title_op_edge">Operator Button Edge Color</string>
     <string name="settings_feedback">FEEDBACK</string>
     <string name="settings_accent">CUSTOM ACCENT</string>
     <string name="accent_default">Default</string>
