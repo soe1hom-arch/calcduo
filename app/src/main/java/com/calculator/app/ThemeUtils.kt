@@ -22,7 +22,7 @@ object ThemeUtils {
             }
         )
 
-        activity.setTheme(resolveTheme(activity, mode, palette))
+        activity.setTheme(resolveTheme(mode, palette))
     }
 
     fun applySystemBarInsets(root: View, includeIme: Boolean = false) {
@@ -34,15 +34,44 @@ object ThemeUtils {
         }
     }
 
-    private fun resolveTheme(activity: AppCompatActivity, mode: String, palette: String): Int {
+    private fun resolveTheme(mode: String, palette: String): Int {
         if (mode == "grey") return R.style.Theme_CalculatorApp_Grey
-        val suffix = when (mode) {
-            "light" -> "Light"
-            "dark" -> "Dark"
-            else -> ""
+        val (base, light, dark) = when (palette) {
+            "orange" -> Triple(
+                R.style.Theme_CalculatorApp_Palette_Orange,
+                R.style.Theme_CalculatorApp_Palette_Orange_Light,
+                R.style.Theme_CalculatorApp_Palette_Orange_Dark
+            )
+            "green" -> Triple(
+                R.style.Theme_CalculatorApp_Palette_Green,
+                R.style.Theme_CalculatorApp_Palette_Green_Light,
+                R.style.Theme_CalculatorApp_Palette_Green_Dark
+            )
+            "blue" -> Triple(
+                R.style.Theme_CalculatorApp_Palette_Blue,
+                R.style.Theme_CalculatorApp_Palette_Blue_Light,
+                R.style.Theme_CalculatorApp_Palette_Blue_Dark
+            )
+            "pink" -> Triple(
+                R.style.Theme_CalculatorApp_Palette_Pink,
+                R.style.Theme_CalculatorApp_Palette_Pink_Light,
+                R.style.Theme_CalculatorApp_Palette_Pink_Dark
+            )
+            "grey" -> Triple(
+                R.style.Theme_CalculatorApp_Palette_Grey,
+                R.style.Theme_CalculatorApp_Palette_Grey_Light,
+                R.style.Theme_CalculatorApp_Palette_Grey_Dark
+            )
+            else -> Triple(
+                R.style.Theme_CalculatorApp_Palette_Purple,
+                R.style.Theme_CalculatorApp_Palette_Purple_Light,
+                R.style.Theme_CalculatorApp_Palette_Purple_Dark
+            )
         }
-        val styleName = "Theme_CalculatorApp_Palette_${palette.replaceFirstChar { it.uppercase() }}$suffix"
-        val styleRes = activity.resources.getIdentifier(styleName, "style", activity.packageName)
-        return if (styleRes != 0) styleRes else R.style.Theme_CalculatorApp
+        return when (mode) {
+            "light" -> light
+            "dark" -> dark
+            else -> base
+        }
     }
 }
