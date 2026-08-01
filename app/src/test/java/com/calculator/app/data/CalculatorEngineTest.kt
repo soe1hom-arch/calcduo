@@ -154,6 +154,24 @@ class CalculatorEngineTest {
     }
 
     @Test
+    fun testBackspaceAfterEqualsRemovesOneCharAtATime() {
+        var state = CalculatorEngine.processAction(CalculatorState(), CalculatorAction.Number("3"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Operator("+"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("4"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Equals)
+        assertEquals("7", state.result)
+
+        state = CalculatorEngine.processAction(state, CalculatorAction.Backspace)
+        assertEquals("3 +", state.expression)
+        assertEquals("3", state.result)
+        assertEquals("", state.history)
+
+        state = CalculatorEngine.processAction(state, CalculatorAction.Backspace)
+        assertEquals("3", state.expression)
+        assertEquals("3", state.result)
+    }
+
+    @Test
     fun testDecimal() {
         var state = CalculatorEngine.processAction(CalculatorState(), CalculatorAction.Number("3"))
         state = CalculatorEngine.processAction(state, CalculatorAction.Decimal)

@@ -233,8 +233,6 @@ object CalculatorEngine {
 
     private fun handleBackspace(state: CalculatorState): CalculatorState {
         if (state.expression.isEmpty() || state.isError) return CalculatorState()
-        // After a calculation, backspace clears the result
-        if (state.justEvaluated) return CalculatorState()
 
         val newExpr = state.expression.dropLast(1).trimEnd()
         if (newExpr.isEmpty()) return CalculatorState()
@@ -243,12 +241,12 @@ object CalculatorEngine {
         return try {
             if (newExpr.contains(Regex("[+\\-×÷^]"))) {
                 val result = evaluate(newExpr)
-                state.copy(expression = newExpr, result = formatPlain(result))
+                state.copy(expression = newExpr, result = formatPlain(result), history = "", justEvaluated = false)
             } else {
-                state.copy(expression = newExpr, result = newExpr)
+                state.copy(expression = newExpr, result = newExpr, history = "", justEvaluated = false)
             }
         } catch (e: Exception) {
-            state.copy(expression = newExpr, result = newExpr)
+            state.copy(expression = newExpr, result = newExpr, history = "", justEvaluated = false)
         }
     }
 
