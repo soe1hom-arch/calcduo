@@ -11,16 +11,17 @@ CalcDuo is a premium dual-calculator app that lets you run two independent calcu
 
 FEATURES:
 • Dual Calculator - Two independent calculators side-by-side
-• Tab System - Create, rename, and switch between calculators
-• Advanced Math - Parentheses, power (xʸ), square root, π, e, percentage, sign toggle
+• Advanced Math - Parentheses, powers (xʸ), square root, π, e, percentages
+• Exact Precision - BigDecimal engine, so 0.1 + 0.2 equals 0.3 exactly
+• Scientific Keyboard - sin, cos, tan, log, ln with a 30/70 output/keyboard layout
 • Memory Functions - MC, MR, M+, M− with visual memory indicator
 • Calculation History - Browse your recent calculations
-• Notes Panel - Built-in notepad alongside your work
-• Light & Dark Theme - Auto-switches with system settings
+• Notes - Full-screen notepad with autosave and multi-select delete
+• Personalization - Custom accent color, keyboard edge & glow colors
+• Themes - Light, dark, system, and grey
 • Haptic Feedback - Tactile response on every key press
-• Material Design 3 - Premium design with purple accent
-• Fully Offline - No internet connection required
-• Lightweight - Under 3MB
+• Languages - English & Indonesian
+• Fully Offline - No ads, no internet, no data collected
 
 CalcDuo is perfect for students, professionals, and anyone who needs to compare calculations, work with multiple numbers simultaneously, or simply wants a beautiful and functional calculator.
 
