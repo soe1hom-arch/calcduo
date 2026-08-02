@@ -63,7 +63,13 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 34
+          target: aosp_atd
           arch: x86_64
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
-          script: ./gradlew connectedDebugAndroidTest
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -no-metrics
+          script: |
+            adb shell wm dismiss-keyguard
+            adb shell input keyevent 82
+            adb shell settings put global device_provisioned 1
+            adb shell settings put secure user_setup_complete 1
+            ./gradlew connectedDebugAndroidTest
