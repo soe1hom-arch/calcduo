@@ -1,3 +1,19 @@
+/*
+ * Copyright 2026 soe1hom-arch
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.calculator.app
 
 import android.content.Context
@@ -241,7 +257,30 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, getString(R.string.browser_unavailable), Toast.LENGTH_SHORT).show()
             }
         }
+        view.findViewById<View>(R.id.tv_about_license).setOnClickListener { showLicense() }
         dialog.show()
+    }
+
+    private fun showLicense() {
+        val licenseText = runCatching {
+            resources.openRawResource(R.raw.license).bufferedReader().use { it.readText() }
+        }.getOrDefault(getString(R.string.about_license))
+        val scroll = android.widget.ScrollView(this).apply {
+            addView(android.widget.TextView(this@MainActivity).apply {
+                text = licenseText
+                setPadding(48, 24, 48, 24)
+                textSize = 12f
+            })
+            layoutParams = android.view.ViewGroup.LayoutParams(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                (resources.displayMetrics.heightPixels * 0.6).toInt()
+            )
+        }
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.about_license))
+            .setView(scroll)
+            .setPositiveButton(getString(R.string.ok), null)
+            .show()
     }
 
     private fun showPrivacy() {
