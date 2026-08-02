@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.calculator.app
+package com.soe1hom.calcduo
 
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.calculator.app.data.Note
-import com.calculator.app.data.NotesStore
-import com.calculator.app.databinding.ActivityNoteEditorBinding
+import com.soe1hom.calcduo.data.Note
+import com.soe1hom.calcduo.data.NotesStore
+import com.soe1hom.calcduo.databinding.ActivityNoteEditorBinding
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

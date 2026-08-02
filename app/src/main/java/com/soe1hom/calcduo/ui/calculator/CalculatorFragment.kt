@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.calculator.app.ui.calculator
+package com.soe1hom.calcduo.ui.calculator
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -29,11 +29,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.ViewModelProvider
-import com.calculator.app.data.CalculatorAction
-import com.calculator.app.data.CalculatorEngine
-import com.calculator.app.data.CalculatorState
-import com.calculator.app.databinding.FragmentCalculatorBinding
-import com.calculator.app.R
+import com.soe1hom.calcduo.data.CalculatorAction
+import com.soe1hom.calcduo.data.CalculatorEngine
+import com.soe1hom.calcduo.data.CalculatorState
+import com.soe1hom.calcduo.databinding.FragmentCalculatorBinding
+import com.soe1hom.calcduo.R
 import com.google.android.material.color.MaterialColors
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.calculator.app.ui.calculator
+package com.soe1hom.calcduo.ui.calculator
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.calculator.app.data.CalculatorAction
-import com.calculator.app.data.CalculatorEngine
-import com.calculator.app.data.CalculatorState
+import com.soe1hom.calcduo.data.CalculatorAction
+import com.soe1hom.calcduo.data.CalculatorEngine
+import com.soe1hom.calcduo.data.CalculatorState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.calculator.app"
+    namespace = "com.soe1hom.calcduo"
     compileSdk = 36
 
     signingConfigs {
@@ -35,7 +35,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.calculator.app"
+        applicationId = "com.soe1hom.calcduo"
         minSdk = 26
         targetSdk = 36
         versionCode = 2

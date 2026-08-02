@@ -56,14 +56,14 @@
             android:layout_height="260dp"
             android:orientation="horizontal">
 
-            <com.calculator.app.SatValView
+            <com.soe1hom.calcduo.SatValView
                 android:id="@+id/picker_satval"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:contentDescription="@string/picker_satval_desc" />
 
-            <com.calculator.app.HueSliderView
+            <com.soe1hom.calcduo.HueSliderView
                 android:id="@+id/picker_hue"
                 android:layout_width="36dp"
                 android:layout_height="match_parent"

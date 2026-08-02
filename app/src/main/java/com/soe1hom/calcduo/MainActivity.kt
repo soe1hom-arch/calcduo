@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.calculator.app
+package com.soe1hom.calcduo
 
 import android.content.Context
 import android.content.Intent
@@ -36,10 +36,10 @@ import androidx.core.content.edit
 import androidx.core.view.GravityCompat
 import androidx.core.net.toUri
 import com.google.android.material.color.MaterialColors
-import com.calculator.app.data.CalculatorAction
-import com.calculator.app.data.CalculatorEngine
-import com.calculator.app.databinding.ActivityMainBinding
-import com.calculator.app.ui.calculator.CalculatorFragment
+import com.soe1hom.calcduo.data.CalculatorAction
+import com.soe1hom.calcduo.data.CalculatorEngine
+import com.soe1hom.calcduo.databinding.ActivityMainBinding
+import com.soe1hom.calcduo.ui.calculator.CalculatorFragment
 
 class MainActivity : AppCompatActivity() {
 

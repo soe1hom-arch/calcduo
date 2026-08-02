@@ -3,10 +3,10 @@
 -keepattributes SourceFile,LineNumberTable
 
 # Keep ViewBinding classes
--keep class com.calculator.app.databinding.** { *; }
+-keep class com.soe1hom.calcduo.databinding.** { *; }
 
 # Keep data classes used in state management
--keep class com.calculator.app.data.** { *; }
+-keep class com.soe1hom.calcduo.data.** { *; }
 
 # Keep enum/sealed class values
 -keepclassmembers enum * { *; }

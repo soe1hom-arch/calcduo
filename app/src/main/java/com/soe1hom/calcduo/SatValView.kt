@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.calculator.app
+package com.soe1hom.calcduo
 
 import android.content.Context
 import android.graphics.Canvas
@@ -28,9 +28,9 @@ import android.view.MotionEvent
 import android.view.View
 
 /**
- * Vertical hue slider (0..360).
+ * Two-dimensional saturation/value picker for a fixed hue.
  */
-class HueSliderView @JvmOverloads constructor(
+class SatValView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -38,27 +38,45 @@ class HueSliderView @JvmOverloads constructor(
 
     var hue: Float = 0f
         set(value) {
-            field = ((value % 360f) + 360f) % 360f
+            field = normalize(value)
+            rebuildShadersIfNeeded(width.toFloat(), height.toFloat())
             invalidate()
         }
 
-    var onHueChanged: ((hue: Float) -> Unit)? = null
+    var saturation: Float = 1f
+        set(value) {
+            field = value.coerceIn(0f, 1f)
+            invalidate()
+        }
+
+    var value: Float = 1f
+        set(value) {
+            field = value.coerceIn(0f, 1f)
+            invalidate()
+        }
+
+    var onColorChanged: ((saturation: Float, value: Float) -> Unit)? = null
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val indicatorPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val indicatorPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+    }
     private val rect = RectF()
-    private var gradient: LinearGradient? = null
+    private var satShader: LinearGradient? = null
+    private var valShader: LinearGradient? = null
+    private var cachedHue = -1f
     private var cachedWidth = -1f
     private var cachedHeight = -1f
 
-    private val hueColors = intArrayOf(
-        Color.RED, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE, Color.MAGENTA, Color.RED
-    )
+    private fun normalize(h: Float): Float = ((h % 360f) + 360f) % 360f
 
-    private fun rebuildGradientIfNeeded(w: Float, h: Float) {
+    private fun rebuildShadersIfNeeded(w: Float, h: Float) {
         if (w <= 0f || h <= 0f) return
-        if (gradient != null && w == cachedWidth && h == cachedHeight) return
-        gradient = LinearGradient(0f, 0f, 0f, h, hueColors, null, Shader.TileMode.CLAMP)
+        if (satShader != null && hue == cachedHue && w == cachedWidth && h == cachedHeight) return
+        val hueColor = Color.HSVToColor(floatArrayOf(hue, 1f, 1f))
+        satShader = LinearGradient(0f, 0f, w, 0f, intArrayOf(Color.WHITE, hueColor), null, Shader.TileMode.CLAMP)
+        valShader = LinearGradient(0f, 0f, 0f, h, intArrayOf(Color.TRANSPARENT, Color.BLACK), null, Shader.TileMode.CLAMP)
+        cachedHue = hue
         cachedWidth = w
         cachedHeight = h
     }
@@ -68,30 +86,33 @@ class HueSliderView @JvmOverloads constructor(
         val w = width.toFloat()
         val h = height.toFloat()
         if (w <= 0f || h <= 0f) return
-        rebuildGradientIfNeeded(w, h)
+        rebuildShadersIfNeeded(w, h)
         rect.set(0f, 0f, w, h)
-        paint.shader = gradient
+        paint.shader = satShader
+        canvas.drawRect(rect, paint)
+        paint.shader = valShader
         canvas.drawRect(rect, paint)
         paint.shader = null
 
         val density = resources.displayMetrics.density
-        val y = hue / 360f * h
-        val barHeight = 4f * density
-        indicatorPaint.style = Paint.Style.FILL
+        val x = saturation * w
+        val y = (1f - value) * h
+        val radius = 10f * density
+        indicatorPaint.strokeWidth = 3f * density
         indicatorPaint.color = Color.WHITE
-        canvas.drawRect(RectF(0f, y - barHeight / 2f, w, y + barHeight / 2f), indicatorPaint)
-        indicatorPaint.style = Paint.Style.STROKE
+        canvas.drawCircle(x, y, radius, indicatorPaint)
         indicatorPaint.strokeWidth = 1.5f * density
         indicatorPaint.color = Color.argb(200, 0, 0, 0)
-        canvas.drawRect(RectF(0f, y - barHeight / 2f, w, y + barHeight / 2f), indicatorPaint)
+        canvas.drawCircle(x, y, radius, indicatorPaint)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (height <= 0) return true
+        if (width <= 0 || height <= 0) return true
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
-                hue = (event.y / height * 360f).coerceIn(0f, 359.99f)
-                onHueChanged?.invoke(hue)
+                saturation = event.x / width
+                value = 1f - event.y / height
+                onColorChanged?.invoke(saturation, value)
                 return true
             }
         }

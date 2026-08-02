@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.calculator.app
+package com.soe1hom.calcduo
 
 import android.app.Dialog
 import android.content.Context

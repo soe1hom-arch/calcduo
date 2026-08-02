@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.calculator.app.data
+package com.soe1hom.calcduo.data
 
 import kotlin.math.sqrt
 import kotlin.math.sin

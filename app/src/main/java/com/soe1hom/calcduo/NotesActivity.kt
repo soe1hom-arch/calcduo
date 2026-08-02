@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.calculator.app
+package com.soe1hom.calcduo
 
 import android.content.Intent
 import android.os.Bundle
@@ -28,10 +28,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.calculator.app.data.Note
-import com.calculator.app.data.NotesStore
-import com.calculator.app.databinding.ActivityNotesBinding
-import com.calculator.app.databinding.ItemNoteBinding
+import com.soe1hom.calcduo.data.Note
+import com.soe1hom.calcduo.data.NotesStore
+import com.soe1hom.calcduo.databinding.ActivityNotesBinding
+import com.soe1hom.calcduo.databinding.ItemNoteBinding
 import com.google.android.material.card.MaterialCardView
 import java.text.DateFormat
 
