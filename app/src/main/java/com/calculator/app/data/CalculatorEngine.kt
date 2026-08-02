@@ -16,7 +16,6 @@
 
 package com.calculator.app.data
 
-import kotlin.math.pow
 import kotlin.math.sqrt
 import kotlin.math.sin
 import kotlin.math.cos
@@ -26,6 +25,9 @@ import kotlin.math.ln
 import kotlin.math.absoluteValue
 import kotlin.math.PI
 import kotlin.math.E
+import java.math.BigDecimal
+import java.math.MathContext
+import java.math.RoundingMode
 import java.util.Locale
 
 data class CalculatorState(
@@ -71,6 +73,11 @@ sealed class CalculatorAction {
 object CalculatorEngine {
 
     private const val MAX_HISTORY_LOG = 100
+    private const val DIVISION_SCALE = 12
+    private const val DOUBLE_PRECISION_DIGITS = 12
+    private const val MAX_POW_EXPONENT = 10000
+    private const val MAX_PLAIN_LENGTH = 30
+    private const val MAX_RESULT_LENGTH = 15
 
     fun processAction(state: CalculatorState, action: CalculatorAction): CalculatorState {
         return try {
@@ -146,7 +153,7 @@ object CalculatorEngine {
                     }
                 }
                 is CalculatorAction.MemoryAdd -> {
-                    val currentValue = try { CalculatorEngine.evaluate(state.expression).let { if (it.isNaN()) 0.0 else it } } catch (e: Exception) { 0.0 }
+                    val currentValue = try { CalculatorEngine.evaluate(state.expression)?.toDouble() ?: 0.0 } catch (e: Exception) { 0.0 }
                     if (currentValue == 0.0 && state.result != "0") {
                         val fallback = state.result.toDoubleOrNull() ?: 0.0
                         state.copy(memory = state.memory + fallback, hasMemory = true)
@@ -155,7 +162,7 @@ object CalculatorEngine {
                     }
                 }
                 is CalculatorAction.MemorySubtract -> {
-                    val currentValue = try { CalculatorEngine.evaluate(state.expression).let { if (it.isNaN()) 0.0 else it } } catch (e: Exception) { 0.0 }
+                    val currentValue = try { CalculatorEngine.evaluate(state.expression)?.toDouble() ?: 0.0 } catch (e: Exception) { 0.0 }
                     if (currentValue == 0.0 && state.result != "0") {
                         val fallback = state.result.toDoubleOrNull() ?: 0.0
                         state.copy(memory = state.memory - fallback, hasMemory = true)
@@ -235,14 +242,13 @@ object CalculatorEngine {
         if (state.expression.isBlank() || state.isError) return state
 
         val result = evaluate(state.expression)
-        val raw = formatPlain(result)
 
         return state.copy(
             expression = state.expression,
-            result = raw,
+            result = if (result == null) "Error" else formatPlain(result),
             history = state.expression + " =",
-            isError = result.isNaN() || result.isInfinite(),
-            errorMessage = if (result.isNaN() || result.isInfinite()) "Cannot divide by zero" else "",
+            isError = result == null,
+            errorMessage = if (result == null) "Cannot divide by zero" else "",
             justEvaluated = true
         )
     }
@@ -257,7 +263,7 @@ object CalculatorEngine {
         return try {
             if (newExpr.contains(Regex("[+\\-×÷^]"))) {
                 val result = evaluate(newExpr)
-                state.copy(expression = newExpr, result = formatPlain(result), history = "", justEvaluated = false)
+                state.copy(expression = newExpr, result = if (result == null) "Error" else formatPlain(result), history = "", justEvaluated = false)
             } else {
                 state.copy(expression = newExpr, result = newExpr, history = "", justEvaluated = false)
             }
@@ -270,7 +276,7 @@ object CalculatorEngine {
         if (state.expression.isEmpty() || state.isError) return state
         return try {
             val value = evaluate(state.expression)
-            val percent = value / 100.0
+            val percent = value?.movePointLeft(2) ?: return errorState("Math Error")
             val raw = formatPlain(percent)
             state.copy(
                 expression = raw,
@@ -307,22 +313,23 @@ object CalculatorEngine {
     private fun handleUnaryOp(state: CalculatorState, op: String): CalculatorState {
         if (state.expression.isEmpty() || state.isError) return state
         return try {
-            val value = evaluate(state.expression)
+            val value = evaluate(state.expression) ?: return errorState("Math Error")
             val result = when (op) {
-                "sin" -> sin(Math.toRadians(value))
-                "cos" -> cos(Math.toRadians(value))
+                "sin" -> fromDouble(sin(Math.toRadians(value.toDouble())))
+                "cos" -> fromDouble(cos(Math.toRadians(value.toDouble())))
                 "tan" -> {
-                    val rad = Math.toRadians(value)
-                    if (cos(rad).absoluteValue < 1e-15) Double.NaN else tan(rad)
+                    val rad = Math.toRadians(value.toDouble())
+                    if (cos(rad).absoluteValue < 1e-15) null else fromDouble(tan(rad))
                 }
-                "log" -> if (value > 0) log10(value) else Double.NaN
-                "ln" -> if (value > 0) ln(value) else Double.NaN
-                "sqrt" -> if (value >= 0) sqrt(value) else Double.NaN
-                "sqr" -> value * value
-                "1/" -> if (value != 0.0) 1.0 / value else Double.NaN
+                "log" -> if (value.signum() > 0) fromDouble(log10(value.toDouble())) else null
+                "ln" -> if (value.signum() > 0) fromDouble(ln(value.toDouble())) else null
+                "sqrt" -> if (value.signum() >= 0) fromDouble(sqrt(value.toDouble())) else null
+                "sqr" -> value.multiply(value)
+                "1/" -> if (value.signum() == 0) null
+                        else BigDecimal.ONE.divide(value, DIVISION_SCALE, RoundingMode.HALF_UP)
                 else -> value
             }
-            if (result.isNaN() || result.isInfinite()) {
+            if (result == null) {
                 state.copy(isError = true, errorMessage = "Math Error", result = "Error")
             } else {
                 val raw = formatPlain(result)
@@ -338,7 +345,10 @@ object CalculatorEngine {
         }
     }
 
-    fun evaluate(expression: String): Double {
+    private fun errorState(message: String = "Error"): CalculatorState =
+        CalculatorState(isError = true, errorMessage = message, result = "Error")
+
+    fun evaluate(expression: String): BigDecimal? {
         val sanitized = expression
             .replace("×", "*")
             .replace("÷", "/")
@@ -353,7 +363,7 @@ object CalculatorEngine {
         return try {
             evaluateSimple(sanitized)
         } catch (e: Exception) {
-            Double.NaN
+            null
         }
     }
 
@@ -363,14 +373,14 @@ object CalculatorEngine {
         return entry.substring(0, eq) to entry.substring(eq + 3)
     }
 
-    private fun evaluateSimple(expr: String): Double {
+    private fun evaluateSimple(expr: String): BigDecimal? {
         var e = expr.trim()
         // Edge case: empty expression
-        if (e.isEmpty()) return 0.0
+        if (e.isEmpty()) return BigDecimal.ZERO
         // Edge case: just a decimal point
-        if (e == ".") return 0.0
+        if (e == ".") return BigDecimal.ZERO
         // Edge case: just operators
-        if (e.all { it in "+-×÷^*" }) return 0.0
+        if (e.all { it in "+-×÷^*" }) return BigDecimal.ZERO
         // Edge case: starts with operator (except minus)
         if (e.startsWith("+") || e.startsWith("×") || e.startsWith("÷") || e.startsWith("^") || e.startsWith("*") || e.startsWith("/")) {
             e = "0$e"
@@ -381,23 +391,25 @@ object CalculatorEngine {
             val end = e.indexOf(')', start)
             if (end == -1) throw IllegalArgumentException("Mismatched parentheses")
             val inner = e.substring(start + 1, end)
-            val result = evaluateSimple(inner)
-            e = e.substring(0, start) + result.toString() + e.substring(end + 1)
+            val result = evaluateSimple(inner) ?: return null
+            e = e.substring(0, start) + plain(result) + e.substring(end + 1)
         }
         return evaluateTokens(e)
     }
 
-    private fun evaluateTokens(expr: String): Double {
+    private fun evaluateTokens(expr: String): BigDecimal? {
         // Handle ** (power) first
         var e = expr
         if (e.contains("**")) {
             val parts = e.split("\\*\\*".toRegex(), 2)
-            return evaluateTokens(parts[0]).pow(evaluateTokens(parts[1]))
+            val base = evaluateTokens(parts[0]) ?: return null
+            val exponent = evaluateTokens(parts[1]) ?: return null
+            return powBigDecimal(base, exponent)
         }
 
         // Tokenize expression into numbers and operators
         val ops = mutableListOf<Char>()
-        val nums = mutableListOf<Double>()
+        val nums = mutableListOf<BigDecimal>()
         val currentNum = StringBuilder()
         var i = 0
 
@@ -411,14 +423,14 @@ object CalculatorEngine {
                         continue
                     }
                     if (currentNum.isNotEmpty()) {
-                        nums.add(currentNum.toString().toDouble())
+                        nums.add(currentNum.toString().toBigDecimal())
                         currentNum.clear()
                     }
                     ops.add(e[i])
                 }
                 e[i] == '*' || e[i] == '/' -> {
                     if (currentNum.isNotEmpty()) {
-                        nums.add(currentNum.toString().toDouble())
+                        nums.add(currentNum.toString().toBigDecimal())
                         currentNum.clear()
                     }
                     ops.add(e[i])
@@ -430,11 +442,11 @@ object CalculatorEngine {
             i++
         }
         if (currentNum.isNotEmpty()) {
-            nums.add(currentNum.toString().toDouble())
+            nums.add(currentNum.toString().toBigDecimal())
         }
 
-        // If no numbers parsed, return NaN
-        if (nums.isEmpty()) return Double.NaN
+        // If no numbers parsed, return null (error)
+        if (nums.isEmpty()) return null
         // If no operators, just return the single number
         if (ops.isEmpty()) return nums[0]
 
@@ -449,8 +461,9 @@ object CalculatorEngine {
             if (ops[j] == '*' || ops[j] == '/') {
                 val left = nums[j]
                 val right = nums[j + 1]
-                val result = if (ops[j] == '*') left * right else left / right
-                nums[j] = result
+                if (ops[j] == '/' && right.signum() == 0) return null
+                nums[j] = if (ops[j] == '*') left.multiply(right)
+                          else left.divide(right, DIVISION_SCALE, RoundingMode.HALF_UP)
                 nums.removeAt(j + 1)
                 ops.removeAt(j)
             } else {
@@ -461,12 +474,51 @@ object CalculatorEngine {
         // Process + and -
         var result = nums[0]
         for (k in ops.indices) {
-            if (ops[k] == '+') result += nums[k + 1]
-            else if (ops[k] == '-') result -= nums[k + 1]
+            result = if (ops[k] == '+') result.add(nums[k + 1]) else result.subtract(nums[k + 1])
         }
         return result
 
     }
+
+    private fun powBigDecimal(base: BigDecimal, exponent: BigDecimal): BigDecimal? {
+        if (exponent.signum() == 0) return BigDecimal.ONE
+        val expInt = try {
+            exponent.intValueExact()
+        } catch (e: ArithmeticException) {
+            null
+        }
+        if (expInt != null && expInt >= 0 && expInt <= MAX_POW_EXPONENT) {
+            return try {
+                base.pow(expInt)
+            } catch (e: ArithmeticException) {
+                null
+            }
+        }
+        val d = Math.pow(base.toDouble(), exponent.toDouble())
+        return if (d.isNaN() || d.isInfinite()) null else fromDouble(d)
+    }
+
+    private fun fromDouble(d: Double): BigDecimal? {
+        if (d.isNaN() || d.isInfinite()) return null
+        return BigDecimal.valueOf(d).round(MathContext(DOUBLE_PRECISION_DIGITS, RoundingMode.HALF_UP))
+    }
+
+    private fun plain(value: BigDecimal): String {
+        if (value.signum() == 0) return "0"
+        val stripped = value.stripTrailingZeros()
+        val s = stripped.toPlainString()
+        return if (s.length > MAX_PLAIN_LENGTH) toSciString(stripped) else s
+    }
+
+    private fun toSciString(value: BigDecimal): String {
+        val abs = value.abs()
+        val exp = abs.precision() - abs.scale() - 1
+        val mantissa = abs.movePointLeft(exp).stripTrailingZeros().toPlainString()
+        val sign = if (value.signum() < 0) "-" else ""
+        return "$sign$mantissa" + "E$exp"
+    }
+
+    fun formatPlain(value: BigDecimal): String = plain(value)
 
     fun formatPlain(value: Double): String =
         if (value.isNaN() || value.isInfinite()) "Error"
@@ -506,20 +558,22 @@ object CalculatorEngine {
         return addThousandsSeparator(intPart) + rest
     }
 
-    fun formatResult(value: Double): String {
-        if (value.isNaN() || value.isInfinite()) return "Error"
-        val formatted = if (value == value.toLong().toDouble()) {
-            addThousandsSeparator(value.toLong().toString())
+    fun formatResult(value: BigDecimal): String {
+        val plainStr = plain(value)
+        val parts = plainStr.split(".")
+        val formatted = if (parts.size == 2) {
+            addThousandsSeparator(parts[0]) + "." + parts[1]
         } else {
-            val s = String.format(Locale.US, "%.10f", value).trimEnd('0').trimEnd('.')
-            val parts = s.split(".")
-            if (parts.size == 2) {
-                addThousandsSeparator(parts[0]) + "." + parts[1]
-            } else {
-                addThousandsSeparator(s)
-            }
+            addThousandsSeparator(parts[0])
         }
-        return if (formatted.length > 15) String.format(Locale.US, "%.6e", value) else formatted
+        return if (formatted.length > MAX_RESULT_LENGTH) formatScientific(value) else formatted
+    }
+
+    fun formatResult(value: Double): String = formatResult(BigDecimal.valueOf(value))
+
+    private fun formatScientific(value: BigDecimal): String {
+        val d = value.toDouble()
+        return if (d.isFinite()) String.format(Locale.US, "%.6e", d) else toSciString(value)
     }
 
     private fun addThousandsSeparator(num: String): String {

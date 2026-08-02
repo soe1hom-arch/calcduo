@@ -18,6 +18,7 @@ package com.calculator.app.data
 
 import org.junit.Assert.*
 import org.junit.Test
+import java.math.BigDecimal
 
 class CalculatorEngineTest {
 
@@ -342,22 +343,93 @@ class CalculatorEngineTest {
 
     @Test
     fun testEvaluateSimple() {
-        assertEquals(7.0, CalculatorEngine.evaluate("3+4"), 0.001)
+        assertEquals(BigDecimal("7"), CalculatorEngine.evaluate("3+4"))
     }
 
     @Test
     fun testEvaluateComplex() {
-        assertEquals(20.0, CalculatorEngine.evaluate("(2+3)*4"), 0.001)
+        assertEquals(BigDecimal("20"), CalculatorEngine.evaluate("(2+3)*4"))
     }
 
     @Test
     fun testEvaluatePower() {
-        assertEquals(8.0, CalculatorEngine.evaluate("2^3"), 0.001)
+        assertEquals(BigDecimal("8"), CalculatorEngine.evaluate("2^3"))
     }
 
     @Test
     fun testEvaluatePercent() {
-        assertEquals(2.0, CalculatorEngine.evaluate("200%"), 0.001)
+        assertEquals(0, BigDecimal("2").compareTo(CalculatorEngine.evaluate("200%")))
+    }
+
+    // ─── Precision (BigDecimal) ───
+
+    @Test
+    fun testFloatAdditionExact() {
+        var state = CalculatorState()
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("0"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Decimal)
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("1"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Operator("+"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("0"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Decimal)
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("2"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Equals)
+        assertEquals("0.3", state.result)
+    }
+
+    @Test
+    fun testFloatSubtractionExact() {
+        var state = CalculatorState()
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("2"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Operator("-"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("1"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Decimal)
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("1"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Equals)
+        assertEquals("0.9", state.result)
+    }
+
+    @Test
+    fun testMultiplicationExact() {
+        var state = CalculatorState()
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("0"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Decimal)
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("1"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Operator("×"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("3"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Equals)
+        assertEquals("0.3", state.result)
+    }
+
+    @Test
+    fun testDivisionRoundsToTwelveDecimals() {
+        var state = CalculatorState()
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("1"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Operator("÷"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("3"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Equals)
+        assertEquals("0.333333333333", state.result)
+    }
+
+    @Test
+    fun testEvaluateFloatExact() {
+        assertEquals(BigDecimal("0.3"), CalculatorEngine.evaluate("0.1+0.2"))
+    }
+
+    @Test
+    fun testEvaluateDivisionByZeroIsNull() {
+        assertNull(CalculatorEngine.evaluate("1÷0"))
+    }
+
+    @Test
+    fun testLargePowerStaysScientific() {
+        var state = CalculatorState()
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("2"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Power)
+        state = CalculatorEngine.processAction(state, CalculatorAction.Number("100"))
+        state = CalculatorEngine.processAction(state, CalculatorAction.Equals)
+        assertFalse(state.isError)
+        assertTrue(state.result.contains("E") || state.result.length <= 15)
     }
 
     // ─── Format ───
